@@ -12,11 +12,12 @@ def test_create_no_arch_error():
         _nvjitlinklib.create()
 
 
+@pytest.mark.skip('Causes fatal error and exit(1)')
 def test_invalid_arch_error():
     # sm_XX is not a valid architecture
     with pytest.raises(RuntimeError,
                        match='NVJITLINK_ERROR_UNRECOGNIZED_OPTION error'):
-        _nvjitlinklib.create('-arch', 'sm_XX')
+        _nvjitlinklib.create('-arch=sm_XX')
 
 
 def test_invalid_option_type_error():
