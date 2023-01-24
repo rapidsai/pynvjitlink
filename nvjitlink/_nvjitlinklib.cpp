@@ -143,6 +143,20 @@ static PyObject *add_file(PyObject *self, PyObject *args) {
   return nullptr;
 }
 static PyObject *complete(PyObject *self, PyObject *args) {
+  nvJitLinkHandle *jitlink;
+  if (!PyArg_ParseTuple(args, "K", &jitlink))
+    return nullptr;
+
+  nvJitLinkResult res = nvJitLinkComplete(*jitlink);
+
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError, "%s error when calling nvJitLinkComplete",
+                  res);
+    return nullptr;
+  }
+
+  Py_RETURN_NONE;
+
   set_exception(PyExc_NotImplementedError, "Unimplemented", NVJITLINK_SUCCESS);
 
   return nullptr;

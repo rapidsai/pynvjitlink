@@ -36,3 +36,9 @@ def test_create_and_destroy():
     handle = _nvjitlinklib.create('-arch=sm_53')
     assert handle != 0
     _nvjitlinklib.destroy(handle)
+
+
+def test_complete_empty():
+    handle = _nvjitlinklib.create('-arch=sm_75')
+    _nvjitlinklib.complete(handle)
+    _nvjitlinklib.destroy(handle)
