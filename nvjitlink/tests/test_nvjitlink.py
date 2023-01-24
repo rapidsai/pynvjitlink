@@ -1,9 +1,18 @@
 # Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
 
+import os
 import pytest
 
 from nvjitlink import _nvjitlinklib
 from nvjitlink.api import InputType
+
+
+@pytest.fixture
+def device_functions_cubin():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    cubin_path = os.path.join(test_dir, 'test_device_functions.cubin')
+    with open(cubin_path, 'rb') as f:
+        return f.read()
 
 
 def test_create_no_arch_error():
@@ -42,4 +51,12 @@ def test_create_and_destroy():
 def test_complete_empty():
     handle = _nvjitlinklib.create('-arch=sm_75')
     _nvjitlinklib.complete(handle)
+    _nvjitlinklib.destroy(handle)
+
+
+def test_add_file_cubin(device_functions_cubin):
+    handle = _nvjitlinklib.create('-arch=sm_75')
+    name = 'test_device_functions.cubin'
+    _nvjitlinklib.add_data(handle, InputType.CUBIN.value,
+                           device_functions_cubin, name)
     _nvjitlinklib.destroy(handle)

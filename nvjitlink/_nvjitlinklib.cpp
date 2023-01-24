@@ -133,10 +133,29 @@ static PyObject *destroy(PyObject *self, PyObject *args) {
 }
 
 static PyObject *add_data(PyObject *self, PyObject *args) {
-  set_exception(PyExc_NotImplementedError, "Unimplemented", NVJITLINK_SUCCESS);
+  nvJitLinkHandle *jitlink;
+  nvJitLinkInputType input_type;
+  Py_buffer buf;
+  const char *name;
 
-  return nullptr;
+  if (!PyArg_ParseTuple(args, "Kiy*s", &jitlink, &input_type, &buf, &name)) {
+    return nullptr;
+  }
+
+  const void *data = buf.buf;
+  size_t size = buf.len;
+  nvJitLinkResult res =
+      nvJitLinkAddData(*jitlink, input_type, data, size, name);
+
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError, "%s error when calling nvJitLinkAddData",
+                  res);
+    return nullptr;
+  }
+
+  Py_RETURN_NONE;
 }
+
 static PyObject *add_file(PyObject *self, PyObject *args) {
   set_exception(PyExc_NotImplementedError, "Unimplemented", NVJITLINK_SUCCESS);
 
