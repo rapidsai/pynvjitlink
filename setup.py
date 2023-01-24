@@ -42,7 +42,7 @@ module = Extension(
     'nvjitlink._nvjitlinklib',
     sources=['nvjitlink/_nvjitlinklib.cpp'],
     include_dirs=include_dirs,
-    libraries=['nvJitLink_static'],
+    libraries=['nvJitLink_static', 'nvptxcompiler_static'],
     library_dirs=library_dirs,
     extra_compile_args=['-Wall', '-Werror'],
 )

@@ -17,6 +17,7 @@
 #define PY_SSIZE_T_CLEAN
 #include "nvJitLink.h"
 #include <Python.h>
+#include <new>
 
 static const char *nvJitLinkGetErrorEnum(nvJitLinkResult error) {
   switch (error) {
@@ -55,15 +56,80 @@ static void set_exception(PyObject *exception_type, const char *message_format,
 }
 
 static PyObject *create(PyObject *self, PyObject *args) {
-  set_exception(PyExc_NotImplementedError, "Unimplemented", NVJITLINK_SUCCESS);
+  PyObject *ret = nullptr;
+  const char **jitlink_options;
+  nvJitLinkHandle *jitlink;
 
+  Py_ssize_t n_args = PyTuple_Size(args);
+
+  try {
+    jitlink_options = new const char *[n_args];
+  } catch (const std::bad_alloc &) {
+    PyErr_NoMemory();
+    return nullptr;
+  }
+
+  for (Py_ssize_t i = 0; i < n_args; ++i) {
+    PyObject *py_option = PyTuple_GetItem(args, i);
+    if (!PyUnicode_Check(py_option)) {
+      PyErr_SetString(PyExc_TypeError,
+                      "Expecting only strings for jitlink args");
+      delete[] jitlink_options;
+      return nullptr;
+    }
+
+    jitlink_options[i] = PyUnicode_AsUTF8AndSize(py_option, nullptr);
+  }
+
+  try {
+    jitlink = new nvJitLinkHandle;
+  } catch (const std::bad_alloc &) {
+    PyErr_NoMemory();
+    delete[] jitlink_options;
+    return nullptr;
+  }
+
+  nvJitLinkResult res = nvJitLinkCreate(jitlink, n_args, jitlink_options);
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError, "%s error when calling nvJitLinkCreate",
+                  res);
+    goto error;
+  }
+
+  if ((ret = PyLong_FromUnsignedLongLong((unsigned long long)jitlink)) ==
+      nullptr) {
+    // Attempt to destroy the linker - since we're already in an error
+    // condition, there's no point in checking the return code and taking any
+    // further action based on it though.
+    nvJitLinkDestroy(jitlink);
+    goto error;
+  }
+
+  delete[] jitlink_options;
+  return ret;
+
+error:
+  delete jitlink;
+  delete[] jitlink_options;
   return nullptr;
 }
 
 static PyObject *destroy(PyObject *self, PyObject *args) {
-  set_exception(PyExc_NotImplementedError, "Unimplemented", NVJITLINK_SUCCESS);
+  nvJitLinkHandle *jitlink;
+  if (!PyArg_ParseTuple(args, "K", &jitlink))
+    return nullptr;
 
-  return nullptr;
+  nvJitLinkResult res = nvJitLinkDestroy(jitlink);
+
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError, "%s error when calling nvJitLinkDestroy",
+                  res);
+    return nullptr;
+  }
+
+  delete jitlink;
+
+  Py_RETURN_NONE;
 }
 
 static PyObject *add_data(PyObject *self, PyObject *args) {
