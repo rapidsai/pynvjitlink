@@ -20,6 +20,12 @@ def test_invalid_arch_error():
         _nvjitlinklib.create('-arch=sm_XX')
 
 
+def test_unrecognized_option_error():
+    with pytest.raises(RuntimeError,
+                       match='NVJITLINK_ERROR_UNRECOGNIZED_OPTION error'):
+        _nvjitlinklib.create('-fictitious_option')
+
+
 def test_invalid_option_type_error():
     with pytest.raises(TypeError,
                        match='Expecting only strings'):
