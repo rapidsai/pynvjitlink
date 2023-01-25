@@ -15,6 +15,8 @@
 import os
 import os.path
 import shutil
+import sys
+from distutils.command.build_ext import build_ext
 from distutils.sysconfig import get_config_var, get_python_inc
 from setuptools import setup, Extension
 
@@ -38,6 +40,46 @@ if not os.path.isdir(CUDA_HOME):
 include_dirs.append(os.path.join(CUDA_HOME, "include"))
 library_dirs.append(os.path.join(CUDA_HOME, "lib64"))
 
+default_werror_wall = sys.platform.startswith('linux')
+
+nvjitlink_be_user_options = [
+    ('werror', None, 'Build extensions with -Werror'),
+    ('wall', None, 'Build extensions with -Wall'),
+    ('noopt', None, 'Build extensions without optimization'),
+]
+
+
+class NvJitLinkBuildExt(build_ext):
+
+    user_options = build_ext.user_options + nvjitlink_be_user_options
+    boolean_options = build_ext.boolean_options + ['werror', 'wall', 'noopt']
+
+    def initialize_options(self):
+        super().initialize_options()
+        self.werror = default_werror_wall
+        self.wall = default_werror_wall
+        self.noopt = 0
+
+    def run(self):
+        extra_compile_args = []
+        if self.noopt:
+            if sys.platform == 'win32':
+                extra_compile_args.append('/Od')
+            else:
+                extra_compile_args.append('-O0')
+        if self.werror:
+            extra_compile_args.append('-Werror')
+        if self.wall:
+            extra_compile_args.append('-Wall')
+        for ext in self.extensions:
+            ext.extra_compile_args.extend(extra_compile_args)
+
+        super().run()
+
+
+cmdclass = {}
+cmdclass['build_ext'] = NvJitLinkBuildExt
+
 module = Extension(
     'nvjitlink._nvjitlinklib',
     sources=['nvjitlink/_nvjitlinklib.cpp'],
@@ -52,4 +94,5 @@ setup(
     description='nvJitLink Python binding',
     ext_modules=[module],
     packages=['nvjitlink', 'nvjitlink.tests'],
+    cmdclass=cmdclass,
 )
