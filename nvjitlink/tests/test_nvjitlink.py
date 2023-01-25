@@ -3,6 +3,7 @@
 import pytest
 
 from nvjitlink import _nvjitlinklib
+from nvjitlink.api import InputType
 
 
 def test_create_no_arch_error():
