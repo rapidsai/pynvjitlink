@@ -181,15 +181,73 @@ static PyObject *complete(PyObject *self, PyObject *args) {
   return nullptr;
 }
 static PyObject *get_error_log(PyObject *self, PyObject *args) {
-  set_exception(PyExc_NotImplementedError, "Unimplemented", NVJITLINK_SUCCESS);
+  nvJitLinkHandle *jitlink;
+  if (!PyArg_ParseTuple(args, "K", &jitlink))
+    return nullptr;
 
-  return nullptr;
+  size_t error_log_size;
+  nvJitLinkResult res =
+      nvJitLinkGetErrorLogSize(*jitlink, &error_log_size);
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError,
+                  "%s error when calling nvJitLinkGetErrorLogSize",
+                  res);
+    return nullptr;
+  }
+
+  // The size returned doesn't include a trailing null byte
+  char *error_log = new char[error_log_size + 1];
+  res = nvJitLinkGetErrorLog(*jitlink, error_log);
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError,
+                  "%s error when calling nvJitLinkGetErrorLog",
+                  res);
+    return nullptr;
+  }
+
+  PyObject *py_log = PyUnicode_FromStringAndSize(error_log, error_log_size);
+  // Once we've copied the log to a Python object we can delete it - we don't
+  // need to check whether creation of the Unicode object succeeded, because we
+  // delete the log either way.
+  delete[] error_log;
+
+  return py_log;
 }
+
 static PyObject *get_info_log(PyObject *self, PyObject *args) {
-  set_exception(PyExc_NotImplementedError, "Unimplemented", NVJITLINK_SUCCESS);
+  nvJitLinkHandle *jitlink;
+  if (!PyArg_ParseTuple(args, "K", &jitlink))
+    return nullptr;
 
-  return nullptr;
+  size_t info_log_size;
+  nvJitLinkResult res =
+      nvJitLinkGetInfoLogSize(*jitlink, &info_log_size);
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError,
+                  "%s error when calling nvJitLinkGetInfoLogSize",
+                  res);
+    return nullptr;
+  }
+
+  // The size returned doesn't include a trailing null byte
+  char *info_log = new char[info_log_size + 1];
+  res = nvJitLinkGetInfoLog(*jitlink, info_log);
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError,
+                  "%s error when calling nvJitLinkGetInfoLog",
+                  res);
+    return nullptr;
+  }
+
+  PyObject *py_log = PyUnicode_FromStringAndSize(info_log, info_log_size);
+  // Once we've copied the log to a Python object we can delete it - we don't
+  // need to check whether creation of the Unicode object succeeded, because we
+  // delete the log either way.
+  delete[] info_log;
+
+  return py_log;
 }
+
 static PyObject *get_linked_ptx(PyObject *self, PyObject *args) {
   set_exception(PyExc_NotImplementedError, "Unimplemented", NVJITLINK_SUCCESS);
 

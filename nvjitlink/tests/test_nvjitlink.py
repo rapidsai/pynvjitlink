@@ -44,6 +44,11 @@ def device_functions_ptx():
     return read_test_file('test_device_functions.ptx')
 
 
+@pytest.fixture
+def undefined_extern_cubin():
+    return read_test_file('undefined_extern.cubin')
+
+
 def test_create_no_arch_error():
     # nvjitlink expects at least the architecture to be specified.
     with pytest.raises(RuntimeError,
@@ -102,3 +107,31 @@ def test_add_file(input_file, input_type, request):
     handle = _nvjitlinklib.create('-arch=sm_75')
     _nvjitlinklib.add_data(handle, input_type.value, data, filename)
     _nvjitlinklib.destroy(handle)
+
+
+def test_get_error_log(undefined_extern_cubin):
+    handle = _nvjitlinklib.create('-arch=sm_75')
+    filename, data = undefined_extern_cubin
+    input_type = InputType.CUBIN.value
+    _nvjitlinklib.add_data(handle, input_type, data, filename)
+    with pytest.raises(RuntimeError):
+        _nvjitlinklib.complete(handle)
+    error_log = _nvjitlinklib.get_error_log(handle)
+    _nvjitlinklib.destroy(handle)
+    # XXX: The error message in the log is strange. The actual expected error
+    # message appears on the terminal:
+    #     error   : Undefined reference to '_Z5undefff' in
+    #               'undefined_extern.cubin'
+    assert "ERROR 9: finish" in error_log
+
+
+def test_get_info_log(device_functions_cubin):
+    handle = _nvjitlinklib.create('-arch=sm_75')
+    filename, data = device_functions_cubin
+    input_type = InputType.CUBIN.value
+    _nvjitlinklib.add_data(handle, input_type, data, filename)
+    _nvjitlinklib.complete(handle)
+    info_log = _nvjitlinklib.get_info_log(handle)
+    _nvjitlinklib.destroy(handle)
+    # Info log is empty
+    assert "" == info_log
