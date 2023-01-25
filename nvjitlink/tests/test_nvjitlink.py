@@ -7,12 +7,41 @@ from nvjitlink import _nvjitlinklib
 from nvjitlink.api import InputType
 
 
+def read_test_file(filename):
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(test_dir, filename)
+    with open(path, 'rb') as f:
+        return filename, f.read()
+
+
 @pytest.fixture
 def device_functions_cubin():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    cubin_path = os.path.join(test_dir, 'test_device_functions.cubin')
-    with open(cubin_path, 'rb') as f:
-        return f.read()
+    return read_test_file('test_device_functions.cubin')
+
+
+@pytest.fixture
+def device_functions_fatbin():
+    return read_test_file('test_device_functions.fatbin')
+
+
+@pytest.fixture
+def device_functions_ltoir():
+    return read_test_file('test_device_functions.ltoir')
+
+
+@pytest.fixture
+def device_functions_object():
+    return read_test_file('test_device_functions.o')
+
+
+@pytest.fixture
+def device_functions_archive():
+    return read_test_file('test_device_functions.a')
+
+
+@pytest.fixture
+def device_functions_ptx():
+    return read_test_file('test_device_functions.ptx')
 
 
 def test_create_no_arch_error():
@@ -54,9 +83,22 @@ def test_complete_empty():
     _nvjitlinklib.destroy(handle)
 
 
-def test_add_file_cubin(device_functions_cubin):
+@pytest.mark.parametrize('input_file,input_type', [
+    ('device_functions_cubin', InputType.CUBIN),
+    ('device_functions_fatbin', InputType.FATBIN),
+    # XXX: LTOIR input type needs debugging - results in
+    # NVJITLINK_ERROR_INTERNAL.
+    pytest.param('device_functions_ltoir', InputType.LTOIR,
+                 marks=pytest.mark.xfail),
+    ('device_functions_ptx', InputType.PTX),
+    ('device_functions_object', InputType.OBJECT),
+    # XXX: Archive type needs debugging - results in a segfault.
+    pytest.param('device_functions_archive', InputType.LIBRARY,
+                 marks=pytest.mark.skip),
+])
+def test_add_file(input_file, input_type, request):
+    filename, data = request.getfixturevalue(input_file)
+
     handle = _nvjitlinklib.create('-arch=sm_75')
-    name = 'test_device_functions.cubin'
-    _nvjitlinklib.add_data(handle, InputType.CUBIN.value,
-                           device_functions_cubin, name)
+    _nvjitlinklib.add_data(handle, input_type.value, data, filename)
     _nvjitlinklib.destroy(handle)
