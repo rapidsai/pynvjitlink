@@ -3,7 +3,7 @@
 NVCC_FLAGS := -O3 -rdc true
 CUBIN_FLAGS := -gencode arch=compute_75,code=sm_75 --cubin
 FATBIN_FLAGS := -gencode arch=compute_75,code=sm_75 -gencode arch=compute_70,code=sm_70 --fatbin
-LTOIR_FLAGS := -gencode arch=compute_75,code=lto_75 -dc
+LTOIR_FLAGS := -gencode arch=lto_75,code=lto_75 -dc
 PTX_FLAGS := -gencode arch=compute_75,code=compute_75 -ptx
 OBJECT_FLAGS := -gencode arch=compute_75,code=compute_75 -dc
 LIBRARY_FLAGS := -gencode arch=compute_75,code=compute_75 -lib

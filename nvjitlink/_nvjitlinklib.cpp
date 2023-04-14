@@ -186,12 +186,10 @@ static PyObject *get_error_log(PyObject *self, PyObject *args) {
     return nullptr;
 
   size_t error_log_size;
-  nvJitLinkResult res =
-      nvJitLinkGetErrorLogSize(*jitlink, &error_log_size);
+  nvJitLinkResult res = nvJitLinkGetErrorLogSize(*jitlink, &error_log_size);
   if (res != NVJITLINK_SUCCESS) {
     set_exception(PyExc_RuntimeError,
-                  "%s error when calling nvJitLinkGetErrorLogSize",
-                  res);
+                  "%s error when calling nvJitLinkGetErrorLogSize", res);
     return nullptr;
   }
 
@@ -200,8 +198,7 @@ static PyObject *get_error_log(PyObject *self, PyObject *args) {
   res = nvJitLinkGetErrorLog(*jitlink, error_log);
   if (res != NVJITLINK_SUCCESS) {
     set_exception(PyExc_RuntimeError,
-                  "%s error when calling nvJitLinkGetErrorLog",
-                  res);
+                  "%s error when calling nvJitLinkGetErrorLog", res);
     return nullptr;
   }
 
@@ -220,12 +217,10 @@ static PyObject *get_info_log(PyObject *self, PyObject *args) {
     return nullptr;
 
   size_t info_log_size;
-  nvJitLinkResult res =
-      nvJitLinkGetInfoLogSize(*jitlink, &info_log_size);
+  nvJitLinkResult res = nvJitLinkGetInfoLogSize(*jitlink, &info_log_size);
   if (res != NVJITLINK_SUCCESS) {
     set_exception(PyExc_RuntimeError,
-                  "%s error when calling nvJitLinkGetInfoLogSize",
-                  res);
+                  "%s error when calling nvJitLinkGetInfoLogSize", res);
     return nullptr;
   }
 
@@ -234,8 +229,7 @@ static PyObject *get_info_log(PyObject *self, PyObject *args) {
   res = nvJitLinkGetInfoLog(*jitlink, info_log);
   if (res != NVJITLINK_SUCCESS) {
     set_exception(PyExc_RuntimeError,
-                  "%s error when calling nvJitLinkGetInfoLog",
-                  res);
+                  "%s error when calling nvJitLinkGetInfoLog", res);
     return nullptr;
   }
 
@@ -249,14 +243,62 @@ static PyObject *get_info_log(PyObject *self, PyObject *args) {
 }
 
 static PyObject *get_linked_ptx(PyObject *self, PyObject *args) {
-  set_exception(PyExc_NotImplementedError, "Unimplemented", NVJITLINK_SUCCESS);
+  nvJitLinkHandle *jitlink;
+  if (!PyArg_ParseTuple(args, "K", &jitlink))
+    return nullptr;
 
-  return nullptr;
+  size_t linked_ptx_size;
+  nvJitLinkResult res = nvJitLinkGetLinkedPtxSize(*jitlink, &linked_ptx_size);
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError,
+                  "%s error when calling nvJitLinkGetLinkedPtxSize", res);
+    return nullptr;
+  }
+
+  char *linked_ptx = new char[linked_ptx_size];
+  res = nvJitLinkGetLinkedPtx(*jitlink, linked_ptx);
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError,
+                  "%s error when calling nvJitLinkGetLinkedPtx", res);
+  }
+
+  PyObject *py_ptx = PyBytes_FromStringAndSize(linked_ptx, linked_ptx_size);
+  // Once we've copied the compiled program to a Python object we can delete it
+  // - we don't need to check whether creation of the Unicode object succeeded,
+  // because we delete the compiled program either way.
+  delete[] linked_ptx;
+
+  return py_ptx;
 }
 static PyObject *get_linked_cubin(PyObject *self, PyObject *args) {
-  set_exception(PyExc_NotImplementedError, "Unimplemented", NVJITLINK_SUCCESS);
+  nvJitLinkHandle *jitlink;
+  if (!PyArg_ParseTuple(args, "K", &jitlink))
+    return nullptr;
 
-  return nullptr;
+  size_t linked_cubin_size;
+  nvJitLinkResult res =
+      nvJitLinkGetLinkedCubinSize(*jitlink, &linked_cubin_size);
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError,
+                  "%s error when calling nvJitLinkGetLinkedCubinSize", res);
+    return nullptr;
+  }
+
+  char *linked_cubin = new char[linked_cubin_size];
+  res = nvJitLinkGetLinkedCubin(*jitlink, linked_cubin);
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError,
+                  "%s error when calling nvJitLinkGetLinkedCubin", res);
+  }
+
+  PyObject *py_cubin =
+      PyBytes_FromStringAndSize(linked_cubin, linked_cubin_size);
+  // Once we've copied the compiled program to a Python object we can delete it
+  // - we don't need to check whether creation of the Unicode object succeeded,
+  // because we delete the compiled program either way.
+  delete[] linked_cubin;
+
+  return py_cubin;
 }
 
 static PyMethodDef ext_methods[] = {
