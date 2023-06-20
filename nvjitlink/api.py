@@ -4,7 +4,7 @@ from enum import Enum
 from nvjitlink import _nvjitlinklib
 
 import weakref
-
+from numba.cuda.cudadrv.driver import Linker
 
 class InputType(Enum):
     NONE = 0
@@ -20,10 +20,17 @@ class NvJitLinkError(RuntimeError):
     pass
 
 
-class NvJitLinker:
-    def __init__(self, *options):
+class NvJitLinker(Linker):
+    def __init__(self, max_registers=None, lineinfo=False, cc=None):
+        if cc is None:
+            raise RuntimeError("PatchedLinker requires CC to be specified")
+        if not any(isinstance(cc, t) for t in [list, tuple]):
+            raise TypeError("`cc` must be a list or tuple of length 2")
+        sm_ver = f"{cc[0] * 10 + cc[1]}"
+        arch = f"-arch=sm_{sm_ver}"
+
         try:
-            self.handle = _nvjitlinklib.create(*options)
+            self.handle = _nvjitlinklib.create(arch)
         except RuntimeError as e:
             raise NvJitLinkError(f"{e}")
 
@@ -51,6 +58,17 @@ class NvJitLinker:
             self._info_log = _nvjitlinklib.get_info_log(self.handle)
             self._error_log = _nvjitlinklib.get_error_log(self.handle)
             raise NvJitLinkError(f"{e}\n{self.error_log}")
+
+    def add_cu(self, cu, name):
+        # TODO
+        raise NotImplementedError
+
+    def add_file(self, path, kind):
+        # TODO
+        raise NotImplementedError
+
+    def complete(self):
+        return self.get_linked_cubin()
 
     def add_cubin(self, cubin, name=None):
         name = name or 'unnamed-cubin'
