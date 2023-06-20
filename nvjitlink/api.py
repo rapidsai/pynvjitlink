@@ -2,10 +2,11 @@
 
 from enum import Enum
 from nvjitlink import _nvjitlinklib
-
+import pathlib
 import weakref
-from numba.cuda.cudadrv.driver import Linker
-
+from numba.cuda.cudadrv.driver import Linker, NvrtcProgram, FILE_EXTENSION_MAP, LinkerError
+from numba import config
+import os
 class InputType(Enum):
     NONE = 0
     CUBIN = 1
@@ -60,12 +61,40 @@ class NvJitLinker(Linker):
             raise NvJitLinkError(f"{e}\n{self.error_log}")
 
     def add_cu(self, cu, name):
-        # TODO
-        raise NotImplementedError
+        program = NvrtcProgram(cu, name)
+
+        if config.DUMP_ASSEMBLY:
+            print(("ASSEMBLY %s" % name).center(80, '-'))
+            print(program.ptx.decode())
+            print('=' * 80)
+
+        # Link the program's PTX using the normal linker mechanism
+        ptx_name = os.path.splitext(name)[0] + ".ptx"
+        self.add_ptx(program.ptx.rstrip(b'\x00'), ptx_name)
 
     def add_file(self, path, kind):
-        # TODO
-        raise NotImplementedError
+        try:
+            with open(path, 'rb') as f:
+                data = f.read()
+        except FileNotFoundError:
+            raise LinkerError(f'{path} not found')
+
+        name = pathlib.Path(path).name
+        if kind == FILE_EXTENSION_MAP['cubin']:
+            fn = self._linker.add_cubin
+        elif kind == FILE_EXTENSION_MAP['fatbin']:
+            fn = self._linker.add_fatbin
+        elif kind == FILE_EXTENSION_MAP['a']:
+            raise LinkerError("Don't know how to link archives")
+        elif kind == FILE_EXTENSION_MAP['ptx']:
+            return self.add_ptx(data, name)
+        else:
+            raise LinkerError(f"Don't know how to link {kind}")
+
+        try:
+            fn(data, name)
+        except NvJitLinkError as e:
+            raise LinkerError from e
 
     def complete(self):
         return self.get_linked_cubin()
