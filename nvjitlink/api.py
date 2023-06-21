@@ -25,7 +25,6 @@ class NvJitLinker:
         try:
             self.handle = _nvjitlinklib.create(*options)
         except RuntimeError as e:
-            breakpoint()
             raise NvJitLinkError(f"{e}")
 
         weakref.finalize(self, _nvjitlinklib.destroy, self.handle)
