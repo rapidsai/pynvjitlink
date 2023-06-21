@@ -2,11 +2,10 @@
 
 from enum import Enum
 from nvjitlink import _nvjitlinklib
-import pathlib
+
 import weakref
-from numba.cuda.cudadrv.driver import Linker, NvrtcProgram, FILE_EXTENSION_MAP, LinkerError
-from numba import config
-import os
+
+
 class InputType(Enum):
     NONE = 0
     CUBIN = 1
@@ -21,18 +20,12 @@ class NvJitLinkError(RuntimeError):
     pass
 
 
-class NvJitLinker(Linker):
-    def __init__(self, max_registers=None, lineinfo=False, cc=None):
-        if cc is None:
-            raise RuntimeError("PatchedLinker requires CC to be specified")
-        if not any(isinstance(cc, t) for t in [list, tuple]):
-            raise TypeError("`cc` must be a list or tuple of length 2")
-        sm_ver = f"{cc[0] * 10 + cc[1]}"
-        arch = f"-arch=sm_{sm_ver}"
-
+class NvJitLinker:
+    def __init__(self, *options):
         try:
-            self.handle = _nvjitlinklib.create(arch)
+            self.handle = _nvjitlinklib.create(*options)
         except RuntimeError as e:
+            breakpoint()
             raise NvJitLinkError(f"{e}")
 
         weakref.finalize(self, _nvjitlinklib.destroy, self.handle)
@@ -59,45 +52,6 @@ class NvJitLinker(Linker):
             self._info_log = _nvjitlinklib.get_info_log(self.handle)
             self._error_log = _nvjitlinklib.get_error_log(self.handle)
             raise NvJitLinkError(f"{e}\n{self.error_log}")
-
-    def add_cu(self, cu, name):
-        program = NvrtcProgram(cu, name)
-
-        if config.DUMP_ASSEMBLY:
-            print(("ASSEMBLY %s" % name).center(80, '-'))
-            print(program.ptx.decode())
-            print('=' * 80)
-
-        # Link the program's PTX using the normal linker mechanism
-        ptx_name = os.path.splitext(name)[0] + ".ptx"
-        self.add_ptx(program.ptx.rstrip(b'\x00'), ptx_name)
-
-    def add_file(self, path, kind):
-        try:
-            with open(path, 'rb') as f:
-                data = f.read()
-        except FileNotFoundError:
-            raise LinkerError(f'{path} not found')
-
-        name = pathlib.Path(path).name
-        if kind == FILE_EXTENSION_MAP['cubin']:
-            fn = self._linker.add_cubin
-        elif kind == FILE_EXTENSION_MAP['fatbin']:
-            fn = self._linker.add_fatbin
-        elif kind == FILE_EXTENSION_MAP['a']:
-            raise LinkerError("Don't know how to link archives")
-        elif kind == FILE_EXTENSION_MAP['ptx']:
-            return self.add_ptx(data, name)
-        else:
-            raise LinkerError(f"Don't know how to link {kind}")
-
-        try:
-            fn(data, name)
-        except NvJitLinkError as e:
-            raise LinkerError from e
-
-    def complete(self):
-        return self.get_linked_cubin()
 
     def add_cubin(self, cubin, name=None):
         name = name or 'unnamed-cubin'
