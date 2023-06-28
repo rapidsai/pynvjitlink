@@ -1,7 +1,4 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
-
-from ptxcompiler.api import compile_ptx
-from ptxcompiler.patch import get_logger, patch_needed
 from nvjitlink.api import NvJitLinker, NvJitLinkError
 
 import os
@@ -21,12 +18,6 @@ try:
     if ver < required_numba_ver:
         _numba_error = (f"version {numba.__version__} is insufficient for "
                         "patching - %s.%s is needed." % required_numba_ver)
-    elif ver > required_numba_ver:
-        _numba_error = (
-            f"version {numba.__version__} should not be patched. "
-            "Set the environment variable "
-            "NUMBA_CUDA_ENABLE_MINOR_VERSION_COMPATIBILITY=1 instead. "
-            f"See {mvc_docs_url} for more details.")
     else:
         _numba_version_ok = True
 except ImportError as ie:
