@@ -10,7 +10,7 @@ import pathlib
 _numba_version_ok = False
 _numba_error = None
 
-required_numba_ver = (0, 56)
+required_numba_ver = (0, 57)
 
 mvc_docs_url = ("https://numba.readthedocs.io/en/stable/cuda/"
                 "minor_version_compatibility.html")
@@ -118,20 +118,12 @@ class PatchedLinker(Linker):
 
 
 def new_patched_linker(max_registers=0, lineinfo=False, cc=None):
-    logger = get_logger()
-    logger.debug("Creating new PatchedLinker")
     return PatchedLinker(max_registers, lineinfo, cc)
 
 
-def patch_numba_linker_if_needed():
+def patch_numba_linker():
     if not _numba_version_ok:
         msg = f"Cannot patch Numba: {_numba_error}"
         raise RuntimeError(msg)
 
-    logger = get_logger()
-
-    if patch_needed():
-        logger.debug("Patching Numba to use NvJitLinker")
-        Linker.new = new_patched_linker
-    else:
-        logger.debug("Not patching Numba to use NvJitLinker")
+    Linker.new = new_patched_linker
