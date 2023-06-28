@@ -1,7 +1,7 @@
 # <div align="left"><img src="https://rapids.ai/assets/images/rapids_logo.png" width="90px"/>&nbsp;nvjitlink</div>
 
 The [RAPIDS](https://rapids.ai) nvjitlink library provides a Python binding for the 
-[nvJitLinklibrary](https://docs.nvidia.com/cuda/nvJitLink/index.html). It is presently a
+[nvJitLink library](https://docs.nvidia.com/cuda/nvJitLink/index.html). It is presently a
 work-in-progress.
 
 **NOTE:** For the latest stable [README.md](https://github.com/rapidsai/nvjitlink/blob/main/README.md) ensure you are on the `main` branch.

@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a bug report to help us improve ___PROJECT___
+about: Create a bug report to help us improve nvjitlink
 title: "[BUG]"
 labels: "? - Needs Triage, bug"
 assignees: ''

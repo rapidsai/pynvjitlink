@@ -1,9 +1,9 @@
 #python code owners
-nvjitlink/            @rapidsai/<repo>-python-codeowners
+nvjitlink/            @rapidsai/nvjitlink-python-codeowners
 
 #cmake code owners
-**/CMakeLists.txt  @rapidsai/<repo>-cmake-codeowners
-**/cmake/          @rapidsai/<repo>-cmake-codeowners
+**/CMakeLists.txt  @rapidsai/nvjitlink-cmake-codeowners
+**/cmake/          @rapidsai/nvjitlink-cmake-codeowners
 
 #build/ops code owners
 .github/           @rapidsai/ops-codeowners 
