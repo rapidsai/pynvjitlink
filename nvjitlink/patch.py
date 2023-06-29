@@ -41,16 +41,14 @@ class PatchedLinker(Linker):
             raise TypeError("`cc` must be a list or tuple of length 2")
 
         sm_ver = f"{cc[0] * 10 + cc[1]}"
-        ptx_compile_opts = ['--gpu-name', f'sm_{sm_ver}', '-c']
-        if max_registers:
-            arg = f"--maxrregcount={max_registers}"
-            ptx_compile_opts.append(arg)
-        if lineinfo:
-            ptx_compile_opts.append('--generate-line-info')
-        self.ptx_compile_options = tuple(ptx_compile_opts)
-
         arch = f"-arch=sm_{sm_ver}"
-        self._linker = NvJitLinker(arch)
+        opts = [arch]
+        if max_registers:
+            opts.append(f"-maxrregcount={max_registers}")
+        if lineinfo:
+            opts.append("-lineinfo")
+
+        self._linker = NvJitLinker(*opts)
 
     @property
     def info_log(self):
