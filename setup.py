@@ -95,4 +95,5 @@ setup(
     ext_modules=[module],
     packages=['nvjitlink', 'nvjitlink.tests'],
     cmdclass=cmdclass,
+    package_data={'nvjitlink.tests': ['test_device_functions.*', 'undefined_extern.cubin']},
 )
