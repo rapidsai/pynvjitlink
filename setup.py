@@ -17,6 +17,8 @@ setup(
     name='nvjitlink',
     version='0.0.0',
     description='nvJitLink Python binding',
-    packages=['nvjitlink'],
-    python_requires=">=3.9"
+    packages=['nvjitlink', 'nvjitlink.tests'],
+    package_data={'nvjitlink.tests': ['test_device_functions.*', 'undefined_extern.cubin']},
+    python_requires=">=3.9",
+
 )
