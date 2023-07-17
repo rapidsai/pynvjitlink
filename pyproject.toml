@@ -1,5 +1,7 @@
 [tool.scikit-build]
 cmake.minimum-version = "3.26.4"
+ninja.make-fallback = true
+build-dir = "build/{wheel_tag}"
 
 [build-system]
 requires = ["scikit-build-core"]

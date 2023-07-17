@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.26.4 FATAL_ERROR)
 project(
   nvjitlink
   VERSION 0.1.0
-  LANGUAGES C CXX
+  LANGUAGES CXX
 )
 
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
@@ -15,10 +15,11 @@ find_package(
 )
 target_link_libraries(_nvjitlinklib PRIVATE CUDA::nvJitLink_static CUDA::nvptxcompiler_static)
 
+set(opt_option -O0)
+
 if(WIN32)
-  target_compile_options(_nvjitlinklib PRIVATE -Werror -Wall -/Od)
-else()
-  target_compile_options(_nvjitlinklib PRIVATE -Werror -Wall -O0)
+  set(opt_option -/Od)
 endif()
+target_compile_options(_nvjitlinklib PRIVATE -Werror -Wall ${opt_option})
 
 install(TARGETS _nvjitlinklib LIBRARY DESTINATION nvjitlink)
