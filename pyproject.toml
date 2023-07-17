@@ -1,0 +1,10 @@
+[tool.scikit-build]
+cmake.minimum-version = "3.26.4"
+
+[build-system]
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "nvjitlink"
+version = "0.1.0"
