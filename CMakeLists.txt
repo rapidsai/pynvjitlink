@@ -9,10 +9,12 @@ project(
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
 Python_add_library(_nvjitlinklib MODULE nvjitlink/_nvjitlinklib.cpp WITH_SOABI)
-
+set(CMAKE_FIND_DEBUG_MODE TRUE)
 find_package(
   CUDAToolkit 12.0 REQUIRED
 )
+set(CMAKE_FIND_DEBUG_MODE FALSE)
+
 target_link_libraries(_nvjitlinklib PRIVATE CUDA::nvJitLink_static CUDA::nvptxcompiler_static)
 
 set(opt_option -O0)

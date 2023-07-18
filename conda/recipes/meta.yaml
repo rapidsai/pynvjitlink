@@ -8,7 +8,9 @@ source:
 
 build:
   noarch: python
-  script: pip install . -vv
+  script:
+    - export CMAKE_PREFIX_PATH=${PREFIX}/targets/x86_64-linux/lib:$CMAKE_PREFIX_PATH
+    - pip install . -vv
 
 requirements:
   build:
@@ -17,10 +19,11 @@ requirements:
     - {{ compiler('cuda') }}
     - cmake >=3.26.4
     - sysroot_{{ target_platform }} 2.17
+    - cuda-version =12.0
   host:
     - libnvjitlink-dev
     - libnvjitlink-static
-    - cuda-version=12.0
+    - cuda-version =12.0
     - python
     - scikit-build-core
   run:
