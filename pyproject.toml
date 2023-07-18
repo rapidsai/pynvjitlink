@@ -1,0 +1,19 @@
+[tool.scikit-build]
+cmake.minimum-version = "3.26.4"
+ninja.make-fallback = true
+build-dir = "build/{wheel_tag}"
+
+[build-system]
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "nvjitlink"
+version = "0.1.0"
+description = "nvJitLink Python binding"
+readme = { file = "README.md", content-type = "text/markdown" }
+authors = [
+    { name = "NVIDIA Corporation" },
+]
+license = { text = "Apache 2.0" }
+requires-python = ">=3.9"
