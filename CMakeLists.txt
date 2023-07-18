@@ -16,7 +16,6 @@ find_package(
 target_link_libraries(_nvjitlinklib PRIVATE CUDA::nvJitLink_static CUDA::nvptxcompiler_static)
 
 set(opt_option -O0)
-
 if(WIN32)
   set(opt_option -/Od)
 endif()
