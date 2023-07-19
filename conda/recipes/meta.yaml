@@ -9,6 +9,10 @@ source:
 build:
   noarch: python
   script:
+    # This is a workaround for library search path issues with the current
+    # cuda-nvcc package. They should be fixed by
+    # https://github.com/conda-forge/cuda-nvcc-feedstock/pull/24, at which
+    # point we can remove this.
     - export CMAKE_PREFIX_PATH=${PREFIX}/targets/x86_64-linux/lib:$CMAKE_PREFIX_PATH
     - pip install . -vv
 
