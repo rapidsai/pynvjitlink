@@ -33,6 +33,7 @@ requirements:
   run:
     - python
     - numba >=0.57
+    - {{ pin_compatible('cuda-version', max_pin='x', min_pin='x') }}
 test:
   imports:
     - nvjitlink
@@ -43,7 +44,6 @@ test:
     - nvjitlink/tests/test_device_functions.fatbin
     - nvjitlink/tests/undefined_extern.cubin
     
-
   requires:
     - pytest
   commands: 
