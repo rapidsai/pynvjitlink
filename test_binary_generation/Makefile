@@ -1,4 +1,4 @@
-# Generates the input files used by the nvjitlink binding test suite
+# Generates the input files used by the pynvjitlink binding test suite
 
 NVCC_FLAGS := -O3 -rdc true
 CUBIN_FLAGS := -gencode arch=compute_75,code=sm_75 --cubin
@@ -9,7 +9,7 @@ OBJECT_FLAGS := -gencode arch=compute_75,code=compute_75 -dc
 LIBRARY_FLAGS := -gencode arch=compute_75,code=compute_75 -lib
 
 
-OUTPUT_DIR := ../nvjitlink/tests
+OUTPUT_DIR := ../pynvjitlink/tests
 
 all:
 	nvcc $(NVCC_FLAGS) $(CUBIN_FLAGS) -o $(OUTPUT_DIR)/undefined_extern.cubin undefined_extern.cu

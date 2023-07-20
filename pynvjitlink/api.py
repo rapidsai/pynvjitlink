@@ -1,7 +1,7 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
 
 from enum import Enum
-from nvjitlink import _nvjitlinklib
+from pynvjitlink import _nvjitlinklib
 
 import weakref
 

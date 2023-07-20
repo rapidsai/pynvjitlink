@@ -1,4 +1,4 @@
-# nvjitlink 0.0.0 (DD Mon YYYY)
+# pynvjitlink 0.0.0 (DD Mon YYYY)
 
 ## New Features
 
