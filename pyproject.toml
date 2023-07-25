@@ -11,7 +11,7 @@ requires = ["scikit-build-core"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "nvjitlink"
+name = "pynvjitlink"
 version = "0.1.0"
 description = "nvJitLink Python binding"
 readme = { file = "README.md", content-type = "text/markdown" }

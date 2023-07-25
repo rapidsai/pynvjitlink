@@ -4,7 +4,7 @@ import pytest
 import sys
 import os
 
-from nvjitlink import NvJitLinker, NvJitLinkError
+from pynvjitlink import NvJitLinker, NvJitLinkError
 
 
 @pytest.fixture

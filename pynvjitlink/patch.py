@@ -1,5 +1,5 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
-from nvjitlink.api import NvJitLinker, NvJitLinkError
+from pynvjitlink.api import NvJitLinker, NvJitLinkError
 
 import os
 import pathlib

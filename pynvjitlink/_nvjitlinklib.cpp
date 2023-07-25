@@ -323,7 +323,7 @@ static PyMethodDef ext_methods[] = {
     {nullptr}};
 
 static struct PyModuleDef moduledef = {
-    PyModuleDef_HEAD_INIT, "nvjitlink",
+    PyModuleDef_HEAD_INIT, "pynvjitlink",
     "Provides access to nvJitLink API methods", -1, ext_methods};
 
 PyMODINIT_FUNC PyInit__nvjitlinklib(void) {

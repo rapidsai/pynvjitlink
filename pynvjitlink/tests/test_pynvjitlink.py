@@ -3,8 +3,8 @@
 import os
 import pytest
 
-from nvjitlink import _nvjitlinklib
-from nvjitlink.api import InputType
+from pynvjitlink import _nvjitlinklib
+from pynvjitlink.api import InputType
 
 
 def read_test_file(filename):
