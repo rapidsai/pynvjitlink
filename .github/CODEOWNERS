@@ -6,4 +6,4 @@ pynvjitlink/            @rapidsai/pynvjitlink-write
 **/cmake/          @rapidsai/pynvjitlink-write
 
 #build/ops code owners
-.github/           @rapidsai/ops-codeowners 
+.github/           @rapidsai/ops-codeowners
