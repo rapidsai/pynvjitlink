@@ -2,9 +2,6 @@
 cmake.minimum-version = "3.26.4"
 ninja.make-fallback = true
 build-dir = "build/{wheel_tag}"
-# Workaround for
-# https://github.com/scikit-build/scikit-build-core/issues/437
-sdist.exclude = [".gitignore"]
 
 [build-system]
 requires = ["scikit-build-core"]
