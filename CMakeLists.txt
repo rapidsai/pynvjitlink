@@ -15,6 +15,6 @@ find_package(
 )
 target_link_libraries(_nvjitlinklib PRIVATE CUDA::nvJitLink_static CUDA::nvptxcompiler_static)
 
-target_compile_options(_nvjitlinklib PRIVATE -Werror -Wall ${opt_option})
+target_compile_options(_nvjitlinklib PRIVATE -Werror -Wall)
 
 install(TARGETS _nvjitlinklib LIBRARY DESTINATION pynvjitlink)
