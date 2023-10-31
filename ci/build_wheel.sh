@@ -25,4 +25,4 @@ rapids-logger "Running Tests"
 
 cd ..
 conda install -y pytest
-py.test tests
+py.test pynvjitlink/tests
