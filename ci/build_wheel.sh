@@ -3,4 +3,4 @@
 
 # install CUDAToolKit version 12.2
 apt-get update
-apt-get install nvidia-cuda-toolkit-12.2
+apt-get install cuda-toolkit-12-2
