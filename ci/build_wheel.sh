@@ -13,10 +13,16 @@ rapids-logger "Building wheel"
 
 pip wheel .
 
+rapids-logger "Installing wheel"
+
+pip install pynvjitlink-0.1.0-cp310-cp310-manylinux_2_35_x86_64.whl
+
 rapids-logger "Building tests"
 
 cd test_binary_generation && make
 
 rapids-logger "Running Tests"
 
-cd .. && pytest -v
+cd ..
+conda install -y pytest
+py.test tests
