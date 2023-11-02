@@ -1,9 +1,11 @@
 #!/bin/bash
 # Copyright (c) 2023, NVIDIA CORPORATION
 
+set -e
+
 rapids-logger "Install CUDA Toolkit"
-apt-get update
-apt-get -y install cuda-toolkit-12-3
+yum update
+yum install -y cuda-toolkit-12-3
 
 rapids-logger "Check conda environment"
 
