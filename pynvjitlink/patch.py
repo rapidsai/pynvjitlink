@@ -47,17 +47,18 @@ class PatchedLinker(Linker):
 
         sm_ver = f"{cc[0] * 10 + cc[1]}"
         arch = f"-arch=sm_{sm_ver}"
-        opts = [arch]
+        options = [arch]
         if max_registers:
-            opts.append(f"-maxrregcount={max_registers}")
+            options.append(f"-maxrregcount={max_registers}")
         if lineinfo:
-            opts.append("-lineinfo")
+            options.append("-lineinfo")
         if lto:
-            opts.append('-lto')
+            options.append('-lto')
         if additional_flags is not None:
-            opts.extend(additional_flags)
+            options.extend(additional_flags)
 
-        self._linker = NvJitLinker(*opts)
+        self._linker = NvJitLinker(*options)
+        self.options = options
 
     @property
     def info_log(self):
@@ -126,8 +127,10 @@ class PatchedLinker(Linker):
             raise LinkerError from e
 
 
-def new_patched_linker(max_registers=0, lineinfo=False, cc=None):
-    return PatchedLinker(max_registers, lineinfo, cc)
+def new_patched_linker(max_registers=0, lineinfo=False, cc=None, lto=False,
+                       additional_flags=None):
+    return PatchedLinker(max_registers=max_registers, lineinfo=lineinfo, cc=cc,
+                         lto=lto, additional_flags=additional_flags)
 
 
 def patch_numba_linker():
