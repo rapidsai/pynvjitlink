@@ -1,27 +1,27 @@
 #!/bin/bash
 # Copyright (c) 2023, NVIDIA CORPORATION
 
-# install CUDAToolKit version 12.2
+rapids-logger "Install CUDA Toolkit"
 apt-get update
-apt-get -y install cuda-toolkit-12-2
+apt-get -y install cuda-toolkit-12-3
 
 rapids-logger "Check conda environment"
 
 conda list
 
-rapids-logger "Building wheel"
+rapids-logger "Build wheel"
 
 pip wheel .
 
-rapids-logger "Installing wheel"
+rapids-logger "Install wheel"
 
 pip install pynvjitlink-0.1.0-cp310-cp310-manylinux_2_35_x86_64.whl
 
-rapids-logger "Building tests"
+rapids-logger "Build tests"
 
 cd test_binary_generation && make
 
-rapids-logger "Running Tests"
+rapids-logger "Run tests"
 
 cd ..
 conda install -y pytest

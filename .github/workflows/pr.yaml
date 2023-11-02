@@ -15,16 +15,17 @@ jobs:
     needs:
       - checks
     secrets: inherit
-    uses: rapidsai/shared-action-workflows/.github/workflows/pr-builder.yaml@branch-23.10
+    uses: rapidsai/shared-action-workflows/.github/workflows/pr-builder.yaml@branch-23.12
   checks:
     secrets: inherit
-    uses: rapidsai/shared-action-workflows/.github/workflows/checks.yaml@branch-23.10
+    uses: rapidsai/shared-action-workflows/.github/workflows/checks.yaml@branch-23.12
     with:
       enable_check_generated_files: false
   wheel-build:
     runs-on: ubuntu-latest
     container:
-      image: "rapidsai/ci-conda:latest"
+      # Use CentOS 7 for an old glibc version, so the wheel has broad manylinux compatibility.
+      image: "rapidsai/ci-conda:cuda12.0.1-centos7-py3.10"
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
