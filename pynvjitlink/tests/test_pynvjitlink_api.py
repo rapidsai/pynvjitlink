@@ -30,6 +30,7 @@ def undefined_extern_cubin():
     with open(fatbin_path, 'rb') as f:
         return f.read()
 
+
 @pytest.mark.skip
 def test_create_no_arch_error():
     # nvlink expects at least the architecture to be specified.
@@ -37,12 +38,14 @@ def test_create_no_arch_error():
                        match='NVJITLINK_ERROR_MISSING_ARCH error'):
         NvJitLinker()
 
+
 @pytest.mark.skip
 def test_invalid_arch_error():
     # sm_XX is not a valid architecture
     with pytest.raises(NvJitLinkError,
                        match='NVJITLINK_ERROR_UNRECOGNIZED_OPTION error'):
         NvJitLinker('-arch=sm_XX')
+
 
 @pytest.mark.skip
 def test_invalid_option_type_error():
@@ -60,6 +63,7 @@ def test_add_cubin(device_functions_cubin):
     nvjitlinker = NvJitLinker('-arch=sm_75')
     name = 'test_device_functions.cubin'
     nvjitlinker.add_cubin(device_functions_cubin, name)
+
 
 @pytest.mark.skip
 def test_add_incompatible_cubin_arch_error(device_functions_cubin):
@@ -81,6 +85,7 @@ def test_add_fatbin_sm70(device_functions_fatbin):
     name = 'test_device_functions.fatbin'
     nvjitlinker.add_fatbin(device_functions_fatbin, name)
 
+
 @pytest.mark.skip
 def test_add_incompatible_fatbin_arch_error(device_functions_fatbin):
     nvjitlinker = NvJitLinker('-arch=sm_80')
@@ -88,6 +93,7 @@ def test_add_incompatible_fatbin_arch_error(device_functions_fatbin):
     with pytest.raises(NvJitLinkError,
                        match='NVJITLINK_ERROR_INVALID_INPUT error'):
         nvjitlinker.add_fatbin(device_functions_fatbin, name)
+
 
 @pytest.mark.skip
 def test_add_cubin_with_fatbin_error(device_functions_fatbin):
@@ -104,6 +110,7 @@ def test_add_fatbin_with_cubin(device_functions_cubin):
     nvjitlinker = NvJitLinker('-arch=sm_75')
     name = 'test_device_functions.cubin'
     nvjitlinker.add_fatbin(device_functions_cubin, name)
+
 
 @pytest.mark.skip
 def test_duplicate_symbols_cubin_and_fatbin(device_functions_cubin,
@@ -135,6 +142,7 @@ def test_get_linked_cubin(device_functions_cubin):
 
     # Just check we got something that looks like an ELF
     assert cubin[:4] == b'\x7fELF'
+
 
 @pytest.mark.skip
 def test_get_error_log(undefined_extern_cubin):
