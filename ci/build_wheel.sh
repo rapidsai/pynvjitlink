@@ -18,4 +18,5 @@ conda list
 
 rapids-logger "Build wheel"
 
-pip wheel .
+mkdir -p ./wheel-build-${python_version}
+pip wheel . --wheel-dir=./wheel-build-${python_version}
