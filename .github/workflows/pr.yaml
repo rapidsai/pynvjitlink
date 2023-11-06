@@ -43,7 +43,7 @@ jobs:
     - name: Upload Python Wheel
       uses: actions/upload-artifact@v2
       with:
-        name: pynvjitlink-0.1.0-cp${{ matrix.python-version | replace(".", "") }}-cp${{ matrix.python-version | replace(".", "") }}-${{ runner.platform }}.whl
+        name: pynvjitlink-*.whl
         path: ./
     wheel-test:
       needs:
@@ -62,7 +62,7 @@ jobs:
       - name: Download Python Wheel
         uses: actions/download-artifact@v2
         with:
-          name: pynvjitlink-0.1.0-cp${{ matrix.python-version | replace(".", "") }}-cp${{ matrix.python-version | replace(".", "") }}-${{ runner.platform }}.whl
+          name: pynvjitlink*.whl
           path: ./
       - name: run test_wheel.sh
         run: ci/test_wheel.sh ${{ matrix.python-version }}
