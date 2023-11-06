@@ -20,8 +20,9 @@ rapids-logger "Check conda environment"
 conda list
 
 rapids-logger "Install wheel"
-
-pip install ./wheel-build-${python_version}/*.whl
+for whl in ./wheel-build-${python_version}/*.whl; do
+    pip install "$whl"
+done
 
 rapids-logger "Build Tests"
 cd test_binary_generation && make
