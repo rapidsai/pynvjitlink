@@ -45,24 +45,24 @@ jobs:
       with:
         name: pynvjitlink-*.whl
         path: ./
-    wheel-test:
-      needs:
-        - wheel-build
-      runs-on: ubuntu-latest
-      container:
-        image: "rapidsai/ci-conda:cuda12.0.1-centos7-py3.10"
-      steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Get PR Info
-        id: get-pr-info
-        uses: rapidsai/shared-actions/get-pr-info@main
-      - name: Download Python Wheel
-        uses: actions/download-artifact@v2
-        with:
-          name: pynvjitlink*.whl
-          path: ./
-      - name: run test_wheel.sh
-        run: ci/test_wheel.sh ${{ matrix.python-version }}
+  wheel-test:
+    needs:
+      - wheel-build
+    runs-on: ubuntu-latest
+    container:
+      image: "rapidsai/ci-conda:cuda12.0.1-centos7-py3.10"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Get PR Info
+      id: get-pr-info
+      uses: rapidsai/shared-actions/get-pr-info@main
+    - name: Download Python Wheel
+      uses: actions/download-artifact@v2
+      with:
+        name: pynvjitlink*.whl
+        path: ./
+    - name: run test_wheel.sh
+      run: ci/test_wheel.sh ${{ matrix.python-version }}
