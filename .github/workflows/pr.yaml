@@ -45,7 +45,7 @@ jobs:
       with:
         name: pynvjitlink-0.1.0-cp${{ matrix.python-version | replace(".", "") }}-cp${{ matrix.python-version | replace(".", "") }}-${{ runner.platform }}.whl
         path: ./
-    wheel-test
+    wheel-test:
       needs:
         - wheel-build
       runs-on: ubuntu-latest
