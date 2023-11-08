@@ -19,16 +19,8 @@ rapids-logger "Check conda environment"
 
 conda list
 
-# TODO: for debugging
-rapids-logger "Check wheel dir"
-ls .
-ls artifact
-
-
 rapids-logger "Install wheel"
-for whl in ./wheel-build-${python_version}/*.whl; do
-    pip install "$whl"
-done
+pip install  --find-links ./artifact pynvjitlink
 
 rapids-logger "Build Tests"
 cd test_binary_generation && make
