@@ -28,4 +28,4 @@ cd test_binary_generation && make
 rapids-logger "Run Tests"
 cd ..
 conda install -y pytest
-py.test tests
+py.test pynvjitlink/tests
