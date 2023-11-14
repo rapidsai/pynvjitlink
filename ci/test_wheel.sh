@@ -3,14 +3,6 @@
 
 set -e
 
-rapids-logger "Install Python"
-
-python_version="${1:-3.10}"
-conda install -y python="$python_version"
-
-rapids-logger "Check conda environment"
-
-conda list
 
 rapids-logger "Install wheel"
 pip install  --find-links ./artifact pynvjitlink
