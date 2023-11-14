@@ -8,8 +8,6 @@ rapids-logger "Install Python"
 python_version="${1:-3.10}"
 conda install -y python="$python_version"
 
-rapids-logger "Install GCC/G++"
-conda install -y gcc
 
 rapids-logger "Install CUDA Toolkit"
 yum update

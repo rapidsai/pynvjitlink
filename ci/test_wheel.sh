@@ -3,13 +3,6 @@
 
 set -e
 
-rapids-logger "Install CUDA Toolkit"
-yum update
-yum install -y epel-release
-yum install -y nvidia-driver-latest-dkms
-yum install -y cuda-toolkit-12-3
-
-
 rapids-logger "Install Python"
 
 python_version="${1:-3.10}"
