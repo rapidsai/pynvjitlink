@@ -3,12 +3,11 @@
 
 set -e
 
-rapids-logger "Search artficact directory"
+rapids-logger "Search artifact directory"
 ls ./artifact
 
-
 rapids-logger "Install wheel"
-pip install  --find-links ./artifact pynvjitlink
+pip install --find-links ./artifact pynvjitlink
 
 rapids-logger "Build Tests"
 cd test_binary_generation && make
@@ -16,4 +15,4 @@ cd test_binary_generation && make
 rapids-logger "Run Tests"
 cd ..
 pip install pytest
-py.test pynvjitlink/tests
+pytest pynvjitlink/tests

@@ -73,7 +73,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         path: ./
-    - name: run test_wheel.sh
+    - name: Run test_wheel.sh
       run: ci/test_wheel.sh 
   wheel-test-arm64:
     needs:
