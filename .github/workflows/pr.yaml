@@ -15,7 +15,8 @@ jobs:
     needs:
       - checks
       - wheel-build
-      - wheel-test
+      - wheel-test-amd64
+      - wheel-test-arm64
     secrets: inherit
     uses: rapidsai/shared-action-workflows/.github/workflows/pr-builder.yaml@branch-23.12
   checks:
