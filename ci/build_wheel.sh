@@ -18,7 +18,10 @@ yum install -y cuda-toolkit-12-3
 rapids-logger "Install GCC"
 yum install -y centos-release-scl
 yum install -y devtoolset-9
+
+set +e
 source scl_source enable devtoolset-9
+set -e
 
 rapids-logger "Check conda environment"
 conda list
