@@ -24,13 +24,16 @@ jobs:
     with:
       enable_check_generated_files: false
   wheel-build:
-    runs-on: ubuntu-latest
+    runs-on: linux-${{ matrix.arch }}-gpu-v100-latest-1
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
+        arch: ["arm64", "amd64"]
     container:
       # Use CentOS 7 for an old glibc version, so the wheel has broad manylinux compatibility.
       image: "rapidsai/ci-conda:cuda12.0.1-centos7-py3.10"
+      env:
+        NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -48,12 +51,14 @@ jobs:
   wheel-test:
     needs:
       - wheel-build
-    runs-on: linux-amd64-gpu-v100-latest-1
+    runs-on: linux-${{ matrix.arch }}-gpu-v100-latest-1
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
+        linux-version: ["centos7", "rockylinux8"]
+        arch: ["arm64", "amd64"]
     container:
-      image: "rapidsai/ci-wheel:cuda12.0.1-centos7-py${{ matrix.python-version }}"
+      image: "rapidsai/ci-wheel:cuda12.0.1-${{ matrix.linux-version }}-py${{ matrix.python-version }}"
       env:
         NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
