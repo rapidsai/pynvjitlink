@@ -1,8 +1,6 @@
 #!/bin/bash
 # Copyright (c) 2023, NVIDIA CORPORATION
 
-set -e
-
 rapids-logger "Install Python"
 
 python_version="${1:-3.10}"
@@ -19,9 +17,7 @@ rapids-logger "Install GCC"
 yum install -y centos-release-scl
 yum install -y devtoolset-9
 
-set +e
 source scl_source enable devtoolset-9
-set -e
 
 rapids-logger "Check conda environment"
 conda list
