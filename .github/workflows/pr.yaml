@@ -48,15 +48,40 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         path: ./wheel-build
-  wheel-test:
+  wheel-test-amd64:
     needs:
       - wheel-build
-    runs-on: linux-${{ matrix.arch }}-gpu-v100-latest-1
+    runs-on: linux-amd64-gpu-v100-latest-1
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
         linux-version: ["centos7", "rockylinux8"]
-        arch: ["arm64", "amd64"]
+    container:
+      image: "rapidsai/ci-wheel:cuda12.0.1-${{ matrix.linux-version }}-py${{ matrix.python-version }}"
+      env:
+        NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Get PR Info
+      id: get-pr-info
+      uses: rapidsai/shared-actions/get-pr-info@main
+    - name: Download Python Wheel
+      uses: actions/download-artifact@v2
+      with:
+        path: ./
+    - name: run test_wheel.sh
+      run: ci/test_wheel.sh 
+  wheel-test-arm64:
+    needs:
+      - wheel-build
+    runs-on: linux-arm64-gpu-a100-latest-1
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+        linux-version: ["centos7", "rockylinux8"]
     container:
       image: "rapidsai/ci-wheel:cuda12.0.1-${{ matrix.linux-version }}-py${{ matrix.python-version }}"
       env:

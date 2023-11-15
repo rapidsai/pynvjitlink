@@ -3,6 +3,9 @@
 
 set -e
 
+rapids-logger "Search artficact directory"
+ls ./artifact
+
 
 rapids-logger "Install wheel"
 pip install  --find-links ./artifact pynvjitlink
