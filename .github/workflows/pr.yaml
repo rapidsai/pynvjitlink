@@ -24,7 +24,7 @@ jobs:
     with:
       enable_check_generated_files: false
   wheel-build:
-    runs-on: linux-${{ matrix.arch }}-${{ inputs.node_type }}"
+    runs-on: linux-${{ matrix.arch }}-cpu4
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
