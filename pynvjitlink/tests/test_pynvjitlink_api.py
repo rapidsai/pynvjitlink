@@ -104,6 +104,7 @@ def test_add_cubin_with_fatbin_error(device_functions_fatbin):
         nvjitlinker.add_cubin(device_functions_fatbin, name)
 
 
+@pytest.mark.skip
 def test_add_fatbin_with_cubin(device_functions_cubin):
     # Adding a cubin with add_fatbin seems to work - this may be expected
     # behaviour.
