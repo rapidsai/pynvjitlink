@@ -31,7 +31,7 @@ jobs:
         arch: ["arm64", "amd64"]
     container:
       # Use CentOS 7 for an old glibc version, so the wheel has broad manylinux compatibility.
-      image: "rapidsai/ci-wheel:cuda12.0.1-centos7-py${{ matrix.python-version }}"
+      image: "rapidsai/ci-wheel:cuda12.0.1-rockylinux8-py${{ matrix.python-version }}"
       env:
         NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
