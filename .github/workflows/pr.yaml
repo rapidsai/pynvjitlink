@@ -58,7 +58,7 @@ jobs:
         python-version: ["3.9", "3.10"]
         linux-version: ["centos7", "rockylinux8"]
     container:
-      image: "rapidsai/ci-wheel:cuda12.0.1-${{ matrix.linux-version }}-py${{ matrix.python-version }}"
+      image: "rapidsai/citestwheel:cuda12.0.1-ubuntu20.04-py${{ matrix.python-version }}"
       env:
         NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
@@ -84,7 +84,7 @@ jobs:
         python-version: ["3.9", "3.10"]
         linux-version: ["centos7", "rockylinux8"]
     container:
-      image: "rapidsai/ci-wheel:cuda12.0.1-${{ matrix.linux-version }}-py${{ matrix.python-version }}"
+      image: "rapidsai/citestwheel:cuda12.0.1-ubuntu20.04-py${{ matrix.python-version }}"
       env:
         NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
