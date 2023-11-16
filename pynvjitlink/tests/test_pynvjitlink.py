@@ -192,7 +192,7 @@ def test_get_linked_ptx_from_lto(device_functions_ltoir):
     handle = _nvjitlinklib.create('-arch=sm_75', '-lto', '-ptx')
     _nvjitlinklib.add_data(handle, input_type, data, filename)
     _nvjitlinklib.complete(handle)
-    ptx = _nvjitlinklib.get_linked_ptx(handle)  # noqa: F841
+    _nvjitlinklib.get_linked_ptx(handle)
     _nvjitlinklib.destroy(handle)
 
 
