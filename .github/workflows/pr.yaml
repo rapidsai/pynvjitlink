@@ -14,7 +14,8 @@ jobs:
   pr-builder:
     needs:
       - checks
-      - wheel-build
+      - wheel-build-amd64
+      - wheel-build-arm64
       - wheel-test-amd64
       - wheel-test-arm64
     secrets: inherit
@@ -24,17 +25,34 @@ jobs:
     uses: rapidsai/shared-action-workflows/.github/workflows/checks.yaml@branch-23.12
     with:
       enable_check_generated_files: false
-  wheel-build:
-    runs-on: linux-${{ matrix.arch }}-cpu4
+  wheel-build-amd64:
+    runs-on: linux-amd64-cpu4
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
-        arch: ["arm64", "amd64"]
     container:
-      # Use CentOS 7 for an old glibc version, so the wheel has broad manylinux compatibility.
+      image: "rapidsai/ci-wheel:cuda12.0.1-centos7-py${{ matrix.python-version }}"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Get PR Info
+      id: get-pr-info
+      uses: rapidsai/shared-actions/get-pr-info@main
+    - name: Run build_wheel.sh
+      run: ci/build_wheel.sh
+    - name: Upload Python Wheel
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./wheel-build
+  wheel-build-arm64:
+    runs-on: linux-arm64-cpu4
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+    container:
       image: "rapidsai/ci-wheel:cuda12.0.1-rockylinux8-py${{ matrix.python-version }}"
-      env:
-        NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -51,14 +69,14 @@ jobs:
         path: ./wheel-build
   wheel-test-amd64:
     needs:
-      - wheel-build
+      - wheel-build-amd64
     runs-on: linux-amd64-gpu-v100-latest-1
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
-        linux-version: ["centos7", "rockylinux8"]
+        linux-version: ["ubuntu20.04", "ubuntu18.04"]
     container:
-      image: "rapidsai/citestwheel:cuda12.0.1-ubuntu20.04-py${{ matrix.python-version }}"
+      image: "rapidsai/citestwheel:cuda12.0.1-${{ matrix.linux-version }}-py${{ matrix.python-version }}"
       env:
         NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
@@ -77,14 +95,14 @@ jobs:
       run: ci/test_wheel.sh 
   wheel-test-arm64:
     needs:
-      - wheel-build
+      - wheel-build-arm64
     runs-on: linux-arm64-gpu-a100-latest-1
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
-        linux-version: ["centos7", "rockylinux8"]
+        linux-version: ["ubuntu20.04", "ubuntu18.04"]
     container:
-      image: "rapidsai/citestwheel:cuda12.0.1-ubuntu20.04-py${{ matrix.python-version }}"
+      image: "rapidsai/citestwheel:cuda12.0.1-${{ matrix.linux-version }}-py${{ matrix.python-version }}"
       env:
         NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
