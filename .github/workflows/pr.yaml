@@ -100,9 +100,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
-        linux-version: ["ubuntu20.04", "ubuntu18.04"]
     container:
-      image: "rapidsai/citestwheel:cuda12.0.1-${{ matrix.linux-version }}-py${{ matrix.python-version }}"
+      image: "rapidsai/citestwheel:cuda12.0.1-ubuntu20.04-py${{ matrix.python-version }}"
       env:
         NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
