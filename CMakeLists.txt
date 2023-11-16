@@ -17,6 +17,6 @@ target_link_libraries(_nvjitlinklib PRIVATE CUDA::nvJitLink_static CUDA::nvptxco
 
 target_compile_options(_nvjitlinklib PRIVATE -Werror -Wall)
 
-target_compile_features(_nvjitlinklib PRIVATE cxx_std_11
+target_compile_features(_nvjitlinklib PRIVATE cxx_std_11)
 
 install(TARGETS _nvjitlinklib LIBRARY DESTINATION pynvjitlink)
