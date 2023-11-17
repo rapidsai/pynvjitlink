@@ -106,7 +106,6 @@ def test_add_fatbin_with_cubin_error(device_functions_cubin):
         nvjitlinker.add_fatbin(device_functions_cubin, name)
 
 
-
 def test_duplicate_symbols_cubin_and_fatbin(device_functions_cubin,
                                             device_functions_fatbin):
     # This link errors because the cubin and the fatbin contain the same

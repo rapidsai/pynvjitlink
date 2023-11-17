@@ -115,7 +115,8 @@ def test_get_error_log(undefined_extern_cubin):
         _nvjitlinklib.complete(handle)
     error_log = _nvjitlinklib.get_error_log(handle)
     _nvjitlinklib.destroy(handle)
-    assert "Undefined reference to '_Z5undefff' in 'undefined_extern.cubin'" in error_log
+    assert "Undefined reference to '_Z5undefff' in \
+            'undefined_extern.cubin'" in error_log
 
 
 def test_get_info_log(device_functions_cubin):
