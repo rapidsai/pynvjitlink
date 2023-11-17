@@ -48,6 +48,7 @@ def device_functions_ptx():
 def undefined_extern_cubin():
     return read_test_file('undefined_extern.cubin')
 
+
 @pytest.mark.skip
 def test_create_no_arch_error():
     # nvjitlink expects at least the architecture to be specified.
@@ -63,11 +64,13 @@ def test_invalid_arch_error():
                        match='NVJITLINK_ERROR_UNRECOGNIZED_OPTION error'):
         _nvjitlinklib.create('-arch=sm_XX')
 
+
 @pytest.mark.skip
 def test_unrecognized_option_error():
     with pytest.raises(RuntimeError,
                        match='NVJITLINK_ERROR_UNRECOGNIZED_OPTION error'):
         _nvjitlinklib.create('-fictitious_option')
+
 
 @pytest.mark.skip
 def test_invalid_option_type_error():
@@ -107,6 +110,7 @@ def test_add_file(input_file, input_type, request):
     handle = _nvjitlinklib.create('-arch=sm_75')
     _nvjitlinklib.add_data(handle, input_type.value, data, filename)
     _nvjitlinklib.destroy(handle)
+
 
 @pytest.mark.skip
 def test_get_error_log(undefined_extern_cubin):
@@ -188,7 +192,7 @@ def test_get_linked_ptx_from_lto(device_functions_ltoir):
     handle = _nvjitlinklib.create('-arch=sm_75', '-lto', '-ptx')
     _nvjitlinklib.add_data(handle, input_type, data, filename)
     _nvjitlinklib.complete(handle)
-    ptx = _nvjitlinklib.get_linked_ptx(handle)
+    _nvjitlinklib.get_linked_ptx(handle)
     _nvjitlinklib.destroy(handle)
 
 
