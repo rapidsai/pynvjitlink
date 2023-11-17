@@ -49,7 +49,6 @@ def undefined_extern_cubin():
     return read_test_file('undefined_extern.cubin')
 
 
-@pytest.mark.skip
 def test_create_no_arch_error():
     # nvjitlink expects at least the architecture to be specified.
     with pytest.raises(RuntimeError,
@@ -57,7 +56,6 @@ def test_create_no_arch_error():
         _nvjitlinklib.create()
 
 
-@pytest.mark.skip('Causes fatal error and exit(1)')
 def test_invalid_arch_error():
     # sm_XX is not a valid architecture
     with pytest.raises(RuntimeError,
@@ -65,14 +63,12 @@ def test_invalid_arch_error():
         _nvjitlinklib.create('-arch=sm_XX')
 
 
-@pytest.mark.skip
 def test_unrecognized_option_error():
     with pytest.raises(RuntimeError,
                        match='NVJITLINK_ERROR_UNRECOGNIZED_OPTION error'):
         _nvjitlinklib.create('-fictitious_option')
 
 
-@pytest.mark.skip
 def test_invalid_option_type_error():
     with pytest.raises(TypeError,
                        match='Expecting only strings'):
@@ -100,9 +96,7 @@ def test_complete_empty():
                  marks=pytest.mark.xfail),
     ('device_functions_ptx', InputType.PTX),
     ('device_functions_object', InputType.OBJECT),
-    # XXX: Archive type needs debugging - results in a segfault.
-    pytest.param('device_functions_archive', InputType.LIBRARY,
-                 marks=pytest.mark.skip),
+    ('device_functions_archive', InputType.LIBRARY),
 ])
 def test_add_file(input_file, input_type, request):
     filename, data = request.getfixturevalue(input_file)
@@ -112,7 +106,6 @@ def test_add_file(input_file, input_type, request):
     _nvjitlinklib.destroy(handle)
 
 
-@pytest.mark.skip
 def test_get_error_log(undefined_extern_cubin):
     handle = _nvjitlinklib.create('-arch=sm_75')
     filename, data = undefined_extern_cubin
@@ -122,11 +115,7 @@ def test_get_error_log(undefined_extern_cubin):
         _nvjitlinklib.complete(handle)
     error_log = _nvjitlinklib.get_error_log(handle)
     _nvjitlinklib.destroy(handle)
-    # XXX: The error message in the log is strange. The actual expected error
-    # message appears on the terminal:
-    #     error   : Undefined reference to '_Z5undefff' in
-    #               'undefined_extern.cubin'
-    assert "ERROR 9: finish" in error_log
+    assert "Undefined reference to '_Z5undefff' in 'undefined_extern.cubin'" in error_log
 
 
 def test_get_info_log(device_functions_cubin):
