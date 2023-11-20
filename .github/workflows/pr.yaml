@@ -43,7 +43,7 @@ jobs:
     - name: Run build_wheel.sh
       run: ci/build_wheel.sh
     - name: Upload Python Wheel
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./wheel-build
   wheel-build-arm64:
@@ -64,7 +64,7 @@ jobs:
     - name: Run build_wheel.sh
       run: ci/build_wheel.sh
     - name: Upload Python Wheel
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./wheel-build
   wheel-test-amd64:
@@ -88,7 +88,7 @@ jobs:
       id: get-pr-info
       uses: rapidsai/shared-actions/get-pr-info@main
     - name: Download Python Wheel
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         path: ./
     - name: Run test_wheel.sh
@@ -113,7 +113,7 @@ jobs:
       id: get-pr-info
       uses: rapidsai/shared-actions/get-pr-info@main
     - name: Download Python Wheel
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         path: ./
     - name: run test_wheel.sh
