@@ -30,21 +30,21 @@ def undefined_extern_cubin():
     with open(fatbin_path, 'rb') as f:
         return f.read()
 
-@pytest.mark.skip
+
 def test_create_no_arch_error():
     # nvlink expects at least the architecture to be specified.
     with pytest.raises(NvJitLinkError,
                        match='NVJITLINK_ERROR_MISSING_ARCH error'):
         NvJitLinker()
 
-@pytest.mark.skip
+
 def test_invalid_arch_error():
     # sm_XX is not a valid architecture
     with pytest.raises(NvJitLinkError,
                        match='NVJITLINK_ERROR_UNRECOGNIZED_OPTION error'):
         NvJitLinker('-arch=sm_XX')
 
-@pytest.mark.skip
+
 def test_invalid_option_type_error():
     with pytest.raises(TypeError,
                        match='Expecting only strings'):
@@ -61,7 +61,7 @@ def test_add_cubin(device_functions_cubin):
     name = 'test_device_functions.cubin'
     nvjitlinker.add_cubin(device_functions_cubin, name)
 
-@pytest.mark.skip
+
 def test_add_incompatible_cubin_arch_error(device_functions_cubin):
     nvjitlinker = NvJitLinker('-arch=sm_70')
     name = 'test_device_functions.cubin'
@@ -81,7 +81,7 @@ def test_add_fatbin_sm70(device_functions_fatbin):
     name = 'test_device_functions.fatbin'
     nvjitlinker.add_fatbin(device_functions_fatbin, name)
 
-@pytest.mark.skip
+
 def test_add_incompatible_fatbin_arch_error(device_functions_fatbin):
     nvjitlinker = NvJitLinker('-arch=sm_80')
     name = 'test_device_functions.fatbin'
@@ -89,7 +89,7 @@ def test_add_incompatible_fatbin_arch_error(device_functions_fatbin):
                        match='NVJITLINK_ERROR_INVALID_INPUT error'):
         nvjitlinker.add_fatbin(device_functions_fatbin, name)
 
-@pytest.mark.skip
+
 def test_add_cubin_with_fatbin_error(device_functions_fatbin):
     nvjitlinker = NvJitLinker('-arch=sm_75')
     name = 'test_device_functions.fatbin'
@@ -98,14 +98,14 @@ def test_add_cubin_with_fatbin_error(device_functions_fatbin):
         nvjitlinker.add_cubin(device_functions_fatbin, name)
 
 
-def test_add_fatbin_with_cubin(device_functions_cubin):
-    # Adding a cubin with add_fatbin seems to work - this may be expected
-    # behaviour.
+def test_add_fatbin_with_cubin_error(device_functions_cubin):
     nvjitlinker = NvJitLinker('-arch=sm_75')
     name = 'test_device_functions.cubin'
-    nvjitlinker.add_fatbin(device_functions_cubin, name)
+    with pytest.raises(NvJitLinkError,
+                       match='NVJITLINK_ERROR_INVALID_INPUT error'):
+        nvjitlinker.add_fatbin(device_functions_cubin, name)
 
-@pytest.mark.skip
+
 def test_duplicate_symbols_cubin_and_fatbin(device_functions_cubin,
                                             device_functions_fatbin):
     # This link errors because the cubin and the fatbin contain the same
@@ -136,7 +136,7 @@ def test_get_linked_cubin(device_functions_cubin):
     # Just check we got something that looks like an ELF
     assert cubin[:4] == b'\x7fELF'
 
-@pytest.mark.skip
+
 def test_get_error_log(undefined_extern_cubin):
     nvjitlinker = NvJitLinker('-arch=sm_75')
     name = 'undefined_extern.cubin'
