@@ -1,0 +1,120 @@
+# Copyright (c) 2023, NVIDIA CORPORATION.
+name: release
+
+on:
+  create:
+    tags:
+      - '*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr-builder:
+    needs:
+      - checks
+      - wheel-build-amd64
+      - wheel-build-arm64
+      - wheel-test-amd64
+      - wheel-test-arm64
+    secrets: inherit
+    uses: rapidsai/shared-action-workflows/.github/workflows/pr-builder.yaml@branch-23.12
+  checks:
+    secrets: inherit
+    uses: rapidsai/shared-action-workflows/.github/workflows/checks.yaml@branch-23.12
+    with:
+      enable_check_generated_files: false
+  wheel-build-amd64:
+    runs-on: linux-amd64-cpu4
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+    container:
+      image: "rapidsai/ci-wheel:cuda12.0.1-centos7-py${{ matrix.python-version }}"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Get PR Info
+      id: get-pr-info
+      uses: rapidsai/shared-actions/get-pr-info@main
+    - name: Run build_wheel.sh
+      run: ci/build_wheel.sh
+    - name: Upload Python Wheel
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./wheel-build
+  wheel-build-arm64:
+    runs-on: linux-arm64-cpu4
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+    container:
+      image: "rapidsai/ci-wheel:cuda12.0.1-rockylinux8-py${{ matrix.python-version }}"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Get PR Info
+      id: get-pr-info
+      uses: rapidsai/shared-actions/get-pr-info@main
+    - name: Run build_wheel.sh
+      run: ci/build_wheel.sh
+    - name: Upload Python Wheel
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./wheel-build
+  wheel-test-amd64:
+    needs:
+      - wheel-build-amd64
+    runs-on: linux-amd64-gpu-v100-latest-1
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+        linux-version: ["ubuntu20.04", "ubuntu18.04"]
+    container:
+      image: "rapidsai/citestwheel:cuda12.0.1-${{ matrix.linux-version }}-py${{ matrix.python-version }}"
+      env:
+        NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Get PR Info
+      id: get-pr-info
+      uses: rapidsai/shared-actions/get-pr-info@main
+    - name: Download Python Wheel
+      uses: actions/download-artifact@v2
+      with:
+        path: ./
+    - name: Run test_wheel.sh
+      run: ci/test_wheel.sh 
+  wheel-test-arm64:
+    needs:
+      - wheel-build-arm64
+    runs-on: linux-arm64-gpu-a100-latest-1
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+    container:
+      image: "rapidsai/citestwheel:cuda12.0.1-ubuntu20.04-py${{ matrix.python-version }}"
+      env:
+        NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Get PR Info
+      id: get-pr-info
+      uses: rapidsai/shared-actions/get-pr-info@main
+    - name: Download Python Wheel
+      uses: actions/download-artifact@v2
+      with:
+        path: ./
+    - name: run test_wheel.sh
+      run: ci/test_wheel.sh 
