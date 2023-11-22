@@ -1,13 +1,15 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
-name: release
+name: Build and test
 
 on:
-  create:
+  push:
+    branches:
+      - "pull-request/[0-9]+"
     tags:
-      - '*'
+      - 'v*'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -92,7 +94,7 @@ jobs:
       with:
         path: ./
     - name: Run test_wheel.sh
-      run: ci/test_wheel.sh 
+      run: ci/test_wheel.sh
   wheel-test-arm64:
     needs:
       - wheel-build-arm64
@@ -117,4 +119,17 @@ jobs:
       with:
         path: ./
     - name: run test_wheel.sh
-      run: ci/test_wheel.sh 
+      run: ci/test_wheel.sh
+  wheel-publish-pynvjitlink:
+    needs:
+      - pr-builder
+    # Only trigger this step for tags
+    if: startsWith(github.event_name, 'push') && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    secrets: inherit
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-23.12
+    with:
+      build_type: ${{ inputs.build_type || 'branch' }}
+      branch: ${{ inputs.branch }}
+      sha: ${{ inputs.sha }}
+      date: ${{ inputs.date }}
+      package-name: pynvjitlink
