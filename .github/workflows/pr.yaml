@@ -92,7 +92,7 @@ jobs:
       with:
         path: ./
     - name: Run test_wheel.sh
-      run: ci/test_wheel.sh 
+      run: ci/test_wheel.sh
   wheel-test-arm64:
     needs:
       - wheel-build-arm64
@@ -117,4 +117,4 @@ jobs:
       with:
         path: ./
     - name: run test_wheel.sh
-      run: ci/test_wheel.sh 
+      run: ci/test_wheel.sh
