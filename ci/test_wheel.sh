@@ -7,7 +7,7 @@ rapids-logger "Search artifact directory"
 ls ./artifact
 
 rapids-logger "Install wheel"
-pip install --find-links ./artifact pynvjitlink
+pip install --find-links ./artifact pynvjitlink-cu12
 
 rapids-logger "Build Tests"
 cd test_binary_generation && make
