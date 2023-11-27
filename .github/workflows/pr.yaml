@@ -20,7 +20,6 @@ jobs:
       - wheel-build-arm64
       - wheel-test-amd64
       - wheel-test-arm64
-      - wheel-publish-pynvjitlink
     secrets: inherit
     uses: rapidsai/shared-action-workflows/.github/workflows/pr-builder.yaml@branch-23.12
   checks:
@@ -28,6 +27,7 @@ jobs:
     uses: rapidsai/shared-action-workflows/.github/workflows/checks.yaml@branch-23.12
     with:
       enable_check_generated_files: false
+      enable_check_pr_job_dependencies: false
   wheel-build-amd64:
     runs-on: linux-amd64-cpu4
     strategy:
