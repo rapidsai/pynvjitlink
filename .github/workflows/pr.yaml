@@ -126,7 +126,7 @@ jobs:
       - wheel-test-amd64
       - wheel-test-arm64
     # Only trigger this step for tags
-    if: startsWith(github.event_name, 'push') && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     secrets: inherit
     uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-23.12
     with:
