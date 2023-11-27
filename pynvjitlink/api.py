@@ -43,7 +43,7 @@ class NvJitLinker:
 
     def add_data(self, input_type, data, name):
         if self._complete:
-            raise NvJitLinkError('Cannot add data to already-completeted link')
+            raise NvJitLinkError("Cannot add data to already-completeted link")
 
         try:
             _nvjitlinklib.add_data(self.handle, input_type.value, data, name)
@@ -53,23 +53,23 @@ class NvJitLinker:
             raise NvJitLinkError(f"{e}\n{self.error_log}")
 
     def add_cubin(self, cubin, name=None):
-        name = name or 'unnamed-cubin'
+        name = name or "unnamed-cubin"
         self.add_data(InputType.CUBIN, cubin, name)
 
     def add_ptx(self, ptx, name=None):
-        name = name or 'unnamed-ptx'
+        name = name or "unnamed-ptx"
         self.add_data(InputType.PTX, ptx, name)
 
     def add_ltoir(self, ltoir, name=None):
-        name = name or 'unnamed-ltoir'
+        name = name or "unnamed-ltoir"
         self.add_data(InputType.LTOIR, ltoir, name)
 
     def add_object(self, object_, name=None):
-        name = name or 'unnamed-object'
+        name = name or "unnamed-object"
         self.add_data(InputType.OBJECT, object_, name)
 
     def add_fatbin(self, fatbin, name=None):
-        name = name or 'unnamed-fatbin'
+        name = name or "unnamed-fatbin"
         self.add_data(InputType.FATBIN, fatbin, name)
 
     def add_library(self, library, name=None):

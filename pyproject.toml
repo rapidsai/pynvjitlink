@@ -18,3 +18,9 @@ authors = [
 ]
 license = { text = "Apache 2.0" }
 requires-python = ">=3.9"
+
+[tool.setuptools]
+license-files = ["LICENSE"]
+
+[tool.setuptools.dynamic]
+version = {file = "pynvjitlink/VERSION"}
