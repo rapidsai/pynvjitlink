@@ -3,13 +3,14 @@ cmake.minimum-version = "3.26.4"
 cmake.verbose = true
 ninja.make-fallback = true
 build-dir = "build/{wheel_tag}"
+wheel.packages = ["pynvjitlink"]
 
 [build-system]
 requires = ["scikit-build-core"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "pynvjitlink"
+name = "pynvjitlink-cu12"
 version = "0.1.0"
 description = "nvJitLink Python binding"
 readme = { file = "README.md", content-type = "text/markdown" }
