@@ -20,7 +20,6 @@ jobs:
       - wheel-build-arm64
       - wheel-test-amd64
       - wheel-test-arm64
-      - wheel-publish-pynvjitlink
     secrets: inherit
     uses: rapidsai/shared-action-workflows/.github/workflows/pr-builder.yaml@branch-23.12
   checks:
@@ -123,7 +122,8 @@ jobs:
       run: ci/test_wheel.sh
   wheel-publish-pynvjitlink:
     needs:
-      - pr-builder
+      - wheel-test-amd64
+      - wheel-test-arm64
     # Only trigger this step for tags
     if: startsWith(github.event_name, 'push') && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     secrets: inherit
