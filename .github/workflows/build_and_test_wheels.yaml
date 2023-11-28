@@ -32,6 +32,11 @@ jobs:
         sha: ${{ inputs.sha }}
     - name: Run build_wheel.sh
       run: ci/build_wheel.sh
+      with:
+        build_type: ${{ inputs.build_type || 'branch' }}
+        branch: ${{ inputs.branch }}
+        sha: ${{ inputs.sha }}
+        date: ${{ inputs.date }}
   wheel-build-arm64:
     runs-on: linux-arm64-cpu4
     strategy:
@@ -53,6 +58,12 @@ jobs:
         sha: ${{ inputs.sha }}
     - name: Run build_wheel.sh
       run: ci/build_wheel.sh
+      with:
+        build_type: ${{ inputs.build_type || 'branch' }}
+        branch: ${{ inputs.branch }}
+        sha: ${{ inputs.sha }}
+        date: ${{ inputs.date }}
+      package-name: pynvjitlink-cu12
   wheel-test-amd64:
     needs:
       - wheel-build-amd64
