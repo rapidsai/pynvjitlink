@@ -1,13 +1,13 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
-name: Build and test
+name: Release
 
 on:
   push:
-    branches:
-      - "pull-request/[0-9]+"
+    tags:
+      - 'v*'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  group: ${{ github.workflow }}-${{ github.ref }}-release
   cancel-in-progress: true
 
 jobs:
@@ -22,6 +22,16 @@ jobs:
     uses: rapidsai/shared-workflows/.github/workflows/checks.yaml@branch-24.02
     with:
       enable_check_generated_files: false
-      enable_check_pr_job_dependencies: false
   build-and-test-wheels:
     uses: ./.github/workflows/build_and_test_wheels.yaml
+  wheel-publish-pynvjitlink:
+    needs:
+      - build-and-test-wheels
+    secrets: inherit
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-24.02
+    with:
+      build_type: ${{ inputs.build_type || 'branch' }}
+      branch: ${{ inputs.branch }}
+      sha: ${{ inputs.sha }}
+      date: ${{ inputs.date }}
+      package-name: pynvjitlink-cu12
