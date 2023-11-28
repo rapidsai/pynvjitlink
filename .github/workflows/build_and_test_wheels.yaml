@@ -19,11 +19,6 @@ jobs:
     container:
       image: "rapidsai/ci-wheel:cuda12.0.1-centos7-py${{ matrix.python-version }}"
     steps:
-    - uses: aws-actions/configure-aws-credentials@v3
-      with:
-        role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-        aws-region: ${{ vars.AWS_REGION }}
-        role-duration-seconds: 43200 # 12h
     - name: Checkout code
       uses: actions/checkout@v3
       with:
@@ -45,11 +40,6 @@ jobs:
     container:
       image: "rapidsai/ci-wheel:cuda12.0.1-rockylinux8-py${{ matrix.python-version }}"
     steps:
-    - uses: aws-actions/configure-aws-credentials@v3
-      with:
-        role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-        aws-region: ${{ vars.AWS_REGION }}
-        role-duration-seconds: 43200 # 12h
     - name: Checkout code
       uses: actions/checkout@v3
       with:
