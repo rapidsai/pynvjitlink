@@ -19,6 +19,13 @@ jobs:
     container:
       image: "rapidsai/ci-wheel:cuda12.0.1-centos7-py${{ matrix.python-version }}"
     steps:
+    - name: Standardize repository information
+      uses: rapidsai/shared-actions/rapids-github-info@main
+      with:
+        repo: ${{ inputs.repo }}
+        branch: ${{ inputs.branch }}
+        date: ${{ inputs.date }}
+        sha: ${{ inputs.sha }}
     - name: Checkout code
       uses: actions/checkout@v3
       with:
@@ -33,6 +40,13 @@ jobs:
     container:
       image: "rapidsai/ci-wheel:cuda12.0.1-rockylinux8-py${{ matrix.python-version }}"
     steps:
+    - name: Standardize repository information
+      uses: rapidsai/shared-actions/rapids-github-info@main
+      with:
+        repo: ${{ inputs.repo }}
+        branch: ${{ inputs.branch }}
+        date: ${{ inputs.date }}
+        sha: ${{ inputs.sha }}
     - name: Checkout code
       uses: actions/checkout@v3
       with:
