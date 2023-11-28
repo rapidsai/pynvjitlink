@@ -1,5 +1,5 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
-name: Build and test
+name: Release
 
 on:
   push:
@@ -28,7 +28,6 @@ jobs:
   wheel-publish-pynvjitlink:
     needs:
       - build-and-test-wheels
-    # Only trigger this step for tags
     secrets: inherit
     uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-23.12
     with:
