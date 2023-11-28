@@ -1,4 +1,7 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
+on:
+  workflow_call:
+
 jobs:
   build-and-test-wheels:
     needs:
