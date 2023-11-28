@@ -13,15 +13,9 @@ concurrency:
 jobs:
   pr-builder:
     needs:
-      - checks
       - build-and-test-wheels
     secrets: inherit
     uses: rapidsai/shared-workflows/.github/workflows/pr-builder.yaml@branch-24.02
-  checks:
-    secrets: inherit
-    uses: rapidsai/shared-workflows/.github/workflows/checks.yaml@branch-24.02
-    with:
-      enable_check_generated_files: false
   build-and-test-wheels:
     uses: ./.github/workflows/build_and_test_wheels.yaml
   wheel-publish-pynvjitlink:
