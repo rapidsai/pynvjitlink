@@ -17,4 +17,4 @@ mkdir -p ./wheel-build
 pip wheel . --wheel-dir=./wheel-build -vvv
 
 rapids-logger "Upload Wheel"
-RAPIDS_BUILD_TYPE="nightly" RAPIDS_REPOSITORY=rapidsai/pynvjitlink rapids-upload-to-s3 pynvjitlink-cu12 ./wheel-build/
+RAPIDS_BUILD_TYPE="branch" RAPIDS_REPOSITORY=rapidsai/pynvjitlink rapids-upload-to-s3 pynvjitlink-cu12 ./wheel-build/
