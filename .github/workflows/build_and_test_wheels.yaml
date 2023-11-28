@@ -2,6 +2,9 @@
 on:
   workflow_call:
 
+permissions:
+  id-token: write
+
 jobs:
   build-and-test-wheels:
     needs:
@@ -24,7 +27,6 @@ jobs:
         role-to-assume: ${{ vars.AWS_ROLE_ARN }}
         aws-region: ${{ vars.AWS_REGION }}
         role-duration-seconds: 43200 # 12h
-        id-token: write
     - name: Checkout code
       uses: actions/checkout@v3
       with:
@@ -51,7 +53,6 @@ jobs:
         role-to-assume: ${{ vars.AWS_ROLE_ARN }}
         aws-region: ${{ vars.AWS_REGION }}
         role-duration-seconds: 43200 # 12h
-        id-token: write
     - name: Checkout code
       uses: actions/checkout@v3
       with:
