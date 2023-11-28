@@ -24,7 +24,7 @@ jobs:
       enable_check_generated_files: false
       enable_check_pr_job_dependencies: false
   build-and-test-wheels:
-    uses: ./build_and_test_wheels.yaml
+    uses: ./.github/workflows/build_and_test_wheels.yaml
   wheel-publish-pynvjitlink:
     needs:
       - build-and-test-wheels
