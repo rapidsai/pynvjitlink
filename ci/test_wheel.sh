@@ -4,7 +4,7 @@
 set -e
 
 rapids-logger "Download Wheel"
-RAPIDS_BUILD_TYPE="branch" rapids-download-from-s3 pynvjitlink-cu12 ./wheel-build/
+RAPIDS_BUILD_TYPE="branch" rapids-download-from-s3 pynvjitlink ./wheel-build/
 
 rapids-logger "Install wheel"
 pip install --find-links ./wheel-build/ pynvjitlink-cu12
