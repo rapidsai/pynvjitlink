@@ -24,4 +24,4 @@ jobs:
       enable_check_generated_files: false
       enable_check_pr_job_dependencies: false
   build-and-test-wheels:
-    uses: ./.github/workflows/build_and_test_wheels.yaml
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.02
