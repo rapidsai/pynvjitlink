@@ -79,10 +79,22 @@ jobs:
       env:
         NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
+    - uses: aws-actions/configure-aws-credentials@v3
+      with:
+        role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+        aws-region: ${{ vars.AWS_REGION }}
+        role-duration-seconds: 43200 # 12h
     - name: Checkout code
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    - name: Standardize repository information
+      uses: rapidsai/shared-actions/rapids-github-info@main
+      with:
+        repo: ${{ inputs.repo }}
+        branch: ${{ inputs.branch }}
+        date: ${{ inputs.date }}
+        sha: ${{ inputs.sha }}
     - name: Run test_wheel.sh
       run: ci/test_wheel.sh
   wheel-test-arm64:
@@ -97,9 +109,21 @@ jobs:
       env:
         NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
     steps:
+    - uses: aws-actions/configure-aws-credentials@v3
+      with:
+        role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+        aws-region: ${{ vars.AWS_REGION }}
+        role-duration-seconds: 43200 # 12h
     - name: Checkout code
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    - name: Standardize repository information
+      uses: rapidsai/shared-actions/rapids-github-info@main
+      with:
+        repo: ${{ inputs.repo }}
+        branch: ${{ inputs.branch }}
+        date: ${{ inputs.date }}
+        sha: ${{ inputs.sha }}
     - name: Run test_wheel.sh
       run: ci/test_wheel.sh
