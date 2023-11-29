@@ -24,13 +24,13 @@ jobs:
     with:
       enable_check_generated_files: false
       enable_check_pr_job_dependencies: false
-  compute-matrix:
+  compute-matrix-build:
     runs-on: ubuntu-latest
     outputs:
-      MATRIX: ${{ steps.compute-matrix.outputs.MATRIX }}
+      MATRIX: ${{ steps.compute-matrix-build.outputs.MATRIX }}
     steps:
       - name: Compute Build Matrix
-        id: compute-matrix
+        id: compute-matrix-build
         run: |
           set -eo pipefail
 
@@ -45,19 +45,41 @@ jobs:
             yq -n -o json 'env(MATRIX)' | \
             jq -c '.' \
           )" | tee --append "${GITHUB_OUTPUT}"
+  compute-matrix-test:
+    runs-on: ubuntu-latest
+    outputs:
+      MATRIX: ${{ steps.compute-matrix-test.outputs.MATRIX }}
+    steps:
+      - name: Compute Build Matrix
+        id: compute-matrix-test
+        run: |
+          set -eo pipefail
+
+          export MATRIX="
+          - { CUDA_VER: '12.0.1', ARCH: 'amd64', PY_VER: '3.9', LINUX_VER: 'ubuntu18.04' }
+          - { CUDA_VER: '12.0.1', ARCH: 'amd64', PY_VER: '3.10', LINUX_VER: 'ubuntu18.04' }
+          - { CUDA_VER: '12.0.1', ARCH: 'arm64', PY_VER: '3.9', LINUX_VER: 'ubuntu20.04' }
+          - { CUDA_VER: '12.0.1', ARCH: 'arm64', PY_VER: '3.10', LINUX_VER: 'ubuntu20.04' }
+          "
+
+          echo "MATRIX=$(
+            yq -n -o json 'env(MATRIX)' | \
+            jq -c '.' \
+          )" | tee --append "${GITHUB_OUTPUT}"
   build-wheels:
     needs:
-      - compute-matrix
+      - compute-matrix-build
     uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.02
     with:
       build_type: pull-request
       script: "ci/build_wheel.sh"
-      matrix_filter: ${{ needs.compute-matrix.outputs.MATRIX }}
+      matrix_filter: ${{ needs.compute-matrix-build.outputs.MATRIX }}
   test-wheels:
     needs:
       - build-wheels
+      - compute-matrix-test
     uses: rapidsai/shared-workflows/.github/workflows/wheels-test.yaml@branch-24.02
     with:
       build_type: pull-request
       script: "ci/test_wheel.sh"
-      matrix_filter: ${{ needs.build-wheels.outputs.MATRIX }}
+      matrix_filter: ${{ needs.compute-matrix-test.outputs.MATRIX }}
