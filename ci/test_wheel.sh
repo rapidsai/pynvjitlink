@@ -3,11 +3,11 @@
 
 set -e
 
-rapids-logger "Search artifact directory"
-ls ./artifact
+rapids-logger "Download Wheel"
+RAPIDS_BUILD_TYPE="branch" rapids-download-from-s3 pynvjitlink-cu12 ./wheel-build/
 
 rapids-logger "Install wheel"
-pip install --find-links ./artifact pynvjitlink-cu12
+pip install --find-links ./wheel-build/ pynvjitlink-cu12
 
 rapids-logger "Build Tests"
 cd test_binary_generation && make
