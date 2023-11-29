@@ -25,3 +25,6 @@ jobs:
       enable_check_pr_job_dependencies: false
   build-and-test-wheels:
     uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.02
+    with:
+      build_type: pull-request
+      script: "ci/build_wheel.sh"
