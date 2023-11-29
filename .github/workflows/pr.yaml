@@ -51,4 +51,4 @@ jobs:
     with:
       build_type: pull-request
       script: "ci/build_wheel.sh"
-      matrix_filter: needs.compute-matrix.outputs.MATRIX
+      matrix_filter: ${{ needs.compute-matrix.outputs.MATRIX }}
