@@ -14,7 +14,7 @@ jobs:
   pr-builder:
     needs:
       - checks
-      - build-and-test-wheels
+      - build-wheels
     secrets: inherit
     uses: rapidsai/shared-workflows/.github/workflows/pr-builder.yaml@branch-24.02
   checks:
