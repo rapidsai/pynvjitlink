@@ -16,7 +16,8 @@ mkdir -p ./wheel-build
 pip wheel . --wheel-dir=./wheel-build -vvv
 
 WHEEL_PATH=$(find "./wheel-build" -type f -name "*.whl")
-echo "WHEEL_PATH=${WHEEL_PATH}"
+WHEEL_NAME=$(basename ${WHEEL_PATH})
+
 
 rapids-logger "Upload Wheel"
-RAPIDS_BUILD_TYPE="branch" rapids-upload-to-s3 pynvjitlink-cu12 ${WHEEL_PATH}
+RAPIDS_BUILD_TYPE="branch" rapids-upload-to-s3 ${WHEEL_NAME} ${WHEEL_PATH}
