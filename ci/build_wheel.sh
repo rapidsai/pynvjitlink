@@ -14,7 +14,10 @@ conda list
 rapids-logger "Build wheel"
 export SCCACHE_S3_NO_CREDENTIALS=1
 mkdir -p ./wheel-build
-pip wheel . --wheel-dir=./wheel-build -vvv
+pip wheel . --wheel-dir=./wheel-build -vv
+
+WHEEL_NAME=$(find "./wheel-build" -type f -name "*.whl")
+echo "WHEEL_NAME=${WHEEL_NAME}"
 
 rapids-logger "Upload Wheel"
-RAPIDS_BUILD_TYPE="branch" rapids-upload-to-s3 pynvjitlink-cu12 ./wheel-build/*.whl
+RAPIDS_BUILD_TYPE="branch" rapids-upload-to-s3 pynvjitlink-cu12 ./wheel-build/${WHEEL_NAME}
