@@ -27,47 +27,9 @@ jobs:
       enable_check_generated_files: false
       enable_check_pr_job_dependencies: false
   compute-matrix-build:
-    runs-on: ubuntu-latest
-    outputs:
-      MATRIX: ${{ steps.compute-matrix-build.outputs.MATRIX }}
-    steps:
-      - name: Compute Build Matrix
-        id: compute-matrix-build
-        run: |
-          set -eo pipefail
-
-          export MATRIX="
-          - { CUDA_VER: '12.0.1', ARCH: 'amd64', PY_VER: '3.9', LINUX_VER: 'centos7' }
-          - { CUDA_VER: '12.0.1', ARCH: 'amd64', PY_VER: '3.10', LINUX_VER: 'centos7' }
-          - { CUDA_VER: '12.0.1', ARCH: 'arm64', PY_VER: '3.9', LINUX_VER: 'rockylinux8' }
-          - { CUDA_VER: '12.0.1', ARCH: 'arm64', PY_VER: '3.10', LINUX_VER: 'rockylinux8' }
-          "
-
-          echo "MATRIX=$(
-            yq -n -o json 'env(MATRIX)' | \
-            jq -c '.' \
-          )" | tee --append "${GITHUB_OUTPUT}"
+    uses: ./.github/workflows/build_matrix.yml
   compute-matrix-test:
-    runs-on: ubuntu-latest
-    outputs:
-      MATRIX: ${{ steps.compute-matrix-test.outputs.MATRIX }}
-    steps:
-      - name: Compute Build Matrix
-        id: compute-matrix-test
-        run: |
-          set -eo pipefail
-
-          export MATRIX="
-          - { CUDA_VER: '12.0.1', ARCH: 'amd64', PY_VER: '3.9', LINUX_VER: 'ubuntu18.04', gpu: 'v100', driver: 'latest' }
-          - { CUDA_VER: '12.0.1', ARCH: 'amd64', PY_VER: '3.10', LINUX_VER: 'ubuntu18.04', gpu: 'v100', driver: 'latest' }
-          - { CUDA_VER: '12.0.1', ARCH: 'arm64', PY_VER: '3.9', LINUX_VER: 'ubuntu20.04', gpu: 'a100', driver: 'latest' }
-          - { CUDA_VER: '12.0.1', ARCH: 'arm64', PY_VER: '3.10', LINUX_VER: 'ubuntu20.04', gpu: 'a100', driver: 'latest' }
-          "
-
-          echo "MATRIX=$(
-            yq -n -o json 'env(MATRIX)' | \
-            jq -c '.' \
-          )" | tee --append "${GITHUB_OUTPUT}"
+    uses: ./.github/workflows/test_matrix.yml
   build-wheels:
     needs:
       - compute-matrix-build
