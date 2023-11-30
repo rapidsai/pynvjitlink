@@ -14,7 +14,7 @@ jobs:
   compute-matrix:
     runs-on: ubuntu-latest
     outputs:
-      MATRIX: ${{ steps.compute-matrix.outputs.MATRIX }}
+      BUILD_MATRIX: ${{ steps.compute-matrix.outputs.BUILD_MATRIX }}
     steps:
       - uses: actions/checkout@v4
       - name: Compute Build Matrix
@@ -27,13 +27,4 @@ jobs:
     with:
       build_type: pull-request
       script: "ci/build_wheel.sh"
-      matrix_filter: ${{ needs.compute-matrix.outputs.MATRIX }}
-  test-wheels:
-    needs:
-      - build-wheels
-      - compute-matrix
-    uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.02
-    with:
-      build_type: pull-request
-      script: "ci/test_wheel.sh"
-      matrix_filter: ${{ needs.compute-matrix.outputs.MATRIX }}
+      matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
