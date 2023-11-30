@@ -1,5 +1,5 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
-name: Build and test
+name: pr
 
 on:
   push:

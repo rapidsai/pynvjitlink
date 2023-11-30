@@ -1,5 +1,5 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
-name: Release
+name: build
 
 on:
   push:
