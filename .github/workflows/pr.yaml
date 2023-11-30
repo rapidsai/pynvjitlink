@@ -1,5 +1,5 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
-name: Build and test
+name: pr
 
 on:
   push:
@@ -14,7 +14,9 @@ jobs:
   pr-builder:
     needs:
       - checks
-      - build-and-test-wheels
+      - compute-matrix
+      - build-wheels
+      - test-wheels
     secrets: inherit
     uses: rapidsai/shared-workflows/.github/workflows/pr-builder.yaml@branch-24.02
   checks:
@@ -22,6 +24,30 @@ jobs:
     uses: rapidsai/shared-workflows/.github/workflows/checks.yaml@branch-24.02
     with:
       enable_check_generated_files: false
-      enable_check_pr_job_dependencies: false
-  build-and-test-wheels:
-    uses: ./.github/workflows/build_and_test_wheels.yaml
+  compute-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      BUILD_MATRIX: ${{ steps.compute-matrix.outputs.BUILD_MATRIX }}
+      TEST_MATRIX: ${{ steps.compute-matrix.outputs.TEST_MATRIX }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compute Build Matrix
+        id: compute-matrix
+        uses: ./.github/actions/compute-matrix
+  build-wheels:
+    needs:
+      - compute-matrix
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.02
+    with:
+      build_type: pull-request
+      script: "ci/build_wheel.sh"
+      matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
+  test-wheels:
+    needs:
+      - build-wheels
+      - compute-matrix
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-test.yaml@branch-24.02
+    with:
+      build_type: pull-request
+      script: "ci/test_wheel.sh"
+      matrix_filter: ${{ needs.compute-matrix.outputs.TEST_MATRIX }}

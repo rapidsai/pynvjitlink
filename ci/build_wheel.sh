@@ -12,6 +12,8 @@ rapids-logger "Check conda environment"
 conda list
 
 rapids-logger "Build wheel"
-export SCCACHE_S3_NO_CREDENTIALS=1
 mkdir -p ./wheel-build
 pip wheel . --wheel-dir=./wheel-build -vvv
+
+rapids-logger "Upload Wheel"
+rapids-upload-wheels-to-s3 ./wheel-build
