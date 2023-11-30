@@ -25,6 +25,6 @@ jobs:
       - compute-matrix
     uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.02
     with:
-      build_type: pull-request
+      build_type: branch
       script: "ci/build_wheel.sh"
       matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
