@@ -16,4 +16,4 @@ mkdir -p ./wheel-build
 pip wheel . --wheel-dir=./wheel-build -vvv
 
 rapids-logger "Upload Wheel"
-rapids-upload-wheels-to-s3 ./wheel-build
+RAPIDS_PY_WHEEL_NAME="pynvjitlink-cu12" rapids-upload-wheels-to-s3 ./wheel-build
