@@ -40,4 +40,4 @@ jobs:
       branch: ${{ inputs.branch }}
       sha: ${{ inputs.sha }}
       date: ${{ inputs.date }}
-      package-name: pynvjitlink-cu12
+      package-name: pynvjitlink
