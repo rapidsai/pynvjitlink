@@ -52,11 +52,3 @@ jobs:
       build_type: pull-request
       script: "ci/test_wheel.sh"
       matrix_filter: ${{ needs.compute-matrix.outputs.TEST_MATRIX }}
-  publish-wheels:
-    needs:
-      - build-wheels
-    secrets: inherit
-    uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-24.02
-    with:
-      build_type: pull-request
-      package-name: pynvjitlink
