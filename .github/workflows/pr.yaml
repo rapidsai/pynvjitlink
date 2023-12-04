@@ -59,4 +59,4 @@ jobs:
     uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-24.02
     with:
       build_type: pull-request
-      package-name: pynvjitlink-cu12
+      package-name: pynvjitlink
