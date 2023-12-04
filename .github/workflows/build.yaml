@@ -3,6 +3,8 @@ name: build
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -28,3 +30,14 @@ jobs:
       build_type: branch
       script: "ci/build_wheel.sh"
       matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
+  publish-wheels:
+    needs:
+      - build-wheels
+    secrets: inherit
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-24.02
+    with:
+      build_type: ${{ inputs.build_type || 'branch' }}
+      branch: ${{ inputs.branch }}
+      sha: ${{ inputs.sha }}
+      date: ${{ inputs.date }}
+      package-name: pynvjitlink-cu12
