@@ -4,7 +4,7 @@
 # Installs the latest CUDA Toolkit.
 # Supports CentOS 7 and Rocky Linux 8.
 
-yum update
+yum update -y
 yum install -y epel-release
 
 OS_ID=$(. /etc/os-release; echo $ID)

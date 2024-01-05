@@ -1,12 +1,10 @@
 #!/bin/bash
-# Copyright (c) 2023, NVIDIA CORPORATION
+# Copyright (c) 2023-2024, NVIDIA CORPORATION
 
+set -euo pipefail
 
 rapids-logger "Install CUDA Toolkit"
 source "$(dirname "$0")/install_latest_cuda_toolkit.sh"
-
-rapids-logger "Check conda environment"
-conda list
 
 rapids-logger "Build wheel"
 mkdir -p ./wheel-build
