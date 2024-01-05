@@ -18,6 +18,8 @@ build:
   noarch: python
   script:
     - {{ PYTHON }} -m pip install . -vv
+  script_env:
+    - CMAKE_ARGS="--debug-find"
 
 requirements:
   build:
