@@ -10,16 +10,17 @@ work-in-progress.
 TODO
 
 ## Install pynvjitlink
+
 Install with either:
 
-```
-python setup.py develop
+```shell
+python -m pip install -e .
 ```
 
 or
 
-```
-python setup.py install
+```shell
+python -m pip install .
 ```
 
 ### Conda
