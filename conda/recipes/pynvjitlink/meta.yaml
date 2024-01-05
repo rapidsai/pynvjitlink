@@ -5,7 +5,7 @@
 {% set cuda_major = cuda_version.split('.')[0] %}
 {% set date_string = environ['RAPIDS_DATE_STRING'] %}
 
-{% set data = load_file_data("../../../pyproject.toml", from_recipe_dir=True) %}
+{% set data = load_file_data("pyproject.toml") %}
 
 package:
   name: pynvjitlink
@@ -23,8 +23,6 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - {{ compiler('cuda') }}
-    - cuda-version ={{ cuda_version }}
     - cmake >=3.26.4
     - ninja
     - sysroot_{{ target_platform }} 2.17
@@ -33,7 +31,7 @@ requirements:
     # sooner than conda sources.
     #- libnvjitlink-dev
     #- libnvjitlink-static
-    - cuda-version ={{ cuda_version }}
+    #- cuda-version ={{ cuda_version }}
     - python
     - pip
     - scikit-build-core
@@ -54,6 +52,8 @@ test:
     - pynvjitlink/tests/test_device_functions.fatbin
     - pynvjitlink/tests/undefined_extern.cubin
   requires:
+    - {{ compiler('cuda') }}
+    - cuda-version ={{ cuda_version }}
     - pytest
   commands:
     - pytest -v
