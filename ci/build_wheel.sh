@@ -3,10 +3,7 @@
 
 
 rapids-logger "Install CUDA Toolkit"
-yum update
-yum install -y epel-release
-yum install -y nvidia-driver-latest-dkms
-yum install -y cuda-toolkit-12-3
+source "$(dirname "$0")/install_latest_cuda_toolkit.sh"
 
 rapids-logger "Check conda environment"
 conda list
