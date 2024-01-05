@@ -1,7 +1,7 @@
 #!/bin/bash
 # Copyright (c) 2023, NVIDIA CORPORATION
 
-set -e
+set -euo pipefail
 
 rapids-logger "Download Wheel"
 RAPIDS_PY_WHEEL_NAME="pynvjitlink-cu12" rapids-download-wheels-from-s3 ./wheel-build/
