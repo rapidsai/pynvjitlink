@@ -13,7 +13,7 @@ RAPIDS_PY_CUDA_SUFFIX="$(rapids-wheel-ctk-name-gen ${RAPIDS_CUDA_VERSION})"
 PACKAGE_CUDA_SUFFIX="-${RAPIDS_PY_CUDA_SUFFIX}"
 
 # Patch project metadata files to include the CUDA version suffix.
-sed -i "s/^name = \"${package_name}\"/name = \"${package_name}${PACKAGE_CUDA_SUFFIX}\"/g" pyproject.toml
+sed -i "s/^name = \"pynvjitlink\"/name = \"pynvjitlink${PACKAGE_CUDA_SUFFIX}\"/g" pyproject.toml
 
 rapids-logger "Build wheel"
 mkdir -p ./dist
