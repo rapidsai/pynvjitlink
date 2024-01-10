@@ -12,6 +12,8 @@ source:
 build:
   script:
     - {{ PYTHON }} -m pip install . -vv
+  ignore_run_exports_from:
+    - libnvjitlink-dev
 
 requirements:
   build:
