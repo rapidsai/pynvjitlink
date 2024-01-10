@@ -9,9 +9,6 @@ export CMAKE_GENERATOR=Ninja
 
 rapids-print-env
 
-rapids-logger "Install CUDA Toolkit"
-source "$(dirname "$0")/install_latest_cuda_toolkit.sh"
-
 rapids-logger "Begin py build"
 
 rapids-conda-retry mambabuild conda/recipes/pynvjitlink

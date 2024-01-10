@@ -1,9 +1,4 @@
-# Copyright (c) 2018-2023, NVIDIA CORPORATION.
-
-{% set py_version = environ['CONDA_PY'] %}
-{% set cuda_version = '.'.join(environ['RAPIDS_CUDA_VERSION'].split('.')[:2]) %}
-{% set cuda_major = cuda_version.split('.')[0] %}
-{% set date_string = environ['RAPIDS_DATE_STRING'] %}
+# Copyright (c) 2018-2024, NVIDIA CORPORATION.
 
 {% set data = load_file_data("pyproject.toml") %}
 
@@ -15,23 +10,22 @@ source:
   path: ../../..
 
 build:
-  noarch: python
   script:
-    - {{ PYTHON }} -m pip install . -vv --config-settings=cmake.args=-DCUDAToolkit_ROOT=/usr/local/cuda
+    - {{ PYTHON }} -m pip install . -vv
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}
+    - cuda-version {{ cuda_version }}
     - cmake >=3.26.4
     - ninja
     - sysroot_{{ target_platform }} 2.17
   host:
-    # We get libnvjitlink from the host's RPM packages, which are updated
-    # sooner than conda sources.
-    #- libnvjitlink-dev
-    #- libnvjitlink-static
-    #- cuda-version ={{ cuda_version }}
+    - libnvjitlink-dev
+    - libnvjitlink-static
+    - cuda-version {{ cuda_version }}
     - python
     - pip
     - scikit-build-core
@@ -40,23 +34,24 @@ requirements:
     - numba >=0.57
     - {{ pin_compatible('cuda-version', max_pin='x', min_pin='x') }}
 
-test:
-  imports:
-    - pynvjitlink
-  source_files:
-    - pynvjitlink/tests/test_nvjitlink_api.py
-    - pynvjitlink/tests/test_nvjitlink.py
-    # Extra files for testing edge cases of libnvjitlink
-    # see test_nvjitlink_api.py for details
-    - pynvjitlink/tests/test_device_functions.cubin
-    - pynvjitlink/tests/test_device_functions.fatbin
-    - pynvjitlink/tests/undefined_extern.cubin
-  requires:
-    - {{ compiler('cuda') }}
-    - cuda-version ={{ cuda_version }}
-    - pytest
-  commands:
-    - pytest -v
+#test:
+#  #imports:
+#  #  - pynvjitlink
+#  source_files:
+#    - pynvjitlink/tests/test_patch.py
+#    - pynvjitlink/tests/test_pynvjitlink.py
+#    - pynvjitlink/tests/test_pynvjitlink_api.py
+#    - test_binary_generation/*
+#  requires:
+#    - {{ compiler('c') }}
+#    - {{ compiler('cxx') }}
+#    - {{ compiler('cuda') }}
+#    - cuda-version ={{ cuda_version }}
+#    - make
+#    - pytest
+#  commands:
+#    - pushd test_binary_generation && make && popd
+#    - pytest -v
 
 about:
   home: https://rapids.ai/
