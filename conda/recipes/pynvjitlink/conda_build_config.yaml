@@ -7,5 +7,5 @@ cxx_compiler_version:
 cuda_compiler:
   - cuda-nvcc
 
-cuda_version:
-  - "=12.2"
+cuda_compiler_version:
+  - 12
