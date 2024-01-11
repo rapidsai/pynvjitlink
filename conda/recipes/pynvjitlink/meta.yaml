@@ -2,6 +2,9 @@
 
 {% set data = load_file_data("pyproject.toml") %}
 
+{% set cuda_major = cuda_compiler_version.split(".")[0]|int %}
+{% set cuda_minor = cuda_compiler_version.split(".")[1]|int %}
+
 package:
   name: pynvjitlink
   version: {{ data.get("project", {}).get("version", "") }}
@@ -34,7 +37,7 @@ requirements:
   run:
     - python
     - numba >=0.57
-    - {{ pin_compatible('cuda-version', max_pin='x', min_pin='x') }}
+    - {{ pin_compatible('cuda-version', min_pin='x', upper_bound=(cuda_major ~ "." ~ (cuda_minor + 1))) }}
 
 about:
   home: https://rapids.ai/
