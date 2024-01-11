@@ -30,8 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       BUILD_MATRIX: ${{ steps.compute-matrix.outputs.BUILD_MATRIX }}
-      TEST_MATRIX_WHEELS: ${{ steps.compute-matrix.outputs.TEST_MATRIX_WHEELS }}
-      TEST_MATRIX_CONDA: ${{ steps.compute-matrix.outputs.TEST_MATRIX_CONDA }}
+      TEST_MATRIX: ${{ steps.compute-matrix.outputs.TEST_MATRIX }}
     steps:
       - uses: actions/checkout@v4
       - name: Compute Build Matrix
@@ -53,7 +52,7 @@ jobs:
     with:
       build_type: pull-request
       test_script: "ci/test_conda.sh"
-      matrix_filter: ${{ needs.compute-matrix.outputs.TEST_MATRIX_CONDA }}
+      matrix_filter: ${{ needs.compute-matrix.outputs.TEST_MATRIX }}
   build-wheels:
     needs:
       - compute-matrix
@@ -70,4 +69,4 @@ jobs:
     with:
       build_type: pull-request
       script: "ci/test_wheel.sh"
-      matrix_filter: ${{ needs.compute-matrix.outputs.TEST_MATRIX_WHEELS }}
+      matrix_filter: ${{ needs.compute-matrix.outputs.TEST_MATRIX }}
