@@ -1,11 +1,10 @@
 c_compiler_version:
-  - 11 
+  - 11
 
-cxx_compiler_version: 
-  - 11 
- 
+cxx_compiler_version:
+  - 11
 cuda_compiler: 
   - cuda-nvcc
 
-cuda_version: 
+cuda_version:
   - 12.0

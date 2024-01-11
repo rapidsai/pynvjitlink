@@ -50,7 +50,7 @@ test:
     - nvjitlink/tests/undefined_extern.cubin
   requires:
     - pytest
-  commands: 
+  commands:
     - pytest -v
 
 about:
