@@ -17,7 +17,7 @@ sed -i "s/^name = \"pynvjitlink\"/name = \"pynvjitlink${PACKAGE_CUDA_SUFFIX}\"/g
 
 rapids-logger "Build wheel"
 mkdir -p ./dist
-python -m pip wheel . --wheel-dir=./dist -vvv --disable-pip-version-check
+python -m pip wheel . --wheel-dir=./dist -vvv --disable-pip-version-check --no-deps
 
 rapids-logger "Upload Wheel"
 RAPIDS_PY_WHEEL_NAME="pynvjitlink_${RAPIDS_PY_CUDA_SUFFIX}" rapids-upload-wheels-to-s3 ./dist
