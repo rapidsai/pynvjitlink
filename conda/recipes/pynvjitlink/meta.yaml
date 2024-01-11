@@ -28,7 +28,6 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}
-    - cuda-version {{ cuda_compiler_version }}
     - cmake >=3.26.4
     - ninja
     - sysroot_{{ target_platform }} 2.17
