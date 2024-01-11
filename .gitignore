@@ -3,3 +3,7 @@ build
 *.so
 *.egg-info
 .*.swp
+
+# compiled test files
+pynvjitlink/tests/test_device_functions.*
+pynvjitlink/tests/undefined_extern.cubin

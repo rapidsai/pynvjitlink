@@ -1,0 +1,41 @@
+# Copyright (c) 2023, NVIDIA CORPORATION.
+name: build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-release
+  cancel-in-progress: true
+
+jobs:
+  compute-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      BUILD_MATRIX: ${{ steps.compute-matrix.outputs.BUILD_MATRIX }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compute Build Matrix
+        id: compute-matrix
+        uses: ./.github/actions/compute-matrix
+  build-wheels:
+    needs:
+      - compute-matrix
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.02
+    with:
+      build_type: branch
+      script: "ci/build_wheel.sh"
+      matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
+  publish-wheels:
+    needs:
+      - build-wheels
+    secrets: inherit
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-24.02
+    with:
+      build_type: ${{ inputs.build_type || 'branch' }}
+      branch: ${{ inputs.branch }}
+      sha: ${{ inputs.sha }}
+      date: ${{ inputs.date }}
+      package-name: pynvjitlink

@@ -1,6 +1,6 @@
 <!--
 
-Thank you for contributing to nvjitlink :)
+Thank you for contributing to pynvjitlink :)
 
 Here are some guidelines to help the review process go smoothly.
 
