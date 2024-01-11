@@ -2,7 +2,7 @@
 
 {% set data = load_file_data("pyproject.toml") %}
 
-{% if cuda_compiler_version is defined %}
+{% if cuda_compiler_version %}
 {% set cuda_major = cuda_compiler_version.split(".")[0]|int %}
 {% set cuda_minor = cuda_compiler_version.split(".")[1]|int %}
 {% else %}
