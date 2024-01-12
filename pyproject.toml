@@ -10,7 +10,7 @@ requires = ["scikit-build-core"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "pynvjitlink-cu12"
+name = "pynvjitlink"
 version = "0.1.6"
 description = "nvJitLink Python binding"
 readme = { file = "README.md", content-type = "text/markdown" }
@@ -19,6 +19,12 @@ authors = [
 ]
 license = { text = "Apache 2.0" }
 requires-python = ">=3.9"
+
+[project.urls]
+Homepage = "https://rapids.ai/"
+Documentation = "https://github.com/rapidsai/pynvjitlink/blob/main/README.md"
+Repository = "https://github.com/rapidsai/pynvjitlink"
+License = "https://github.com/rapidsai/pynvjitlink/blob/main/LICENSE"
 
 [tool.setuptools]
 license-files = ["LICENSE"]

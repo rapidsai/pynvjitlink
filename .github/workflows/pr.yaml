@@ -15,6 +15,8 @@ jobs:
     needs:
       - checks
       - compute-matrix
+      - build-conda
+      - test-conda
       - build-wheels
       - test-wheels
     secrets: inherit
@@ -34,6 +36,23 @@ jobs:
       - name: Compute Build Matrix
         id: compute-matrix
         uses: ./.github/actions/compute-matrix
+  build-conda:
+    needs:
+      - compute-matrix
+    uses: rapidsai/shared-workflows/.github/workflows/conda-python-build.yaml@branch-24.02
+    with:
+      build_type: pull-request
+      build_script: "ci/build_conda.sh"
+      matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
+  test-conda:
+    needs:
+      - build-conda
+      - compute-matrix
+    uses: rapidsai/shared-workflows/.github/workflows/conda-python-tests.yaml@branch-24.02
+    with:
+      build_type: pull-request
+      test_script: "ci/test_conda.sh"
+      matrix_filter: ${{ needs.compute-matrix.outputs.TEST_MATRIX }}
   build-wheels:
     needs:
       - compute-matrix
