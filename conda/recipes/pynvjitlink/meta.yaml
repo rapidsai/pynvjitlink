@@ -1,0 +1,56 @@
+# Copyright (c) 2018-2024, NVIDIA CORPORATION.
+
+{% set data = load_file_data("pyproject.toml") %}
+{% set project_data = data.get("project") %}
+{% set project_urls = project_data["urls"] %}
+
+{% if cuda_compiler_version %}
+{% set cuda_major = cuda_compiler_version.split(".")[0]|int %}
+{% set cuda_minor = cuda_compiler_version.split(".")[1]|int %}
+{% else %}
+{% set cuda_major = 0 %}
+{% set cuda_minor = 0 %}
+{% endif %}
+
+package:
+  name: pynvjitlink
+  version: {{ project_data["version"] }}
+
+source:
+  path: ../../..
+
+build:
+  script:
+    - {{ PYTHON }} -m pip install . -vv
+  ignore_run_exports_from:
+    - libnvjitlink-dev
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}
+    - cmake >=3.26.4
+    - ninja
+    - sysroot_{{ target_platform }} 2.17
+  host:
+    - libnvjitlink-dev
+    - libnvjitlink-static
+    - cuda-version {{ cuda_compiler_version }}
+    - python
+    - pip
+    - scikit-build-core
+  run:
+    - python
+    - numba >=0.57
+    - {{ pin_compatible('cuda-version', min_pin='x', upper_bound=(cuda_major ~ "." ~ (cuda_minor + 1))) }}
+
+about:
+  home: {{ project_urls["Homepage"] }}
+  dev_url: {{ project_urls["Repository"] }}
+  doc_url: {{ project_urls["Documentation"] }}
+  license: {{ project_data["license"]["text"] }}
+  license_family: Apache
+  license_file: LICENSE
+  license_url: {{ project_urls["License"] }}
+  summary: nvJitLink Python binding

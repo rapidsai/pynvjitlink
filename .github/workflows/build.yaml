@@ -28,6 +28,14 @@ jobs:
       build_type: branch
       script: "ci/build_wheel.sh"
       matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
+  build-conda:
+    needs:
+      - compute-matrix
+    uses: rapidsai/shared-workflows/.github/workflows/conda-python-build.yaml@branch-24.02
+    with:
+      build_type: pull-request
+      build_script: "ci/build_conda.sh"
+      matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
   publish-wheels:
     needs:
       - build-wheels
@@ -39,3 +47,13 @@ jobs:
       sha: ${{ inputs.sha }}
       date: ${{ inputs.date }}
       package-name: pynvjitlink
+  publish-conda:
+    needs:
+     - build-conda
+    secrets: inherit
+    uses: rapidsai/shared-workflows/.github/workflows/conda-upload-packages.yaml@branch-24.02
+    with:
+      build_type: ${{ inputs.build_type || 'branch' }}
+      branch: ${{ inputs.branch }}
+      date: ${{ inputs.date }}
+      sha: ${{ inputs.sha }}
