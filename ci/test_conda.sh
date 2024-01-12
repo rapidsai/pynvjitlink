@@ -12,7 +12,7 @@ rapids-mamba-retry create -n test \
     cxx-compiler \
     cuda-nvcc \
     cuda-version=${RAPIDS_CUDA_VERSION%.*} \
-    "numba>=0.57" \
+    "numba>=0.58" \
     make \
     pytest \
     python=${RAPIDS_PY_VERSION}
