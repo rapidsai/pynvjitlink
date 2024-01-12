@@ -30,8 +30,12 @@ except ImportError as ie:
 if _numba_version_ok:
     from numba.core import config
     from numba.cuda.cudadrv import nvrtc
-    from numba.cuda.cudadrv.driver import (driver, FILE_EXTENSION_MAP, Linker,
-                                           LinkerError)
+    from numba.cuda.cudadrv.driver import (
+        driver,
+        FILE_EXTENSION_MAP,
+        Linker,
+        LinkerError,
+    )
 else:
     # Prevent the definition of PatchedLinker failing if we have no Numba
     # Linker - it won't be used anyway.
