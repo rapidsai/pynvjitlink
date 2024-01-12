@@ -1,6 +1,8 @@
 # Copyright (c) 2018-2024, NVIDIA CORPORATION.
 
 {% set data = load_file_data("pyproject.toml") %}
+{% set project_data = data.get("project") %}
+{% set project_urls = project_data["urls"] %}
 
 {% if cuda_compiler_version %}
 {% set cuda_major = cuda_compiler_version.split(".")[0]|int %}
@@ -12,7 +14,7 @@
 
 package:
   name: pynvjitlink
-  version: {{ data.get("project", {}).get("version", "") }}
+  version: {{ project_data["version"] }}
 
 source:
   path: ../../..
@@ -44,11 +46,15 @@ requirements:
     - {{ pin_compatible('cuda-version', min_pin='x', upper_bound=(cuda_major ~ "." ~ (cuda_minor + 1))) }}
 
 about:
-  home: https://rapids.ai/
-  dev_url: https://github.com/rapidsai/pynvjitlink
-  doc_url: https://github.com/rapidsai/pynvjitlink/blob/main/README.md
-  license: Apache-2.0
+  home: {{ project_urls["Homepage"] }}
+  dev_url: {{ project_urls["Repository"] }}
+  doc_url: {{ project_urls["Documentation"] }}
+  license: {{ project_data["license"]["text"] }}
   license_family: Apache
   license_file: LICENSE
-  license_url: https://github.com/rapidsai/pynvjitlink/blob/main/LICENSE
+  license_url: {{ project_urls["License"] }}
   summary: nvJitLink Python binding
+
+extra:
+  name:
+    - {{ project_data["name"] }}
