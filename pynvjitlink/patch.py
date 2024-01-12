@@ -7,7 +7,7 @@ import pathlib
 _numba_version_ok = False
 _numba_error = None
 
-required_numba_ver = (0, 57)
+required_numba_ver = (0, 58)
 
 mvc_docs_url = (
     "https://numba.readthedocs.io/en/stable/cuda/" "minor_version_compatibility.html"
@@ -29,12 +29,9 @@ except ImportError as ie:
 
 if _numba_version_ok:
     from numba.core import config
-    from numba.cuda.cudadrv.driver import FILE_EXTENSION_MAP, Linker, LinkerError
-
-    if ver < (0, 58):
-        from numba.cuda.cudadrv.driver import NvrtcProgram
-    else:
-        from numba.cuda.cudadrv.nvrtc import NvrtcProgram
+    from numba.cuda.cudadrv import nvrtc
+    from numba.cuda.cudadrv.driver import (driver, FILE_EXTENSION_MAP, Linker,
+                                           LinkerError)
 else:
     # Prevent the definition of PatchedLinker failing if we have no Numba
     # Linker - it won't be used anyway.
@@ -117,16 +114,20 @@ class PatchedLinker(Linker):
             raise LinkerError from e
 
     def add_cu(self, cu, name):
-        program = NvrtcProgram(cu, name)
+        with driver.get_active_context() as ac:
+            dev = driver.get_device(ac.devnum)
+            cc = dev.compute_capability
+
+        ptx, log = nvrtc.compile(cu, name, cc)
 
         if config.DUMP_ASSEMBLY:
             print(("ASSEMBLY %s" % name).center(80, "-"))
-            print(program.ptx.decode())
+            print(ptx)
             print("=" * 80)
 
         # Link the program's PTX using the normal linker mechanism
         ptx_name = os.path.splitext(name)[0] + ".ptx"
-        self.add_ptx(program.ptx.rstrip(b"\x00"), ptx_name)
+        self.add_ptx(ptx.encode(), ptx_name)
 
     def complete(self):
         try:
