@@ -4,17 +4,6 @@
 {% set project_data = data.get("project") %}
 {% set project_urls = project_data["urls"] %}
 
-{% if cuda_compiler_version %}
-{% set cuda_major = cuda_compiler_version.split(".")[0]|int %}
-{% set cuda_minor = cuda_compiler_version.split(".")[1]|int %}
-{% else %}
-{% set cuda_major = 0 %}
-{% set cuda_minor = 0 %}
-{% endif %}
-
-{% set cuda_min = cuda_major ~ ".0" %}
-{% set cuda_max = cuda_major ~ "." ~ (cuda_minor + 1) %}
-
 package:
   name: pynvjitlink
   version: {{ project_data["version"] }}
