@@ -12,6 +12,9 @@
 {% set cuda_minor = 0 %}
 {% endif %}
 
+{% set cuda_min = cuda_major ~ ".0" %}
+{% set cuda_max = cuda_major ~ "." ~ (cuda_minor + 1) %}
+
 package:
   name: pynvjitlink
   version: {{ project_data["version"] }}
@@ -44,7 +47,7 @@ requirements:
   run:
     - python
     - numba >=0.57
-    - {{ pin_compatible('cuda-version', lower_bound=(cuda_major ~ ".0"), upper_bound=(cuda_major ~ "." ~ (cuda_minor + 1))) }}
+    - {{ pin_compatible('cuda-version', lower_bound=cuda_min, upper_bound=cuda_max) }}
 
 about:
   home: {{ project_urls["Homepage"] }}
