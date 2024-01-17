@@ -47,7 +47,7 @@ requirements:
   run:
     - python
     - numba >=0.57
-    - {{ pin_compatible('cuda-version', lower_bound=cuda_min, upper_bound=cuda_max) }}
+    - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x.x') }}
 
 about:
   home: {{ project_urls["Homepage"] }}
