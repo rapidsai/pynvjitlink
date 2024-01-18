@@ -11,7 +11,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "pynvjitlink"
-version = "0.1.11"
+version = "0.1.12"
 description = "nvJitLink Python binding"
 readme = { file = "README.md", content-type = "text/markdown" }
 authors = [
