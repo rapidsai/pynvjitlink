@@ -30,6 +30,9 @@ rapids-mamba-retry install \
 rapids-logger "Check GPU usage"
 nvidia-smi
 
+rapids-logger "Show Numba system info"
+python -m numba --sysinfo
+
 EXITCODE=0
 trap "EXITCODE=1" ERR
 set +e

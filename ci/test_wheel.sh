@@ -31,6 +31,9 @@ popd
 rapids-logger "Check GPU usage"
 nvidia-smi
 
+rapids-logger "Show Numba system info"
+python -m numba --sysinfo
+
 rapids-logger "Run Tests"
 pushd pynvjitlink/tests
 python -m pytest \
