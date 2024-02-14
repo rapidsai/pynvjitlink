@@ -11,6 +11,7 @@ rapids-mamba-retry create -n test \
     c-compiler \
     cxx-compiler \
     cuda-nvcc \
+    cuda-nvrtc \
     cuda-version=${RAPIDS_CUDA_VERSION%.*} \
     "numba>=0.58" \
     make \
