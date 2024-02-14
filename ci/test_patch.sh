@@ -8,7 +8,7 @@ set -euo pipefail
 rapids-logger "Install testing dependencies"
 # TODO: Replace with rapids-dependency-file-generator
 rapids-mamba-retry create -n test \
-    cuda-nvcc-impl \
+    cuda-nvcc \
     cuda-nvrtc \
     cuda-version=${RAPIDS_CUDA_VERSION%.*} \
     "numba>=0.58" \
