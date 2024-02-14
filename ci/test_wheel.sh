@@ -28,6 +28,9 @@ pushd test_binary_generation
 make
 popd
 
+rapids-logger "Check GPU usage"
+nvidia-smi
+
 rapids-logger "Run Tests"
 pushd pynvjitlink/tests
 python -m pytest \
