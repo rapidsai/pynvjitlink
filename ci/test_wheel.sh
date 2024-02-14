@@ -19,6 +19,9 @@ pushd test_binary_generation
 make
 popd
 
+rapids-logger "Check GPU usage"
+nvidia-smi
+
 rapids-logger "Run Tests"
 pip install pytest
 pytest pynvjitlink/tests
