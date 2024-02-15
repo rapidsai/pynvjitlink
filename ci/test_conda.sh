@@ -45,11 +45,12 @@ EXITCODE=0
 trap "EXITCODE=1" ERR
 set +e
 
-rapids-logger "pytest pynvjitlink"
+rapids-logger "Run Tests"
 python -m pytest \
   --cache-clear \
   --junitxml="${RAPIDS_TESTS_DIR}/junit-pynvjitlink.xml" \
-  -v
+  -v \
+  pynvjitlink/tests
 
 rapids-logger "Test script exiting with value: $EXITCODE"
 exit ${EXITCODE}
