@@ -17,6 +17,9 @@ RAPIDS_PY_WHEEL_NAME="pynvjitlink_${RAPIDS_PY_CUDA_SUFFIX}" rapids-download-whee
 # everywhere except in the final wheel name.
 PACKAGE_CUDA_SUFFIX="-${RAPIDS_PY_CUDA_SUFFIX}"
 
+RAPIDS_TESTS_DIR=${RAPIDS_TESTS_DIR:-"${PWD}/test-results"}/
+mkdir -p "${RAPIDS_TESTS_DIR}"
+
 rapids-logger "Install wheel"
 python -m pip install --find-links ./dist pynvjitlink${PACKAGE_CUDA_SUFFIX}
 
