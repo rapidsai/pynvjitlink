@@ -12,6 +12,7 @@ rapids-mamba-retry create -n test \
     cuda-nvrtc \
     cuda-version=${RAPIDS_CUDA_VERSION%.*} \
     "numba>=0.58" \
+    psutil \
     python=${RAPIDS_PY_VERSION}
 
 # Temporarily allow unbound variables for conda activation.

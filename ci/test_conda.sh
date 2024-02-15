@@ -15,6 +15,7 @@ rapids-mamba-retry create -n test \
     cuda-version=${RAPIDS_CUDA_VERSION%.*} \
     "numba>=0.58" \
     make \
+    psutil \
     pytest \
     python=${RAPIDS_PY_VERSION}
 

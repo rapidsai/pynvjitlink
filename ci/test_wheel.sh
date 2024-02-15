@@ -7,6 +7,7 @@ rapids-logger "Install testing dependencies"
 # TODO: Replace with rapids-dependency-file-generator
 python -m pip install \
     "numba>=0.58" \
+    psutil \
     pytest
 
 rapids-logger "Download Wheel"
