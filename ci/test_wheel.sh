@@ -26,8 +26,9 @@ make
 popd
 
 rapids-logger "Run Tests"
+pushd pynvjitlink/tests
 python -m pytest \
   --cache-clear \
   --junitxml="${RAPIDS_TESTS_DIR}/junit-pynvjitlink.xml" \
-  -v \
-  pynvjitlink/tests
+  -v
+popd
