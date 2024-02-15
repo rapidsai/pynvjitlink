@@ -40,8 +40,8 @@ popd
 rapids-logger "Check GPU usage"
 nvidia-smi
 
-rapids-logger "Show Numba CUDA library configuration"
-python -c "from numba.cuda.cudadrv.libs import test; test()"
+rapids-logger "Show Numba system info"
+python -m numba --sysinfo
 
 EXITCODE=0
 trap "EXITCODE=1" ERR
