@@ -12,7 +12,7 @@ RAPIDS_PY_WHEEL_NAME="pynvjitlink_${RAPIDS_PY_CUDA_SUFFIX}" rapids-download-whee
 PACKAGE_CUDA_SUFFIX="-${RAPIDS_PY_CUDA_SUFFIX}"
 
 rapids-logger "Install wheel"
-pip install --find-links ./dist pynvjitlink${PACKAGE_CUDA_SUFFIX}
+python -m pip install --find-links ./dist pynvjitlink${PACKAGE_CUDA_SUFFIX}
 
 rapids-logger "Build Tests"
 pushd test_binary_generation
@@ -26,5 +26,5 @@ rapids-logger "Show Numba CUDA library configuration"
 python -c "from numba.cuda.cudadrv.libs import test; test()"
 
 rapids-logger "Run Tests"
-pip install pytest
-pytest pynvjitlink/tests
+python -m pip install pytest
+python -m pytest pynvjitlink/tests
