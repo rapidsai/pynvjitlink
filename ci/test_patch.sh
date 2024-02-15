@@ -5,7 +5,7 @@ set -euo pipefail
 
 . /opt/conda/etc/profile.d/conda.sh
 
-rapids-logger "Generate testing dependencies"
+rapids-logger "Install testing dependencies"
 # TODO: Replace with rapids-dependency-file-generator
 rapids-mamba-retry create -n test \
     cuda-nvcc-impl \
