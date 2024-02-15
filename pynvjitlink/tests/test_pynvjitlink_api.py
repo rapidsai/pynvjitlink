@@ -94,11 +94,6 @@ def test_add_cubin_with_fatbin_error(device_functions_fatbin):
         nvjitlinker.add_cubin(device_functions_fatbin, name)
 
 
-@pytest.mark.xfail(
-    reason="Fails in conda due to using CUDA 12.2u2. This should be fixed "
-    "when requiring CUDA 12.3 nvjitlink library. See: "
-    "https://github.com/rapidsai/pynvjitlink/pull/33#issuecomment-1885182905"
-)
 def test_add_fatbin_with_cubin_error(device_functions_cubin):
     nvjitlinker = NvJitLinker("-arch=sm_75")
     name = "test_device_functions.cubin"
