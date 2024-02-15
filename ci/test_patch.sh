@@ -5,13 +5,14 @@ set -euo pipefail
 
 . /opt/conda/etc/profile.d/conda.sh
 
-rapids-logger "Generate testing dependencies"
+rapids-logger "Install testing dependencies"
 # TODO: Replace with rapids-dependency-file-generator
 rapids-mamba-retry create -n test \
-    cuda-nvcc-impl \
+    cuda-nvcc \
     cuda-nvrtc \
     cuda-version=${RAPIDS_CUDA_VERSION%.*} \
     "numba>=0.58" \
+    psutil \
     python=${RAPIDS_PY_VERSION}
 
 # Temporarily allow unbound variables for conda activation.
@@ -29,6 +30,9 @@ rapids-mamba-retry install \
 
 rapids-logger "Check GPU usage"
 nvidia-smi
+
+rapids-logger "Show Numba system info"
+python -m numba --sysinfo
 
 EXITCODE=0
 trap "EXITCODE=1" ERR

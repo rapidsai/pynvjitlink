@@ -5,15 +5,17 @@ set -euo pipefail
 
 . /opt/conda/etc/profile.d/conda.sh
 
-rapids-logger "Generate testing dependencies"
+rapids-logger "Install testing dependencies"
 # TODO: Replace with rapids-dependency-file-generator
 rapids-mamba-retry create -n test \
     c-compiler \
     cxx-compiler \
     cuda-nvcc \
+    cuda-nvrtc \
     cuda-version=${RAPIDS_CUDA_VERSION%.*} \
     "numba>=0.58" \
     make \
+    psutil \
     pytest \
     python=${RAPIDS_PY_VERSION}
 
@@ -40,15 +42,20 @@ popd
 rapids-logger "Check GPU usage"
 nvidia-smi
 
+rapids-logger "Show Numba system info"
+python -m numba --sysinfo
+
 EXITCODE=0
 trap "EXITCODE=1" ERR
 set +e
 
-rapids-logger "pytest pynvjitlink"
-pytest \
+rapids-logger "Run Tests"
+pushd pynvjitlink/tests
+python -m pytest \
   --cache-clear \
   --junitxml="${RAPIDS_TESTS_DIR}/junit-pynvjitlink.xml" \
   -v
+popd
 
 rapids-logger "Test script exiting with value: $EXITCODE"
 exit ${EXITCODE}
