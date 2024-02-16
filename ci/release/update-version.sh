@@ -16,4 +16,4 @@ function sed_runner() {
 }
 
 # Centralized version file update
-sed_runner 's/^version = "[0-9\.]*"/version = "'${NEXT_FULL_TAG}'"/g' pyproject.toml
+echo "${NEXT_FULL_TAG}" > pynvjitlink/VERSION

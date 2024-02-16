@@ -1,12 +1,16 @@
 # Copyright (c) 2018-2024, NVIDIA CORPORATION.
 
 {% set data = load_file_data("pyproject.toml") %}
+{% set version = load_file_regex(
+    load_file="pynvjitlink/VERSION",
+    regex_pattern="(?P<value>.*)"
+)[0] %}
 {% set project_data = data.get("project") %}
 {% set project_urls = project_data["urls"] %}
 
 package:
   name: pynvjitlink
-  version: {{ project_data["version"] }}
+  version: {{ version }}
 
 source:
   path: ../../..
