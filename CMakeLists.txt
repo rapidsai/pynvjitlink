@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.26.4 FATAL_ERROR)
 
 project(
   pynvjitlink
-  VERSION 0.1.12
+  VERSION ${SKBUILD_PROJECT_VERSION}
   LANGUAGES CXX CUDA
 )
 

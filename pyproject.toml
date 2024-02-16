@@ -28,6 +28,3 @@ License = "https://github.com/rapidsai/pynvjitlink/blob/main/LICENSE"
 
 [tool.setuptools]
 license-files = ["LICENSE"]
-
-[tool.setuptools.dynamic]
-version = {file = "pynvjitlink/VERSION"}
