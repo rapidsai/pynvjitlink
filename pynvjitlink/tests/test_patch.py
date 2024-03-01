@@ -105,5 +105,33 @@ def test_add_file_guess_ext_linkable_code(file, request):
     patched_linker.add_file_guess_ext(file)
 
 
+@pytest.mark.skipif(
+    not _numba_version_ok,
+    reason=f"Requires Numba == {required_numba_ver[0]}.{required_numba_ver[1]}",
+)
+@pytest.mark.parametrize("file", (
+    "linkable_code_archive",
+    "linkable_code_cubin",
+    "linkable_code_fatbin",
+    "linkable_code_object",
+    "linkable_code_ptx",
+))
+def test_jit_with_linkable_code(file, request):
+    from numba import cuda
+    file = request.getfixturevalue(file)
+    patch_numba_linker()
+
+    sig = 'uint32(uint32, uint32)'
+    add_from_numba = cuda.declare_device('add_from_numba', sig)
+
+    @cuda.jit(link=[file])
+    def kernel(result):
+        result[0] = add_from_numba(1, 2)
+
+    result = cuda.device_array(1)
+    kernel[1, 1](result)
+    assert result[0] == 3
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main())
