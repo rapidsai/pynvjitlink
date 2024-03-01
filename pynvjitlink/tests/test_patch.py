@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION.
 
 import pytest
 import sys
@@ -90,6 +90,19 @@ def test_ptx_compile_options(max_registers, lineinfo, lto, additional_flags):
     if additional_flags:
         for flag in additional_flags:
             assert flag in patched_linker.options
+
+
+@pytest.mark.parametrize("file", (
+    "linkable_code_archive",
+    "linkable_code_cubin",
+    "linkable_code_fatbin",
+    "linkable_code_object",
+    "linkable_code_ptx",
+))
+def test_add_file_guess_ext_linkable_code(file, request):
+    file = request.getfixturevalue(file)
+    patched_linker = PatchedLinker(cc=(7, 5))
+    patched_linker.add_file_guess_ext(file)
 
 
 if __name__ == "__main__":

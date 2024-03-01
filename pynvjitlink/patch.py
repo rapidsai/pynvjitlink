@@ -42,6 +42,46 @@ else:
     Linker = object
 
 
+class LinkableCode:
+    def __init__(self, data, name=None):
+        self.data = data
+        self._name = name
+
+    @property
+    def name(self):
+        return self._name or self.default_name
+
+
+class PTXSource(LinkableCode):
+    kind = FILE_EXTENSION_MAP["ptx"]
+    default_name = "<unnamed-ptx>"
+
+
+class CUSource(LinkableCode):
+    kind = "cu"
+    default_name = "<unnamed-cu>"
+
+
+class Fatbin(LinkableCode):
+    kind = FILE_EXTENSION_MAP["fatbin"]
+    default_name = "<unnamed-fatbin>"
+
+
+class Cubin(LinkableCode):
+    kind = FILE_EXTENSION_MAP["cubin"]
+    default_name = "<unnamed-cubin>"
+
+
+class Archive(LinkableCode):
+    kind = FILE_EXTENSION_MAP["a"]
+    default_name = "<unnamed-archive>"
+
+
+class Object(LinkableCode):
+    kind = FILE_EXTENSION_MAP["o"]
+    default_name = "<unnamed-object>"
+
+
 class PatchedLinker(Linker):
     def __init__(
         self,
@@ -91,6 +131,27 @@ class PatchedLinker(Linker):
     def add_object(self, obj, name="<external-object>"):
         self._linker.add_object(obj, name)
 
+    def add_file_guess_ext(self, path_or_code):
+        # Numba's add_file_guess_ext expects to always be passed a path to a
+        # file that it will load from the filesystem to link. We augment it
+        # here with the ability to provide a file from memory.
+
+        # To maintain compatibility with the original interface, all strings
+        # are treated as paths in the filesystem.
+        if isinstance(path_or_code, str):
+            return super().add_file_guess_ext(path_or_code)
+
+        # Otherwise, we should have been given a LinkableCode object
+        if not isinstance(path_or_code, LinkableCode):
+            raise TypeError("Exoected path to file or a LinkableCode object")
+
+        kind = path_or_code.kind
+
+        if kind == "cu":
+            return self.add_cu(path_or_code.data, path_or_code.name)
+
+        self.add_data(path_or_code.data, path_or_code.kind, path_or_code.name)
+
     def add_file(self, path, kind):
         try:
             with open(path, "rb") as f:
@@ -99,6 +160,9 @@ class PatchedLinker(Linker):
             raise LinkerError(f"{path} not found")
 
         name = pathlib.Path(path).name
+        self.add_data(data, kind, name)
+
+    def add_data(self, data, kind, name):
         if kind == FILE_EXTENSION_MAP["cubin"]:
             fn = self._linker.add_cubin
         elif kind == FILE_EXTENSION_MAP["fatbin"]:

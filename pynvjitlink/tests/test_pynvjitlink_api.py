@@ -2,33 +2,8 @@
 
 import pytest
 import sys
-import os
 
 from pynvjitlink import NvJitLinker, NvJitLinkError
-
-
-@pytest.fixture
-def device_functions_cubin():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    cubin_path = os.path.join(test_dir, "test_device_functions.cubin")
-    with open(cubin_path, "rb") as f:
-        return f.read()
-
-
-@pytest.fixture
-def device_functions_fatbin():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    fatbin_path = os.path.join(test_dir, "test_device_functions.fatbin")
-    with open(fatbin_path, "rb") as f:
-        return f.read()
-
-
-@pytest.fixture
-def undefined_extern_cubin():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    fatbin_path = os.path.join(test_dir, "undefined_extern.cubin")
-    with open(fatbin_path, "rb") as f:
-        return f.read()
 
 
 def test_create_no_arch_error():
