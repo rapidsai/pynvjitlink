@@ -36,8 +36,7 @@ rapids-mamba-retry install \
 
 rapids-logger "Build Tests"
 pushd test_binary_generation
-export GPU_CC=`nvidia-smi --query-gpu=compute_cap --format=csv | grep -v compute_cap | sed 's/\.//'
-`
+export GPU_CC=`nvidia-smi --query-gpu=compute_cap --format=csv | grep -v compute_cap | sed 's/\.//'`
 make
 popd
 
