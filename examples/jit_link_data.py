@@ -5,7 +5,7 @@ import numpy as np
 
 patch.patch_numba_linker()
 
-source = patch.CUSource("""
+source = cuda.CUSource("""
 typedef unsigned int uint32_t;
 
 extern "C" __device__ int cu_add(uint32_t* result, uint32_t a, uint32_t b)

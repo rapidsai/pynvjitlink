@@ -29,6 +29,7 @@ except ImportError as ie:
 
 if _numba_version_ok:
     from numba.core import config
+    from numba import cuda
     from numba.cuda.cudadrv import nvrtc
     from numba.cuda.cudadrv.driver import (
         driver,
@@ -224,3 +225,10 @@ def patch_numba_linker():
         raise RuntimeError(msg)
 
     Linker.new = new_patched_linker
+
+    cuda.Archive = Archive
+    cuda.CUSource = CUSource
+    cuda.Cubin = Cubin
+    cuda.Fatbin = Fatbin
+    cuda.Object = Object
+    cuda.PTXSource = PTXSource
