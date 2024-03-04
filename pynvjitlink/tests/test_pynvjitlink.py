@@ -98,16 +98,16 @@ def test_complete_empty():
         ("device_functions_archive", InputType.LIBRARY),
     ],
 )
-def test_add_file(input_file, input_type, request):
+def test_add_file(input_file, input_type, gpu_arch_flag, request):
     filename, data = request.getfixturevalue(input_file)
 
-    handle = _nvjitlinklib.create("-arch=sm_75")
+    handle = _nvjitlinklib.create(gpu_arch_flag)
     _nvjitlinklib.add_data(handle, input_type.value, data, filename)
     _nvjitlinklib.destroy(handle)
 
 
-def test_get_error_log(undefined_extern_cubin):
-    handle = _nvjitlinklib.create("-arch=sm_75")
+def test_get_error_log(undefined_extern_cubin, gpu_arch_flag):
+    handle = _nvjitlinklib.create(gpu_arch_flag)
     filename, data = undefined_extern_cubin
     input_type = InputType.CUBIN.value
     _nvjitlinklib.add_data(handle, input_type, data, filename)
@@ -121,8 +121,8 @@ def test_get_error_log(undefined_extern_cubin):
     )
 
 
-def test_get_info_log(device_functions_cubin):
-    handle = _nvjitlinklib.create("-arch=sm_75")
+def test_get_info_log(device_functions_cubin, gpu_arch_flag):
+    handle = _nvjitlinklib.create(gpu_arch_flag)
     filename, data = device_functions_cubin
     input_type = InputType.CUBIN.value
     _nvjitlinklib.add_data(handle, input_type, data, filename)
@@ -133,8 +133,8 @@ def test_get_info_log(device_functions_cubin):
     assert "" == info_log
 
 
-def test_get_linked_cubin(device_functions_cubin):
-    handle = _nvjitlinklib.create("-arch=sm_75")
+def test_get_linked_cubin(device_functions_cubin, gpu_arch_flag):
+    handle = _nvjitlinklib.create(gpu_arch_flag)
     filename, data = device_functions_cubin
     input_type = InputType.CUBIN.value
     _nvjitlinklib.add_data(handle, input_type, data, filename)
@@ -146,8 +146,9 @@ def test_get_linked_cubin(device_functions_cubin):
     assert cubin[:4] == b"\x7fELF"
 
 
-def test_get_linked_cubin_link_not_complete_error(device_functions_cubin):
-    handle = _nvjitlinklib.create("-arch=sm_75")
+def test_get_linked_cubin_link_not_complete_error(device_functions_cubin,
+                                                  gpu_arch_flag):
+    handle = _nvjitlinklib.create(gpu_arch_flag)
     filename, data = device_functions_cubin
     input_type = InputType.CUBIN.value
     _nvjitlinklib.add_data(handle, input_type, data, filename)
@@ -156,14 +157,14 @@ def test_get_linked_cubin_link_not_complete_error(device_functions_cubin):
     _nvjitlinklib.destroy(handle)
 
 
-def test_get_linked_cubin_from_lto(device_functions_ltoir):
+def test_get_linked_cubin_from_lto(device_functions_ltoir, gpu_arch_flag):
     filename, data = device_functions_ltoir
     # device_functions_ltoir is a host object containing a fatbin containing an
     # LTOIR container, because that is what NVCC produces when LTO is
     # requested. So we need to use the OBJECT input type, and the linker
     # retrieves the LTO IR from it because we passed the -lto flag.
     input_type = InputType.OBJECT.value
-    handle = _nvjitlinklib.create("-arch=sm_75", "-lto")
+    handle = _nvjitlinklib.create(gpu_arch_flag, "-lto")
     _nvjitlinklib.add_data(handle, input_type, data, filename)
     _nvjitlinklib.complete(handle)
     cubin = _nvjitlinklib.get_linked_cubin(handle)
@@ -173,22 +174,23 @@ def test_get_linked_cubin_from_lto(device_functions_ltoir):
     assert cubin[:4] == b"\x7fELF"
 
 
-def test_get_linked_ptx_from_lto(device_functions_ltoir):
+def test_get_linked_ptx_from_lto(device_functions_ltoir, gpu_arch_flag):
     filename, data = device_functions_ltoir
     # device_functions_ltoir is a host object containing a fatbin containing an
     # LTOIR container, because that is what NVCC produces when LTO is
     # requested. So we need to use the OBJECT input type, and the linker
     # retrieves the LTO IR from it because we passed the -lto flag.
     input_type = InputType.OBJECT.value
-    handle = _nvjitlinklib.create("-arch=sm_75", "-lto", "-ptx")
+    handle = _nvjitlinklib.create(gpu_arch_flag, "-lto", "-ptx")
     _nvjitlinklib.add_data(handle, input_type, data, filename)
     _nvjitlinklib.complete(handle)
     _nvjitlinklib.get_linked_ptx(handle)
     _nvjitlinklib.destroy(handle)
 
 
-def test_get_linked_ptx_link_not_complete_error(device_functions_ltoir):
-    handle = _nvjitlinklib.create("-arch=sm_75", "-lto", "-ptx")
+def test_get_linked_ptx_link_not_complete_error(device_functions_ltoir,
+                                                gpu_arch_flag):
+    handle = _nvjitlinklib.create(gpu_arch_flag, "-lto", "-ptx")
     filename, data = device_functions_ltoir
     input_type = InputType.OBJECT.value
     _nvjitlinklib.add_data(handle, input_type, data, filename)

@@ -92,16 +92,20 @@ def test_ptx_compile_options(max_registers, lineinfo, lto, additional_flags):
             assert flag in patched_linker.options
 
 
-@pytest.mark.parametrize("file", (
-    "linkable_code_archive",
-    "linkable_code_cubin",
-    "linkable_code_fatbin",
-    "linkable_code_object",
-    "linkable_code_ptx",
-))
-def test_add_file_guess_ext_linkable_code(file, request):
+@pytest.mark.parametrize(
+    "file",
+    (
+        "linkable_code_archive",
+        "linkable_code_cubin",
+        "linkable_code_cusource",
+        "linkable_code_fatbin",
+        "linkable_code_object",
+        "linkable_code_ptx",
+    ),
+)
+def test_add_file_guess_ext_linkable_code(file, gpu_compute_capability, request):
     file = request.getfixturevalue(file)
-    patched_linker = PatchedLinker(cc=(7, 5))
+    patched_linker = PatchedLinker(cc=gpu_compute_capability)
     patched_linker.add_file_guess_ext(file)
 
 
@@ -109,20 +113,25 @@ def test_add_file_guess_ext_linkable_code(file, request):
     not _numba_version_ok,
     reason=f"Requires Numba == {required_numba_ver[0]}.{required_numba_ver[1]}",
 )
-@pytest.mark.parametrize("file", (
-    "linkable_code_archive",
-    "linkable_code_cubin",
-    "linkable_code_fatbin",
-    "linkable_code_object",
-    "linkable_code_ptx",
-))
+@pytest.mark.parametrize(
+    "file",
+    (
+        "linkable_code_archive",
+        "linkable_code_cubin",
+        "linkable_code_cusource",
+        "linkable_code_fatbin",
+        "linkable_code_object",
+        "linkable_code_ptx",
+    ),
+)
 def test_jit_with_linkable_code(file, request):
     from numba import cuda
+
     file = request.getfixturevalue(file)
     patch_numba_linker()
 
-    sig = 'uint32(uint32, uint32)'
-    add_from_numba = cuda.declare_device('add_from_numba', sig)
+    sig = "uint32(uint32, uint32)"
+    add_from_numba = cuda.declare_device("add_from_numba", sig)
 
     @cuda.jit(link=[file])
     def kernel(result):

@@ -3,46 +3,68 @@
 import os
 import pytest
 
-from pynvjitlink.patch import Archive, Cubin, Fatbin, Object, PTXSource
+from numba import cuda
+from pynvjitlink.patch import Archive, Cubin, CUSource, Fatbin, Object, PTXSource
+
+
+@pytest.fixture(scope="session")
+def gpu_compute_capability():
+    """Compute capability of the current GPU"""
+    return cuda.get_current_device().compute_capability
+
+
+@pytest.fixture(scope="session")
+def gpu_arch_flag(gpu_compute_capability):
+    """nvJitLink arch flag to link for the current GPU"""
+    major, minor = gpu_compute_capability
+    return f"-arch=sm_{major}{minor}"
 
 
 @pytest.fixture(scope="session")
 def device_functions_archive():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    cubin_path = os.path.join(test_dir, "test_device_functions.a")
-    with open(cubin_path, "rb") as f:
+    path = os.path.join(test_dir, "test_device_functions.a")
+    with open(path, "rb") as f:
         return f.read()
 
 
 @pytest.fixture(scope="session")
 def device_functions_cubin():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    cubin_path = os.path.join(test_dir, "test_device_functions.cubin")
-    with open(cubin_path, "rb") as f:
+    path = os.path.join(test_dir, "test_device_functions.cubin")
+    with open(path, "rb") as f:
+        return f.read()
+
+
+@pytest.fixture(scope="session")
+def device_functions_cusource():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(test_dir, "test_device_functions.cu")
+    with open(path, "r") as f:
         return f.read()
 
 
 @pytest.fixture(scope="session")
 def device_functions_fatbin():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    fatbin_path = os.path.join(test_dir, "test_device_functions.fatbin")
-    with open(fatbin_path, "rb") as f:
+    path = os.path.join(test_dir, "test_device_functions.fatbin")
+    with open(path, "rb") as f:
         return f.read()
 
 
 @pytest.fixture(scope="session")
 def device_functions_object():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    cubin_path = os.path.join(test_dir, "test_device_functions.o")
-    with open(cubin_path, "rb") as f:
+    path = os.path.join(test_dir, "test_device_functions.o")
+    with open(path, "rb") as f:
         return f.read()
 
 
 @pytest.fixture(scope="session")
 def device_functions_ptx():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    cubin_path = os.path.join(test_dir, "test_device_functions.ptx")
-    with open(cubin_path, "rb") as f:
+    path = os.path.join(test_dir, "test_device_functions.ptx")
+    with open(path, "rb") as f:
         return f.read()
 
 
@@ -62,6 +84,11 @@ def linkable_code_archive(device_functions_archive):
 @pytest.fixture(scope="session")
 def linkable_code_cubin(device_functions_cubin):
     return Cubin(device_functions_cubin)
+
+
+@pytest.fixture(scope="session")
+def linkable_code_cusource(device_functions_cusource):
+    return CUSource(device_functions_cusource)
 
 
 @pytest.fixture(scope="session")

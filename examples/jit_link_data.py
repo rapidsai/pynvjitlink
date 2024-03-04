@@ -5,7 +5,8 @@ import numpy as np
 
 patch.patch_numba_linker()
 
-source = cuda.CUSource("""
+source = cuda.CUSource(
+    """
 typedef unsigned int uint32_t;
 
 extern "C" __device__ int cu_add(uint32_t* result, uint32_t a, uint32_t b)
@@ -13,7 +14,8 @@ extern "C" __device__ int cu_add(uint32_t* result, uint32_t a, uint32_t b)
     *result = a + b;
     return 0;
 }
-""")
+"""
+)
 
 
 cu_add = cuda.declare_device("cu_add", "uint32(uint32, uint32)")
@@ -22,6 +24,7 @@ cu_add = cuda.declare_device("cu_add", "uint32(uint32, uint32)")
 @cuda.jit(link=[source])
 def kernel(result, a, b):
     result[0] = cu_add(a, b)
+
 
 a = 1
 b = 2
