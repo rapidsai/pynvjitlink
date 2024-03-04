@@ -146,8 +146,9 @@ def test_get_linked_cubin(device_functions_cubin, gpu_arch_flag):
     assert cubin[:4] == b"\x7fELF"
 
 
-def test_get_linked_cubin_link_not_complete_error(device_functions_cubin,
-                                                  gpu_arch_flag):
+def test_get_linked_cubin_link_not_complete_error(
+    device_functions_cubin, gpu_arch_flag
+):
     handle = _nvjitlinklib.create(gpu_arch_flag)
     filename, data = device_functions_cubin
     input_type = InputType.CUBIN.value
@@ -188,8 +189,7 @@ def test_get_linked_ptx_from_lto(device_functions_ltoir, gpu_arch_flag):
     _nvjitlinklib.destroy(handle)
 
 
-def test_get_linked_ptx_link_not_complete_error(device_functions_ltoir,
-                                                gpu_arch_flag):
+def test_get_linked_ptx_link_not_complete_error(device_functions_ltoir, gpu_arch_flag):
     handle = _nvjitlinklib.create(gpu_arch_flag, "-lto", "-ptx")
     filename, data = device_functions_ltoir
     input_type = InputType.OBJECT.value
