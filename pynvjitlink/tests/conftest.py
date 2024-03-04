@@ -14,9 +14,26 @@ def gpu_compute_capability():
 
 
 @pytest.fixture(scope="session")
+def alt_gpu_compute_capability(gpu_compute_capability):
+    """A compute capability that does not match the current GPU"""
+    if gpu_compute_capability == (8, 0):
+        return (7, 0)
+    else:
+        return (8, 0)
+
+
+@pytest.fixture(scope="session")
 def gpu_arch_flag(gpu_compute_capability):
     """nvJitLink arch flag to link for the current GPU"""
     major, minor = gpu_compute_capability
+    return f"-arch=sm_{major}{minor}"
+
+
+@pytest.fixture(scope="session")
+def alt_gpu_arch_flag(alt_gpu_compute_capability):
+    """nvJitLink arch flag to link for a different kind of GPU to the current
+    one"""
+    major, minor = alt_gpu_compute_capability
     return f"-arch=sm_{major}{minor}"
 
 
