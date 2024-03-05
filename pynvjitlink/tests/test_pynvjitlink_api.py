@@ -36,8 +36,7 @@ def test_add_cubin(device_functions_cubin, gpu_arch_flag):
     nvjitlinker.add_cubin(device_functions_cubin, name)
 
 
-def test_add_incompatible_cubin_arch_error(device_functions_cubin,
-                                           alt_gpu_arch_flag):
+def test_add_incompatible_cubin_arch_error(device_functions_cubin, alt_gpu_arch_flag):
     nvjitlinker = NvJitLinker(alt_gpu_arch_flag)
     name = "test_device_functions.cubin"
     with pytest.raises(NvJitLinkError, match="NVJITLINK_ERROR_INVALID_INPUT error"):
@@ -56,8 +55,7 @@ def test_add_fatbin_arch_2(device_functions_fatbin, alt_gpu_arch_flag):
     nvjitlinker.add_fatbin(device_functions_fatbin, name)
 
 
-def test_add_incompatible_fatbin_arch_error(device_functions_fatbin,
-                                            alt_gpu_arch_flag):
+def test_add_incompatible_fatbin_arch_error(device_functions_fatbin, alt_gpu_arch_flag):
     nvjitlinker = NvJitLinker(alt_gpu_arch_flag)
     name = "test_device_functions.fatbin"
     with pytest.raises(NvJitLinkError, match="NVJITLINK_ERROR_INVALID_INPUT error"):
