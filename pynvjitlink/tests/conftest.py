@@ -16,10 +16,10 @@ def gpu_compute_capability():
 @pytest.fixture(scope="session")
 def alt_gpu_compute_capability(gpu_compute_capability):
     """A compute capability that does not match the current GPU"""
-    if gpu_compute_capability == (8, 0):
+    if gpu_compute_capability == (7, 5):
         return (7, 0)
     else:
-        return (8, 0)
+        return (7, 5)
 
 
 @pytest.fixture(scope="session")
