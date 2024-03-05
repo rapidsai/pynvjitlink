@@ -26,6 +26,16 @@ def alt_gpu_compute_capability(gpu_compute_capability):
 
 
 @pytest.fixture(scope="session")
+def absent_gpu_compute_capability(gpu_compute_capability, alt_gpu_compute_capability):
+    """A compute capability that does not match the current GPU"""
+    # A compute capability not used in any cubin or fatbin test binary
+    cc_majors = {6, 7, 8}
+    cc_majors.remove(gpu_compute_capability[0])
+    cc_majors.remove(alt_gpu_compute_capability[0])
+    return (cc_majors.pop(), 0)
+
+
+@pytest.fixture(scope="session")
 def gpu_arch_flag(gpu_compute_capability):
     """nvJitLink arch flag to link for the current GPU"""
     major, minor = gpu_compute_capability
@@ -37,6 +47,14 @@ def alt_gpu_arch_flag(alt_gpu_compute_capability):
     """nvJitLink arch flag to link for a different kind of GPU to the current
     one"""
     major, minor = alt_gpu_compute_capability
+    return f"-arch=sm_{major}{minor}"
+
+
+@pytest.fixture(scope="session")
+def absent_gpu_arch_flag(absent_gpu_compute_capability):
+    """nvJitLink arch flag to link for an architecture not in any cubin or
+    fatbin"""
+    major, minor = absent_gpu_compute_capability
     return f"-arch=sm_{major}{minor}"
 
 
