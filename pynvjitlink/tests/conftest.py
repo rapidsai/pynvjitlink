@@ -16,10 +16,13 @@ def gpu_compute_capability():
 @pytest.fixture(scope="session")
 def alt_gpu_compute_capability(gpu_compute_capability):
     """A compute capability that does not match the current GPU"""
-    if gpu_compute_capability == (7, 5):
-        return (7, 0)
+    # For sufficient incompatibility for the test suites, the major number of
+    # the compute capabilities must differ (for example one can load a 7.0
+    # cubin when linking for 7.5)
+    if gpu_compute_capability[0] == 7:
+        return (8, 0)
     else:
-        return (7, 5)
+        return (7, 0)
 
 
 @pytest.fixture(scope="session")

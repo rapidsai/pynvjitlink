@@ -2,8 +2,13 @@
 
 # Default to CC 7.5 for most testing unless explicitly set otherwise
 GPU_CC ?= 75
-# Use CC 7.0 as an alternative in fatbin testing, unless the default CC is 7.0
-ALT_CC := $(if ifeq $(GPU_CC) 75,70,75)
+
+# Use CC 7.0 as an alternative in fatbin testing, unless CC is 7.x
+ifeq ($(shell echo "$(GPU_CC)" | cut -c1),7)
+    ALT_CC := 80
+else
+    ALT_CC := 70
+endif
 
 # Gencode flags suitable for most tests
 GENCODE := -gencode arch=compute_$(GPU_CC),code=sm_$(GPU_CC)
@@ -29,6 +34,8 @@ LTOIR_FLAGS := $(LTOIR_GENCODE) -dc
 OUTPUT_DIR := ../pynvjitlink/tests
 
 all:
+	@echo "GPU CC: $(GPU_CC)"
+	@echo "Alternative CC: $(ALT_CC)"
 	# Compile all test objects
 	nvcc $(NVCC_FLAGS) $(CUBIN_FLAGS) -o $(OUTPUT_DIR)/undefined_extern.cubin undefined_extern.cu
 	nvcc $(NVCC_FLAGS) $(CUBIN_FLAGS) -o $(OUTPUT_DIR)/test_device_functions.cubin test_device_functions.cu
