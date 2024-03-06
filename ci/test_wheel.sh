@@ -22,7 +22,7 @@ RAPIDS_TESTS_DIR=${RAPIDS_TESTS_DIR:-"${PWD}/test-results"}/
 mkdir -p "${RAPIDS_TESTS_DIR}"
 
 rapids-logger "Install wheel"
-python -m pip install --find-links ./dist pynvjitlink${PACKAGE_CUDA_SUFFIX}
+python -m pip install $(echo ./dist/pynvjitlink*.whl)
 
 rapids-logger "Build Tests"
 pushd test_binary_generation
