@@ -44,6 +44,9 @@ else:
 
 
 class LinkableCode:
+    """An object that can be passed in the `link` list argument to `@cuda.jit`
+    kernels to supply code to be linked from memory."""
+
     def __init__(self, data, name=None):
         self.data = data
         self._name = name
@@ -54,31 +57,43 @@ class LinkableCode:
 
 
 class PTXSource(LinkableCode):
+    """PTX Source code in memory"""
+
     kind = FILE_EXTENSION_MAP["ptx"]
     default_name = "<unnamed-ptx>"
 
 
 class CUSource(LinkableCode):
+    """CUDA C/C++ Source code in memory"""
+
     kind = "cu"
     default_name = "<unnamed-cu>"
 
 
 class Fatbin(LinkableCode):
+    """A fatbin ELF in memory"""
+
     kind = FILE_EXTENSION_MAP["fatbin"]
     default_name = "<unnamed-fatbin>"
 
 
 class Cubin(LinkableCode):
+    """A cubin ELF in memory"""
+
     kind = FILE_EXTENSION_MAP["cubin"]
     default_name = "<unnamed-cubin>"
 
 
 class Archive(LinkableCode):
+    """An archive of objects in memory"""
+
     kind = FILE_EXTENSION_MAP["a"]
     default_name = "<unnamed-archive>"
 
 
 class Object(LinkableCode):
+    """An object file in memory"""
+
     kind = FILE_EXTENSION_MAP["o"]
     default_name = "<unnamed-object>"
 
@@ -144,14 +159,12 @@ class PatchedLinker(Linker):
 
         # Otherwise, we should have been given a LinkableCode object
         if not isinstance(path_or_code, LinkableCode):
-            raise TypeError("Exoected path to file or a LinkableCode object")
+            raise TypeError("Expected path to file or a LinkableCode object")
 
-        kind = path_or_code.kind
-
-        if kind == "cu":
-            return self.add_cu(path_or_code.data, path_or_code.name)
-
-        self.add_data(path_or_code.data, path_or_code.kind, path_or_code.name)
+        if path_or_code.kind == "cu":
+            self.add_cu(path_or_code.data, path_or_code.name)
+        else:
+            self.add_data(path_or_code.data, path_or_code.kind, path_or_code.name)
 
     def add_file(self, path, kind):
         try:
@@ -224,8 +237,11 @@ def patch_numba_linker():
         msg = f"Cannot patch Numba: {_numba_error}"
         raise RuntimeError(msg)
 
+    # Replace the built-in linker that uses the Driver API with our linker that
+    # uses nvJitLink
     Linker.new = new_patched_linker
 
+    # Add linkable code objects to Numba's top-level API
     cuda.Archive = Archive
     cuda.CUSource = CUSource
     cuda.Cubin = Cubin

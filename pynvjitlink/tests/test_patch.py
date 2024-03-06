@@ -3,6 +3,7 @@
 import pytest
 import sys
 
+from numba import cuda
 from pynvjitlink import patch, NvJitLinkError
 from pynvjitlink.patch import (
     PatchedLinker,
@@ -109,6 +110,16 @@ def test_add_file_guess_ext_linkable_code(file, gpu_compute_capability, request)
     patched_linker.add_file_guess_ext(file)
 
 
+def test_add_file_guess_ext_invalid_input(
+    device_functions_cubin, gpu_compute_capability
+):
+    # Feeding raw data as bytes to add_file_guess_ext should raise, because
+    # there's no way to know what kind of file to treat it as
+    patched_linker = PatchedLinker(cc=gpu_compute_capability)
+    with pytest.raises(TypeError, match="Expected path to file or a LinkableCode"):
+        patched_linker.add_file_guess_ext(device_functions_cubin)
+
+
 @pytest.mark.skipif(
     not _numba_version_ok,
     reason=f"Requires Numba == {required_numba_ver[0]}.{required_numba_ver[1]}",
@@ -125,8 +136,6 @@ def test_add_file_guess_ext_linkable_code(file, gpu_compute_capability, request)
     ),
 )
 def test_jit_with_linkable_code(file, request):
-    from numba import cuda
-
     file = request.getfixturevalue(file)
     patch_numba_linker()
 
@@ -140,6 +149,21 @@ def test_jit_with_linkable_code(file, request):
     result = cuda.device_array(1)
     kernel[1, 1](result)
     assert result[0] == 3
+
+
+@pytest.mark.skipif(
+    not _numba_version_ok,
+    reason=f"Requires Numba == {required_numba_ver[0]}.{required_numba_ver[1]}",
+)
+def test_jit_with_invalid_linkable_code(device_functions_cubin):
+    # Attempting to pass raw bytes to the `link` kwarg should fail as in
+    # test_add_file_guess_ext_invalid_input - this is testing the same error
+    # checking triggered through the "public" API of the patched behaviour
+    with pytest.raises(TypeError, match="Expected path to file or a LinkableCode"):
+
+        @cuda.jit("void()", link=[device_functions_cubin])
+        def kernel():
+            pass
 
 
 if __name__ == "__main__":

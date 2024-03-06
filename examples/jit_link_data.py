@@ -1,3 +1,13 @@
+# Copyright (c) 2024, NVIDIA CORPORATION.
+
+# Demonstrates the use of a CUSource object to link code to a @cuda.jit
+# function where the linked source is supplied as a string in memory, rather
+# than on-disk. The CUSource object is passed in the `link` list, just as paths
+# to files are passed when linking source files from disk.
+#
+# In addition to CUSource files, PTXSource objects can be used to link PTX from
+# memory (not shown in this example).
+
 from numba import cuda
 from pynvjitlink import patch
 
