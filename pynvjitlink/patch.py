@@ -155,7 +155,16 @@ class PatchedLinker(Linker):
         # To maintain compatibility with the original interface, all strings
         # are treated as paths in the filesystem.
         if isinstance(path_or_code, str):
-            return super().add_file_guess_ext(path_or_code)
+            # Upstream numba does not yet recognize LTOIR, so handle that
+            # separately here.
+            extension = pathlib.Path(path_or_code).suffix
+            if extension == ".ltoir":
+                self.add_file(path_or_code, 'ltoir')
+            else:
+                # Use Numba's logic for non-LTOIR
+                super().add_file_guess_ext(path_or_code)
+
+            return
 
         # Otherwise, we should have been given a LinkableCode object
         if not isinstance(path_or_code, LinkableCode):
@@ -187,6 +196,8 @@ class PatchedLinker(Linker):
             return self.add_ptx(data, name)
         elif kind == FILE_EXTENSION_MAP["o"]:
             fn = self._linker.add_object
+        elif kind == 'ltoir':
+            fn = self._linker.add_ltoir
         else:
             raise LinkerError(f"Don't know how to link {kind}")
 
