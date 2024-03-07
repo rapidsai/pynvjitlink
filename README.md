@@ -28,7 +28,7 @@ for an editable install.
 ## Installation with Conda
 
 ```shell
-conda install rapidsai-nightly::pynvjitlink
+conda install -c rapidsai pynvjitlink
 ```
 
 ## Contributing Guide
