@@ -104,7 +104,7 @@ class PatchedLinker(Linker):
         elif kind == FILE_EXTENSION_MAP["fatbin"]:
             fn = self._linker.add_fatbin
         elif kind == FILE_EXTENSION_MAP["a"]:
-            raise LinkerError("Don't know how to link archives")
+            fn = self._linker.add_library
         elif kind == FILE_EXTENSION_MAP["ptx"]:
             return self.add_ptx(data, name)
         elif kind == FILE_EXTENSION_MAP["o"]:

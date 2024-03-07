@@ -17,5 +17,3 @@ function sed_runner() {
 
 # Centralized version file update
 echo "${NEXT_FULL_TAG}" > pynvjitlink/VERSION
-sed_runner 's/'"^  VERSION [0-9\.]*"'/'"  VERSION ${NEXT_FULL_TAG}"'/g' CMakeLists.txt
-sed_runner 's/^version = "[0-9\.]*"/version = "'${NEXT_FULL_TAG}'"/g' pyproject.toml
