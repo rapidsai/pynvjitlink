@@ -27,7 +27,9 @@ for an editable install.
 
 ## Installation with Conda
 
-TODO
+```shell
+conda install -c rapidsai pynvjitlink
+```
 
 ## Contributing Guide
 
