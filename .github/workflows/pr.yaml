@@ -21,10 +21,10 @@ jobs:
       - test-wheels
       - test-patch
     secrets: inherit
-    uses: rapidsai/shared-workflows/.github/workflows/pr-builder.yaml@branch-24.02
+    uses: rapidsai/shared-workflows/.github/workflows/pr-builder.yaml@branch-24.04
   checks:
     secrets: inherit
-    uses: rapidsai/shared-workflows/.github/workflows/checks.yaml@branch-24.02
+    uses: rapidsai/shared-workflows/.github/workflows/checks.yaml@branch-24.04
     with:
       enable_check_generated_files: false
   compute-matrix:
@@ -40,7 +40,7 @@ jobs:
   build-conda:
     needs:
       - compute-matrix
-    uses: rapidsai/shared-workflows/.github/workflows/conda-python-build.yaml@branch-24.02
+    uses: rapidsai/shared-workflows/.github/workflows/conda-python-build.yaml@branch-24.04
     with:
       build_type: pull-request
       script: "ci/build_conda.sh"
@@ -49,7 +49,7 @@ jobs:
     needs:
       - build-conda
       - compute-matrix
-    uses: rapidsai/shared-workflows/.github/workflows/conda-python-tests.yaml@branch-24.02
+    uses: rapidsai/shared-workflows/.github/workflows/conda-python-tests.yaml@branch-24.04
     with:
       build_type: pull-request
       script: "ci/test_conda.sh"
@@ -58,7 +58,7 @@ jobs:
     needs:
       - build-conda
       - compute-matrix
-    uses: rapidsai/shared-workflows/.github/workflows/conda-python-tests.yaml@branch-24.02
+    uses: rapidsai/shared-workflows/.github/workflows/conda-python-tests.yaml@branch-24.04
     with:
       build_type: pull-request
       script: "ci/test_patch.sh"
@@ -67,7 +67,7 @@ jobs:
   build-wheels:
     needs:
       - compute-matrix
-    uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.02
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.04
     with:
       build_type: pull-request
       script: "ci/build_wheel.sh"
@@ -76,7 +76,7 @@ jobs:
     needs:
       - build-wheels
       - compute-matrix
-    uses: rapidsai/shared-workflows/.github/workflows/wheels-test.yaml@branch-24.02
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-test.yaml@branch-24.04
     with:
       build_type: pull-request
       script: "ci/test_wheel.sh"
