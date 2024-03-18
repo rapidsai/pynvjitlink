@@ -88,11 +88,6 @@ def test_complete_empty():
     [
         ("device_functions_cubin", InputType.CUBIN),
         ("device_functions_fatbin", InputType.FATBIN),
-        # XXX: LTOIR input type needs debugging - results in
-        # NVJITLINK_ERROR_INTERNAL.
-        pytest.param(
-            "device_functions_ltoir", InputType.LTOIR, marks=pytest.mark.xfail
-        ),
         ("device_functions_ptx", InputType.PTX),
         ("device_functions_object", InputType.OBJECT),
         ("device_functions_archive", InputType.LIBRARY),
@@ -103,6 +98,17 @@ def test_add_file(input_file, input_type, gpu_arch_flag, request):
 
     handle = _nvjitlinklib.create(gpu_arch_flag)
     _nvjitlinklib.add_data(handle, input_type.value, data, filename)
+    _nvjitlinklib.destroy(handle)
+
+
+# We test the LTO input case separately as it requires the `-lto` flag. The
+# OBJECT input type is used because the LTO-IR container is packaged in an ELF
+# object when produced by NVCC.
+def test_add_file_lto(device_functions_ltoir, gpu_arch_flag):
+    filename, data = device_functions_ltoir
+
+    handle = _nvjitlinklib.create(gpu_arch_flag, "-lto")
+    _nvjitlinklib.add_data(handle, InputType.OBJECT.value, data, filename)
     _nvjitlinklib.destroy(handle)
 
 
