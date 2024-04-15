@@ -1,8 +1,9 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 
 import os
 import pytest
 
+import pynvjitlink
 from pynvjitlink import _nvjitlinklib
 from pynvjitlink.api import InputType
 
@@ -203,3 +204,8 @@ def test_get_linked_ptx_link_not_complete_error(device_functions_ltoir, gpu_arch
     with pytest.raises(RuntimeError, match="NVJITLINK_ERROR_INTERNAL error"):
         _nvjitlinklib.get_linked_ptx(handle)
     _nvjitlinklib.destroy(handle)
+
+
+def test_package_version():
+    assert pynvjitlink.__version__ is not None
+    assert len(str(pynvjitlink.__version__)) > 0
