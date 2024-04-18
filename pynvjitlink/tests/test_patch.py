@@ -31,7 +31,7 @@ def test_numba_patching():
     from numba.cuda.cudadrv.driver import Linker
 
     patch_numba_linker()
-    assert Linker.new is new_patched_linker
+    assert Linker.new.func is new_patched_linker
 
 
 def test_create():
@@ -133,12 +133,6 @@ def test_add_file_guess_ext_invalid_input(
         "linkable_code_fatbin",
         "linkable_code_object",
         "linkable_code_ptx",
-        pytest.param(
-            "linkable_code_ltoir",
-            marks=pytest.mark.xfail(
-                reason=".ltoir file is actually an object and lto=True missing"
-            ),
-        ),
     ),
 )
 def test_jit_with_linkable_code(file, request):
@@ -149,6 +143,33 @@ def test_jit_with_linkable_code(file, request):
     add_from_numba = cuda.declare_device("add_from_numba", sig)
 
     @cuda.jit(link=[file])
+    def kernel(result):
+        result[0] = add_from_numba(1, 2)
+
+    result = cuda.device_array(1)
+    kernel[1, 1](result)
+    assert result[0] == 3
+
+
+@pytest.fixture
+def numba_linking_with_lto():
+    """
+    Patch the linker for LTO for the duration of the test.
+    Afterwards, restore the linker to whatever it was before.
+    """
+    from numba.cuda.cudadrv.driver import Linker
+
+    old_new = Linker.new
+    patch_numba_linker(lto=True)
+    yield
+    Linker.new = old_new
+
+
+def test_jit_with_linkable_code_lto(linkable_code_ltoir, numba_linking_with_lto):
+    sig = "uint32(uint32, uint32)"
+    add_from_numba = cuda.declare_device("add_from_numba", sig)
+
+    @cuda.jit(link=[linkable_code_ltoir])
     def kernel(result):
         result[0] = add_from_numba(1, 2)
 
