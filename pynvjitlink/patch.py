@@ -98,6 +98,13 @@ class Object(LinkableCode):
     default_name = "<unnamed-object>"
 
 
+class LTOIR(LinkableCode):
+    """An LTOIR file in memory"""
+
+    kind = "ltoir"
+    default_name = "<unnamed-ltoir>"
+
+
 class PatchedLinker(Linker):
     def __init__(
         self,
@@ -259,3 +266,4 @@ def patch_numba_linker():
     cuda.Fatbin = Fatbin
     cuda.Object = Object
     cuda.PTXSource = PTXSource
+    cuda.LTOIR = LTOIR
