@@ -133,7 +133,12 @@ def test_add_file_guess_ext_invalid_input(
         "linkable_code_fatbin",
         "linkable_code_object",
         "linkable_code_ptx",
-        "linkable_code_ltoir",
+        pytest.param(
+            "linkable_code_ltoir",
+            marks=pytest.mark.xfail(
+                reason=".ltoir file is actually an object and lto=True missing"
+            ),
+        ),
     ),
 )
 def test_jit_with_linkable_code(file, request):
