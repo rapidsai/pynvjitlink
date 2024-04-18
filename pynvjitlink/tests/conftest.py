@@ -4,7 +4,7 @@ import os
 import pytest
 
 from numba import cuda
-from pynvjitlink.patch import Archive, Cubin, CUSource, Fatbin, Object, PTXSource, LTOIR
+from pynvjitlink.patch import Archive, Cubin, CUSource, Fatbin, Object, PTXSource
 
 
 @pytest.fixture(scope="session")
@@ -114,14 +114,6 @@ def undefined_extern_cubin():
 
 
 @pytest.fixture(scope="session")
-def device_functions_ltoir():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(test_dir, "test_device_functions.ltoir")
-    with open(path, "rb") as f:
-        return f.read()
-
-
-@pytest.fixture(scope="session")
 def linkable_code_archive(device_functions_archive):
     return Archive(device_functions_archive)
 
@@ -149,8 +141,3 @@ def linkable_code_object(device_functions_object):
 @pytest.fixture(scope="session")
 def linkable_code_ptx(device_functions_ptx):
     return PTXSource(device_functions_ptx)
-
-
-@pytest.fixture(scope="session")
-def linkable_code_ltoir(device_functions_ltoir):
-    return LTOIR(device_functions_ltoir)
