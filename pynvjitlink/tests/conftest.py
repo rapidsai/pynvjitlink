@@ -85,6 +85,11 @@ def device_functions_ltoir():
 
 
 @pytest.fixture(scope="session")
+def device_functions_ltoir_object():
+    return read_test_file("test_device_functions.ltoir.o")
+
+
+@pytest.fixture(scope="session")
 def device_functions_object():
     return read_test_file("test_device_functions.o")
 

@@ -41,11 +41,14 @@ all:
 	nvcc $(NVCC_FLAGS) $(CUBIN_FLAGS) -o $(OUTPUT_DIR)/undefined_extern.cubin undefined_extern.cu
 	nvcc $(NVCC_FLAGS) $(CUBIN_FLAGS) -o $(OUTPUT_DIR)/test_device_functions.cubin test_device_functions.cu
 	nvcc $(NVCC_FLAGS) $(FATBIN_FLAGS) -o $(OUTPUT_DIR)/test_device_functions.fatbin test_device_functions.cu
-	nvcc $(NVCC_FLAGS) $(LTOIR_FLAGS) -o $(OUTPUT_DIR)/test_device_functions.ltoir test_device_functions.cu
 	nvcc $(NVCC_FLAGS) $(PTX_FLAGS) -o $(OUTPUT_DIR)/test_device_functions.ptx test_device_functions.cu
 	nvcc $(NVCC_FLAGS) $(OBJECT_FLAGS) -o $(OUTPUT_DIR)/test_device_functions.o test_device_functions.cu
 	nvcc $(NVCC_FLAGS) $(LIBRARY_FLAGS) -o $(OUTPUT_DIR)/test_device_functions.a test_device_functions.cu
 
+	# Generate LTO-IR wrapped in a fatbin
+	nvcc $(NVCC_FLAGS) $(LTOIR_FLAGS) -o $(OUTPUT_DIR)/test_device_functions.ltoir.o test_device_functions.cu
+	# Generate LTO-IR in a "raw" LTO-IR container
+	python generate_raw_ltoir.py --arch sm_$(GPU_CC) -o $(OUTPUT_DIR)/test_device_functions.ltoir test_device_functions.cu
 	# We also want to test linking a .cu file; this needs no compilation,
 	# so copy it instead
 	cp test_device_functions.cu $(OUTPUT_DIR)

@@ -63,8 +63,8 @@ def test_add_file(input_file, input_type, gpu_arch_flag, request):
 # We test the LTO input case separately as it requires the `-lto` flag. The
 # OBJECT input type is used because the LTO-IR container is packaged in an ELF
 # object when produced by NVCC.
-def test_add_file_lto(device_functions_ltoir, gpu_arch_flag):
-    filename, data = device_functions_ltoir
+def test_add_file_lto(device_functions_ltoir_object, gpu_arch_flag):
+    filename, data = device_functions_ltoir_object
 
     handle = _nvjitlinklib.create(gpu_arch_flag, "-lto")
     _nvjitlinklib.add_data(handle, InputType.OBJECT.value, data, filename)
@@ -123,11 +123,11 @@ def test_get_linked_cubin_link_not_complete_error(
     _nvjitlinklib.destroy(handle)
 
 
-def test_get_linked_cubin_from_lto(device_functions_ltoir, gpu_arch_flag):
-    filename, data = device_functions_ltoir
-    # device_functions_ltoir is a host object containing a fatbin containing an
-    # LTOIR container, because that is what NVCC produces when LTO is
-    # requested. So we need to use the OBJECT input type, and the linker
+def test_get_linked_cubin_from_lto(device_functions_ltoir_object, gpu_arch_flag):
+    filename, data = device_functions_ltoir_object
+    # device_functions_ltoir_object is a host object containing a fatbin
+    # containing an LTOIR container, because that is what NVCC produces when
+    # LTO is requested. So we need to use the OBJECT input type, and the linker
     # retrieves the LTO IR from it because we passed the -lto flag.
     input_type = InputType.OBJECT.value
     handle = _nvjitlinklib.create(gpu_arch_flag, "-lto")
@@ -140,11 +140,11 @@ def test_get_linked_cubin_from_lto(device_functions_ltoir, gpu_arch_flag):
     assert cubin[:4] == b"\x7fELF"
 
 
-def test_get_linked_ptx_from_lto(device_functions_ltoir, gpu_arch_flag):
-    filename, data = device_functions_ltoir
-    # device_functions_ltoir is a host object containing a fatbin containing an
-    # LTOIR container, because that is what NVCC produces when LTO is
-    # requested. So we need to use the OBJECT input type, and the linker
+def test_get_linked_ptx_from_lto(device_functions_ltoir_object, gpu_arch_flag):
+    filename, data = device_functions_ltoir_object
+    # device_functions_ltoir_object is a host object containing a fatbin
+    # containing an LTOIR container, because that is what NVCC produces when
+    # LTO is requested. So we need to use the OBJECT input type, and the linker
     # retrieves the LTO IR from it because we passed the -lto flag.
     input_type = InputType.OBJECT.value
     handle = _nvjitlinklib.create(gpu_arch_flag, "-lto", "-ptx")
@@ -154,9 +154,9 @@ def test_get_linked_ptx_from_lto(device_functions_ltoir, gpu_arch_flag):
     _nvjitlinklib.destroy(handle)
 
 
-def test_get_linked_ptx_link_not_complete_error(device_functions_ltoir, gpu_arch_flag):
+def test_get_linked_ptx_link_not_complete_error(device_functions_ltoir_object, gpu_arch_flag):
     handle = _nvjitlinklib.create(gpu_arch_flag, "-lto", "-ptx")
-    filename, data = device_functions_ltoir
+    filename, data = device_functions_ltoir_object
     input_type = InputType.OBJECT.value
     _nvjitlinklib.add_data(handle, input_type, data, filename)
     with pytest.raises(RuntimeError, match="NVJITLINK_ERROR_INTERNAL error"):
