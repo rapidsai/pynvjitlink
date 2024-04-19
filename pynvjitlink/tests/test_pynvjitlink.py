@@ -1,6 +1,5 @@
 # Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 
-import os
 import pytest
 
 import pynvjitlink
@@ -154,7 +153,9 @@ def test_get_linked_ptx_from_lto(device_functions_ltoir_object, gpu_arch_flag):
     _nvjitlinklib.destroy(handle)
 
 
-def test_get_linked_ptx_link_not_complete_error(device_functions_ltoir_object, gpu_arch_flag):
+def test_get_linked_ptx_link_not_complete_error(
+    device_functions_ltoir_object, gpu_arch_flag
+):
     handle = _nvjitlinklib.create(gpu_arch_flag, "-lto", "-ptx")
     filename, data = device_functions_ltoir_object
     input_type = InputType.OBJECT.value
