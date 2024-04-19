@@ -8,48 +8,6 @@ from pynvjitlink import _nvjitlinklib
 from pynvjitlink.api import InputType
 
 
-def read_test_file(filename):
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(test_dir, filename)
-    with open(path, "rb") as f:
-        return filename, f.read()
-
-
-@pytest.fixture
-def device_functions_cubin():
-    return read_test_file("test_device_functions.cubin")
-
-
-@pytest.fixture
-def device_functions_fatbin():
-    return read_test_file("test_device_functions.fatbin")
-
-
-@pytest.fixture
-def device_functions_ltoir():
-    return read_test_file("test_device_functions.ltoir")
-
-
-@pytest.fixture
-def device_functions_object():
-    return read_test_file("test_device_functions.o")
-
-
-@pytest.fixture
-def device_functions_archive():
-    return read_test_file("test_device_functions.a")
-
-
-@pytest.fixture
-def device_functions_ptx():
-    return read_test_file("test_device_functions.ptx")
-
-
-@pytest.fixture
-def undefined_extern_cubin():
-    return read_test_file("undefined_extern.cubin")
-
-
 def test_create_no_arch_error():
     # nvjitlink expects at least the architecture to be specified.
     with pytest.raises(RuntimeError, match="NVJITLINK_ERROR_MISSING_ARCH error"):
