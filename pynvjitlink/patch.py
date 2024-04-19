@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION.
 from pynvjitlink.api import NvJitLinker, NvJitLinkError
 
 import os
@@ -96,6 +96,13 @@ class Object(LinkableCode):
 
     kind = FILE_EXTENSION_MAP["o"]
     default_name = "<unnamed-object>"
+
+
+class LTOIR(LinkableCode):
+    """An LTOIR file in memory"""
+
+    kind = "ltoir"
+    default_name = "<unnamed-ltoir>"
 
 
 class PatchedLinker(Linker):
@@ -259,3 +266,4 @@ def patch_numba_linker():
     cuda.Fatbin = Fatbin
     cuda.Object = Object
     cuda.PTXSource = PTXSource
+    cuda.LTOIR = LTOIR
