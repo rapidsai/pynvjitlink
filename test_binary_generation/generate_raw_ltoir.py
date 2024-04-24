@@ -38,16 +38,19 @@ def check(args):
         return args
 
 
-def determine_include_path():
-    # Inspired by the logic in FindCUDA.cmake. We need the CUDA include path
-    # because NVRTC doesn't add it by default, and we can compile a much
-    # broader set of test files if the CUDA headers are available.
+def determine_include_flags():
+    # Inspired by the logic in FindCUDAToolkit.cmake. We need the CUDA include
+    # paths because NVRTC doesn't add them by default, and we can compile a
+    # much broader set of test files if the CUDA includes are available.
 
-    # We get NVCC to tell us the location of the CUDA Toolkit.
+    # We invoke NVCC in verbose mode ("-v") and give a dummy filename, without
+    # which it won't produce output.
 
     cmd = ["nvcc", "-v", "__dummy"]
     cp = subprocess.run(cmd, capture_output=True)
 
+    # Since the dummy file doesn't actually exist, NVCC is expected to exit
+    # with an error code of 1.
     rc = cp.returncode
     if rc != 1:
         print(f"Unexpected return code ({rc}) from `nvcc -v`. Expected 1.")
@@ -56,41 +59,19 @@ def determine_include_path():
     output = cp.stderr.decode()
     lines = output.splitlines()
 
-    top_lines = [line for line in lines if line.startswith("#$ TOP=")]
-    if len(top_lines) != 1:
-        print(f"Expected exactly one TOP line. Got {len(top_lines)}.")
+    includes_lines = [line for line in lines if line.startswith("#$ INCLUDES=")]
+    if len(includes_lines) != 1:
+        print(f"Expected exactly one INCLUDES line. Got {len(includes_lines)}.")
         return None
 
-    # Parse out the path following "TOP="
+    # Parse out the arguments following "INCLUDES=" - these are a space
+    # separated list of strings that are potentially quoted.
 
-    top_dir = top_lines[0].split("TOP=")[1].strip()
-    include_dir = f"{top_dir}/include"
-    print(f"Using CUDA include dir {include_dir}")
+    quoted_flags = includes_lines[0].split("INCLUDES=")[1].strip().split()
+    include_flags = [flag.strip('"') for flag in quoted_flags]
+    print(f"Using CUDA include flags: {include_flags}")
 
-    # Sanity check the include dir
-
-    include_path = pathlib.Path(include_dir)
-    if not include_path.exists():
-        print("Include path appears not to exist", file=sys.stdout)
-        return None
-
-    if not include_path.is_dir():
-        print("Include path appears not to be a directory", file=sys.stdout)
-        return None
-
-    cuda_h = include_path / "cuda.h"
-
-    if not cuda_h.exists():
-        print("cuda.h not found in CUDA in CUDA include location", file=sys.stderr)
-        return None
-
-    if not cuda_h.is_file():
-        print("cuda.h is not a file", file=sys.stdout)
-        return None
-
-    # All is now well!
-
-    return include_dir
+    return include_flags
 
 
 def get_ltoir(source, name, arch):
@@ -98,9 +79,9 @@ def get_ltoir(source, name, arch):
 
     program = check(nvrtc.nvrtcCreateProgram(source.encode(), name.encode(), 0, [], []))
 
-    cuda_include_path = determine_include_path()
-    if cuda_include_path is None:
-        print("Error determining CUDA include path. Exiting.", file=sys.stderr)
+    cuda_include_flags = determine_include_flags()
+    if cuda_include_flags is None:
+        print("Error determining CUDA include flags. Exiting.", file=sys.stderr)
         sys.exit(1)
 
     options = [
@@ -108,7 +89,7 @@ def get_ltoir(source, name, arch):
         "-dlto",
         "-rdc",
         "true",
-        f"-I{cuda_include_path}",
+        *cuda_include_flags
     ]
     options = [o.encode() for o in options]
 
