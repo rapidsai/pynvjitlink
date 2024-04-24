@@ -89,7 +89,7 @@ def get_ltoir(source, name, arch):
         "-dlto",
         "-rdc",
         "true",
-        *cuda_include_flags
+        *cuda_include_flags,
     ]
     options = [o.encode() for o in options]
 
