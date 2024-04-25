@@ -57,100 +57,95 @@ def absent_gpu_arch_flag(absent_gpu_compute_capability):
     return f"-arch=sm_{major}{minor}"
 
 
-@pytest.fixture(scope="session")
-def device_functions_archive():
+def read_test_file(filename):
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(test_dir, "test_device_functions.a")
+    path = os.path.join(test_dir, filename)
     with open(path, "rb") as f:
-        return f.read()
-
-
-@pytest.fixture(scope="session")
-def device_functions_cubin():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(test_dir, "test_device_functions.cubin")
-    with open(path, "rb") as f:
-        return f.read()
+        return filename, f.read()
 
 
 @pytest.fixture(scope="session")
 def device_functions_cusource():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(test_dir, "test_device_functions.cu")
-    with open(path, "r") as f:
-        return f.read()
+    return read_test_file("test_device_functions.cu")
+
+
+@pytest.fixture(scope="session")
+def device_functions_cubin():
+    return read_test_file("test_device_functions.cubin")
 
 
 @pytest.fixture(scope="session")
 def device_functions_fatbin():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(test_dir, "test_device_functions.fatbin")
-    with open(path, "rb") as f:
-        return f.read()
-
-
-@pytest.fixture(scope="session")
-def device_functions_object():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(test_dir, "test_device_functions.o")
-    with open(path, "rb") as f:
-        return f.read()
-
-
-@pytest.fixture(scope="session")
-def device_functions_ptx():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(test_dir, "test_device_functions.ptx")
-    with open(path, "rb") as f:
-        return f.read()
-
-
-@pytest.fixture(scope="session")
-def undefined_extern_cubin():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    fatbin_path = os.path.join(test_dir, "undefined_extern.cubin")
-    with open(fatbin_path, "rb") as f:
-        return f.read()
+    return read_test_file("test_device_functions.fatbin")
 
 
 @pytest.fixture(scope="session")
 def device_functions_ltoir():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(test_dir, "test_device_functions.ltoir")
-    with open(path, "rb") as f:
-        return f.read()
+    return read_test_file("test_device_functions.ltoir")
+
+
+@pytest.fixture(scope="session")
+def device_functions_ltoir_object():
+    return read_test_file("test_device_functions.ltoir.o")
+
+
+@pytest.fixture(scope="session")
+def device_functions_object():
+    return read_test_file("test_device_functions.o")
+
+
+@pytest.fixture(scope="session")
+def device_functions_archive():
+    return read_test_file("test_device_functions.a")
+
+
+@pytest.fixture(scope="session")
+def device_functions_ptx():
+    return read_test_file("test_device_functions.ptx")
+
+
+@pytest.fixture(scope="session")
+def undefined_extern_cubin():
+    return read_test_file("undefined_extern.cubin")
 
 
 @pytest.fixture(scope="session")
 def linkable_code_archive(device_functions_archive):
-    return Archive(device_functions_archive)
+    name, data = device_functions_archive
+    return Archive(data, name=name)
 
 
 @pytest.fixture(scope="session")
 def linkable_code_cubin(device_functions_cubin):
-    return Cubin(device_functions_cubin)
+    name, data = device_functions_cubin
+    return Cubin(data, name=name)
 
 
 @pytest.fixture(scope="session")
 def linkable_code_cusource(device_functions_cusource):
-    return CUSource(device_functions_cusource)
+    name, data = device_functions_cusource
+    return CUSource(data, name=name)
 
 
 @pytest.fixture(scope="session")
 def linkable_code_fatbin(device_functions_fatbin):
-    return Fatbin(device_functions_fatbin)
+    name, data = device_functions_fatbin
+    return Fatbin(data, name=name)
 
 
 @pytest.fixture(scope="session")
 def linkable_code_object(device_functions_object):
-    return Object(device_functions_object)
+    name, data = device_functions_object
+    return Object(data, name=name)
 
 
 @pytest.fixture(scope="session")
 def linkable_code_ptx(device_functions_ptx):
-    return PTXSource(device_functions_ptx)
+    name, data = device_functions_ptx
+    return PTXSource(data, name=name)
 
 
 @pytest.fixture(scope="session")
 def linkable_code_ltoir(device_functions_ltoir):
-    return LTOIR(device_functions_ltoir)
+    name, data = device_functions_ltoir
+    return LTOIR(data, name=name)

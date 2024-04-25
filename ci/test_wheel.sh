@@ -8,6 +8,7 @@ rapids-logger "Install testing dependencies"
 python -m pip install \
     "numba>=0.58" \
     psutil \
+    cuda-python \
     pytest
 
 rapids-logger "Download Wheel"

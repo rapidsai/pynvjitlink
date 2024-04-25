@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 
 import pytest
 import sys
@@ -32,50 +32,50 @@ def test_create_and_destroy():
 
 def test_add_cubin(device_functions_cubin, gpu_arch_flag):
     nvjitlinker = NvJitLinker(gpu_arch_flag)
-    name = "test_device_functions.cubin"
-    nvjitlinker.add_cubin(device_functions_cubin, name)
+    name, cubin = device_functions_cubin
+    nvjitlinker.add_cubin(cubin, name)
 
 
 def test_add_incompatible_cubin_arch_error(device_functions_cubin, alt_gpu_arch_flag):
     nvjitlinker = NvJitLinker(alt_gpu_arch_flag)
-    name = "test_device_functions.cubin"
+    name, cubin = device_functions_cubin
     with pytest.raises(NvJitLinkError, match="NVJITLINK_ERROR_INVALID_INPUT error"):
-        nvjitlinker.add_cubin(device_functions_cubin, name)
+        nvjitlinker.add_cubin(cubin, name)
 
 
 def test_add_fatbin_arch_1(device_functions_fatbin, gpu_arch_flag):
     nvjitlinker = NvJitLinker(gpu_arch_flag)
-    name = "test_device_functions.fatbin"
-    nvjitlinker.add_fatbin(device_functions_fatbin, name)
+    name, fatbin = device_functions_fatbin
+    nvjitlinker.add_fatbin(fatbin, name)
 
 
 def test_add_fatbin_arch_2(device_functions_fatbin, alt_gpu_arch_flag):
     nvjitlinker = NvJitLinker(alt_gpu_arch_flag)
-    name = "test_device_functions.fatbin"
-    nvjitlinker.add_fatbin(device_functions_fatbin, name)
+    name, fatbin = device_functions_fatbin
+    nvjitlinker.add_fatbin(fatbin, name)
 
 
 def test_add_nonexistent_fatbin_arch_error(
     device_functions_fatbin, absent_gpu_arch_flag
 ):
     nvjitlinker = NvJitLinker(absent_gpu_arch_flag)
-    name = "test_device_functions.fatbin"
+    name, fatbin = device_functions_fatbin
     with pytest.raises(NvJitLinkError, match="NVJITLINK_ERROR_INVALID_INPUT error"):
-        nvjitlinker.add_fatbin(device_functions_fatbin, name)
+        nvjitlinker.add_fatbin(fatbin, name)
 
 
 def test_add_cubin_with_fatbin_error(device_functions_fatbin, gpu_arch_flag):
     nvjitlinker = NvJitLinker(gpu_arch_flag)
-    name = "test_device_functions.fatbin"
+    name, fatbin = device_functions_fatbin
     with pytest.raises(NvJitLinkError, match="NVJITLINK_ERROR_INVALID_INPUT error"):
-        nvjitlinker.add_cubin(device_functions_fatbin, name)
+        nvjitlinker.add_cubin(fatbin, name)
 
 
 def test_add_fatbin_with_cubin_error(device_functions_cubin, gpu_arch_flag):
     nvjitlinker = NvJitLinker(gpu_arch_flag)
-    name = "test_device_functions.cubin"
+    name, cubin = device_functions_cubin
     with pytest.raises(NvJitLinkError, match="NVJITLINK_ERROR_INVALID_INPUT error"):
-        nvjitlinker.add_fatbin(device_functions_cubin, name)
+        nvjitlinker.add_fatbin(cubin, name)
 
 
 def test_duplicate_symbols_cubin_and_fatbin(
@@ -84,11 +84,11 @@ def test_duplicate_symbols_cubin_and_fatbin(
     # This link errors because the cubin and the fatbin contain the same
     # symbols.
     nvjitlinker = NvJitLinker(gpu_arch_flag)
-    name = "test_device_functions.cubin"
-    nvjitlinker.add_cubin(device_functions_cubin, name)
-    name = "test_device_functions.fatbin"
+    name, cubin = device_functions_cubin
+    nvjitlinker.add_cubin(cubin, name)
+    name, fatbin = device_functions_fatbin
     with pytest.raises(NvJitLinkError, match="NVJITLINK_ERROR_INVALID_INPUT error"):
-        nvjitlinker.add_fatbin(device_functions_fatbin, name)
+        nvjitlinker.add_fatbin(fatbin, name)
 
 
 def test_get_linked_cubin_complete_empty_error():
@@ -101,8 +101,8 @@ def test_get_linked_cubin_complete_empty_error():
 
 def test_get_linked_cubin(device_functions_cubin, gpu_arch_flag):
     nvjitlinker = NvJitLinker(gpu_arch_flag)
-    name = "test_device_functions.cubin"
-    nvjitlinker.add_cubin(device_functions_cubin, name)
+    name, cubin = device_functions_cubin
+    nvjitlinker.add_cubin(cubin, name)
     cubin = nvjitlinker.get_linked_cubin()
 
     # Just check we got something that looks like an ELF
@@ -111,8 +111,8 @@ def test_get_linked_cubin(device_functions_cubin, gpu_arch_flag):
 
 def test_get_error_log(undefined_extern_cubin, gpu_arch_flag):
     nvjitlinker = NvJitLinker(gpu_arch_flag)
-    name = "undefined_extern.cubin"
-    nvjitlinker.add_cubin(undefined_extern_cubin, name)
+    name, cubin = undefined_extern_cubin
+    nvjitlinker.add_cubin(cubin, name)
     with pytest.raises(NvJitLinkError):
         nvjitlinker.get_linked_cubin()
     error_log = nvjitlinker.error_log
@@ -121,8 +121,8 @@ def test_get_error_log(undefined_extern_cubin, gpu_arch_flag):
 
 def test_get_info_log(device_functions_cubin, gpu_arch_flag):
     nvjitlinker = NvJitLinker(gpu_arch_flag)
-    name = "test_device_functions.cubin"
-    nvjitlinker.add_cubin(device_functions_cubin, name)
+    name, cubin = device_functions_cubin
+    nvjitlinker.add_cubin(cubin, name)
     nvjitlinker.get_linked_cubin()
     info_log = nvjitlinker.info_log
     # Info log is empty
