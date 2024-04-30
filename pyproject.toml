@@ -1,3 +1,5 @@
+# Copyright (c) 2023-2024, NVIDIA CORPORATION.
+
 [tool.scikit-build]
 cmake.minimum-version = "3.26.4"
 cmake.verbose = true
