@@ -6,7 +6,7 @@ build-dir = "build/{wheel_tag}"
 wheel.packages = ["pynvjitlink"]
 
 [build-system]
-requires = ["scikit-build-core"]
+requires = ["scikit-build-core==0.8.2"]
 build-backend = "scikit_build_core.build"
 
 [project]

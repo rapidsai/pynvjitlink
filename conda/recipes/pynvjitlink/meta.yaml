@@ -36,7 +36,7 @@ requirements:
     - cuda-version {{ cuda_compiler_version }}
     - python
     - pip
-    - scikit-build-core
+    - scikit-build-core 0.8.2
   run:
     - python
     - numba >=0.58
