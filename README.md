@@ -6,7 +6,7 @@ The [RAPIDS](https://rapids.ai) pynvjitlink library provides a Python binding fo
 ## Installation with pip
 
 ```shell
-pip install --extra-index-url https://pypi.nvidia.com pynvjitlink-cu12
+pip install pynvjitlink-cu12
 ```
 
 ## Installation from source
