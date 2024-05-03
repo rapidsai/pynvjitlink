@@ -15,22 +15,13 @@ find_package(
   CUDAToolkit 12.2.140 REQUIRED
 )
 
-#set_target_properties(_nvjitlinklib PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
-#target_include_directories(_nvjitlinklib PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
 target_link_libraries(_nvjitlinklib PRIVATE CUDA::nvptxcompiler_static)
-#target_link_libraries(_nvjitlinklib PRIVATE optimized CUDA::nvJitLink)
-target_link_libraries(_nvjitlinklib PRIVATE CUDA::nvJitLink)
-
-#get_target_property(loc CUDA::nvJitLink_static LOCATION)
-#get_target_property(loc2 CUDA::nvJitLink LOCATION)
-
-#include(CMakePrintHelpers)
-#cmake_print_variables(loc)
-#cmake_print_variables(loc2)
-#cmake_print_variables(CUDAToolkit_INCLUDE_DIRS)
-
-
-#target_compile_options(_nvjitlinklib PRIVATE -Werror -Wall)
+if (WIN32)
+    target_link_libraries(_nvjitlinklib PRIVATE CUDA::nvJitLink)
+else()
+    target_link_libraries(_nvjitlinklib PRIVATE CUDA::nvJitLink_static)
+    target_compile_options(_nvjitlinklib PRIVATE -Werror -Wall)
+endif()
 
 target_compile_features(_nvjitlinklib PRIVATE cxx_std_11)
 
