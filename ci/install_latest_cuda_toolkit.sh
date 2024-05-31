@@ -17,4 +17,4 @@ else
     exit 1
 fi
 
-yum install -y cuda-toolkit-12-4
+yum install -y cuda-toolkit-12-5
