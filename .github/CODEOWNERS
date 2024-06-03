@@ -1,5 +1,5 @@
 #python code owners
-/pynvjitlink/ @rapidsai/pynvjitlink-write
+pynvjitlink/ @rapidsai/pynvjitlink-write
 
 #cmake code owners
 **/CMakeLists.txt @rapidsai/pynvjitlink-write
