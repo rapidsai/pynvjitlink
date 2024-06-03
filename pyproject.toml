@@ -33,3 +33,6 @@ license-files = ["LICENSE"]
 provider = "scikit_build_core.metadata.regex"
 input = "pynvjitlink/VERSION"
 regex = "(?P<value>.*)"
+
+[tool.pytest.ini_options]
+xfail_strict = true
