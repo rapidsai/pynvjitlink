@@ -1,0 +1,109 @@
+# Dependency list for https://github.com/rapidsai/dependency-file-generator
+files:
+  test:
+    output: none
+    includes:
+      - cuda_version
+      - py_version
+      - cuda
+      - test
+  checks:
+    output: none
+    includes:
+      - checks
+      - py_version
+  py_build:
+    output: pyproject
+    pyproject_dir: .
+    extras:
+      table: build-system
+    includes:
+      - build
+  py_run:
+    output: pyproject
+    pyproject_dir: .
+    extras:
+      table: project
+    includes:
+      - run
+  py_optional_test:
+    output: pyproject
+    pyproject_dir: .
+    extras:
+      table: project.optional-dependencies
+      key: test
+    includes:
+      - test
+channels:
+  - rapidsai
+  - rapidsai-nightly
+  - conda-forge
+dependencies:
+  build:
+    common:
+      - output_types: [requirements, pyproject]
+        packages:
+          - scikit-build-core[pyproject]>=0.7.0
+  checks:
+    common:
+      - output_types: [conda, requirements]
+        packages:
+          - pre-commit
+  cuda_version:
+    specific:
+      - output_types: conda
+        matrices:
+          - matrix:
+              cuda: "12.0"
+            packages:
+              - cuda-version=12.0
+  cuda:
+    specific:
+      - output_types: conda
+        matrices:
+          - matrix:
+              cuda: "12.*"
+            packages:
+              - cuda-nvcc
+              - cuda-nvrtc
+  py_version:
+    specific:
+      - output_types: conda
+        matrices:
+          - matrix:
+              py: "3.9"
+            packages:
+              - python=3.9
+          - matrix:
+              py: "3.10"
+            packages:
+              - python=3.10
+          - matrix:
+              py: "3.11"
+            packages:
+              - python=3.11
+          - matrix:
+              py: "3.12"
+            packages:
+              - python=3.12
+          - matrix:
+            packages:
+              - python>=3.9,<3.13
+  run:
+    common:
+      - output_types: [conda, requirements, pyproject]
+        packages: []
+  test:
+    common:
+      - output_types: conda
+        packages:
+          - c-compiler
+          - cxx-compiler
+          - make
+      - output_types: [conda, requirements, pyproject]
+        packages:
+          - cuda-python
+          - numba>=0.58
+          - psutil
+          - pytest
+          - pytest-cov
