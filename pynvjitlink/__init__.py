@@ -3,4 +3,4 @@
 from pynvjitlink.api import NvJitLinker, NvJitLinkError
 from pynvjitlink._version import __version__
 
-__all__ = [NvJitLinker, NvJitLinkError, __version__]
+__all__ = ["NvJitLinker", "NvJitLinkError", "__version__"]
