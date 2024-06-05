@@ -36,6 +36,7 @@ requirements:
     - cuda-version {{ cuda_compiler_version }}
     - python
     - pip
+    - rapids-build-backend >=0.3.0,<0.4.0dev0
     - scikit-build-core
   run:
     - python
