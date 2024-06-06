@@ -8,7 +8,7 @@ source "$(dirname "$0")/install_latest_cuda_toolkit.sh"
 
 RAPIDS_PY_CUDA_SUFFIX="$(rapids-wheel-ctk-name-gen ${RAPIDS_CUDA_VERSION})"
 
-rapids-logger "Build wheel"s
+rapids-logger "Build wheel"
 mkdir -p ./dist
 python -m pip wheel . --wheel-dir=./dist -vvv --disable-pip-version-check --no-deps
 
