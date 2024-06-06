@@ -4,8 +4,8 @@ from pynvjitlink.api import NvJitLinker, NvJitLinkError
 from pynvjitlink._version import __git_commit__, __version__
 
 __all__ = [
-    "__git_commit__",
-    "NvJitLinker",
     "NvJitLinkError",
+    "NvJitLinker",
+    "__git_commit__",
     "__version__",
 ]
