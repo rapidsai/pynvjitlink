@@ -13,4 +13,4 @@ if [ "${OS_ID}" != "rocky" ]; then
     exit 1
 fi
 
-yum install -y nvidia-driver cuda-nvcc-12-5 cuda-cudart-devel-12-5 cuda-driver-devel-12-5 libnvjitlink-devel-12-5
+yum install -y cuda-nvcc-12-5 cuda-cudart-devel-12-5 cuda-driver-devel-12-5 libnvjitlink-devel-12-5
