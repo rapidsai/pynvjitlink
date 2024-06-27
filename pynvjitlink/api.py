@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION.
 
 from enum import Enum
 from pynvjitlink import _nvjitlinklib
@@ -14,6 +14,10 @@ class InputType(Enum):
     FATBIN = 4
     OBJECT = 5
     LIBRARY = 6
+
+
+def nvjitlink_version():
+    return _nvjitlinklib.nvjitlink_version()
 
 
 class NvJitLinkError(RuntimeError):
