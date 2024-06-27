@@ -10,3 +10,9 @@ def test_version_constants_are_populated():
     # __version__ should always be non-empty
     assert isinstance(pynvjitlink.__version__, str)
     assert len(pynvjitlink.__version__) > 0
+
+
+def test_nvjitlink_version():
+    major, minor = pynvjitlink.nvjitlink_version()
+    assert major >= 12
+    assert minor >= 0

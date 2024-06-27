@@ -12,7 +12,8 @@ rapids-logger "Build wheel"
 mkdir -p ./dist
 python -m pip wheel . --wheel-dir=./dist -vvv --disable-pip-version-check --no-deps
 
-python -m auditwheel repair -w ./final_dist ./dist/*
+# Exclude libcuda.so.1 because we only install a driver stub
+python -m auditwheel repair --exclude libcuda.so.1 -w ./final_dist ./dist/*
 
 rapids-logger "Upload Wheel"
 RAPIDS_PY_WHEEL_NAME="pynvjitlink_${RAPIDS_PY_CUDA_SUFFIX}" rapids-upload-wheels-to-s3 ./final_dist
