@@ -13,7 +13,6 @@ def test_version_constants_are_populated():
 
 
 def test_nvjitlink_version():
-    nvjitlink_version = pynvjitlink.nvjitlink_version()
-    assert len(nvjitlink_version) == 2
-    assert nvjitlink_version[0] >= 12
-    assert nvjitlink_version[1] >= 0
+    major, minor = pynvjitlink.nvjitlink_version()
+    assert major >= 12
+    assert minor >= 0
