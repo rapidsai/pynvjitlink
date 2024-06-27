@@ -23,6 +23,7 @@ jobs:
   build-wheels:
     needs:
       - compute-matrix
+    secrets: inherit
     uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.08
     with:
       build_type: branch
@@ -31,6 +32,7 @@ jobs:
   build-conda:
     needs:
       - compute-matrix
+    secrets: inherit
     uses: rapidsai/shared-workflows/.github/workflows/conda-python-build.yaml@branch-24.08
     with:
       build_type: branch
