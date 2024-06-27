@@ -55,7 +55,7 @@ static void set_exception(PyObject *exception_type, const char *message_format,
   PyErr_SetString(exception_type, exception_message);
 }
 
-static PyObject *nvjitlink_version() {
+static PyObject *nvjitlink_version(PyObject *self, PyObject *Py_UNUSED(args)) {
   unsigned int major;
   unsigned int minor;
 
@@ -336,7 +336,7 @@ static PyObject *get_linked_cubin(PyObject *self, PyObject *args) {
 }
 
 static PyMethodDef ext_methods[] = {
-    {"nvjitlink_version", (PyCFunction)nvjitlink_version, METH_VARARGS,
+    {"nvjitlink_version", (PyCFunction)nvjitlink_version, METH_NOARGS,
      "Returns the nvJitLink version"},
     {"create", (PyCFunction)create, METH_VARARGS,
      "Returns a handle to a new nvJitLink object"},
