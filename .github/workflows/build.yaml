@@ -47,6 +47,7 @@ jobs:
       sha: ${{ inputs.sha }}
       date: ${{ inputs.date }}
       package-name: pynvjitlink
+      publish_to_pypi: true
   publish-conda:
     needs:
      - build-conda
