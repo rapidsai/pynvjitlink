@@ -1,5 +1,7 @@
 __pycache__
 build
+dist
+final_dist
 *.so
 *.egg-info
 .*.swp

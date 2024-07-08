@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, NVIDIA CORPORATION.
+ * Copyright (c) 2023-2024, NVIDIA CORPORATION.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,40 @@ static void set_exception(PyObject *exception_type, const char *message_format,
   sprintf(exception_message, message_format, nvJitLinkGetErrorEnum(error));
 
   PyErr_SetString(exception_type, exception_message);
+}
+
+static PyObject *nvjitlink_version(PyObject *self, PyObject *Py_UNUSED(args)) {
+  unsigned int major;
+  unsigned int minor;
+
+  nvJitLinkResult res = nvJitLinkVersion(&major, &minor);
+
+  if (res != NVJITLINK_SUCCESS) {
+    set_exception(PyExc_RuntimeError, "%s error when calling nvJitLinkVersion",
+                  res);
+    return nullptr;
+  }
+
+  PyObject *py_version = PyTuple_New(2);
+  PyObject *py_major = PyLong_FromUnsignedLong(major);
+  PyObject *py_minor = PyLong_FromUnsignedLong(minor);
+  if (!py_version || !py_major || !py_minor) {
+    PyErr_SetString(PyExc_RuntimeError, "Failed to create version tuple");
+    if (py_major) {
+      Py_DecRef(py_major);
+    }
+    if (py_minor) {
+      Py_DecRef(py_minor);
+    }
+    if (py_version) {
+      Py_DecRef(py_version);
+    }
+    return nullptr;
+  }
+
+  PyTuple_SetItem(py_version, 0, py_major);
+  PyTuple_SetItem(py_version, 1, py_minor);
+  return py_version;
 }
 
 static PyObject *create(PyObject *self, PyObject *args) {
@@ -302,6 +336,8 @@ static PyObject *get_linked_cubin(PyObject *self, PyObject *args) {
 }
 
 static PyMethodDef ext_methods[] = {
+    {"nvjitlink_version", (PyCFunction)nvjitlink_version, METH_NOARGS,
+     "Returns the nvJitLink version"},
     {"create", (PyCFunction)create, METH_VARARGS,
      "Returns a handle to a new nvJitLink object"},
     {"destroy", (PyCFunction)destroy, METH_VARARGS,
