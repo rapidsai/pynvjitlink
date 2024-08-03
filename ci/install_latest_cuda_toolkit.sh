@@ -13,9 +13,12 @@ if [ "${OS_ID}" != "rocky" ]; then
     exit 1
 fi
 
+export CUDA_VERSION="$(cat pynvjitlink/CUDA_VERSION)"
+export YUM_CUDA_VERSION="${CUDA_VERSION//./-}"
+
 yum install -y \
-    cuda-nvcc-12-5 \
-    cuda-cudart-devel-12-5 \
-    cuda-driver-devel-12-5 \
-    libnvjitlink-devel-12-5 \
+    cuda-nvcc-$YUM_CUDA_VERSION \
+    cuda-cudart-devel-$YUM_CUDA_VERSION \
+    cuda-driver-devel-$YUM_CUDA_VERSION \
+    libnvjitlink-devel-$YUM_CUDA_VERSION \
 ;
