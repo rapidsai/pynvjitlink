@@ -35,9 +35,9 @@ requirements:
     - cmake >=3.26.4,!=3.30.0
     - ninja
   host:
+    - cuda-version {{ cuda_version }}
     - libnvjitlink-dev
     - libnvjitlink-static
-    - cuda-version {{ cuda_version }}
     - python
     - pip
     - rapids-build-backend >=0.3.0,<0.4.0dev0
