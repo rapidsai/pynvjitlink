@@ -17,7 +17,7 @@ rapids-logger "Begin py build"
 
 export CUDA_VERSION="$(cat pynvjitlink/CUDA_VERSION)"
 
-rapids-conda-retry mambabuild \
+rapids-conda-retry build \
     conda/recipes/pynvjitlink \
     --variants "{cuda_compiler_version: ['${CUDA_VERSION}']}" \
 ;
