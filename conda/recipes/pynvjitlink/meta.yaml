@@ -28,11 +28,10 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}
     - {{ stdlib('c') }}
-    - cuda-version {{ cuda_version }}
     - cmake >=3.26.4,!=3.30.0
     - ninja
   host:
-    - cuda-version {{ cuda_version }}
+    - cuda-version {{ cuda_compiler_version }}
     - libnvjitlink-dev
     - libnvjitlink-static
     - python
