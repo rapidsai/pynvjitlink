@@ -19,7 +19,7 @@ export CUDA_VERSION="$(cat pynvjitlink/CUDA_VERSION)"
 
 rapids-conda-retry build \
     conda/recipes/pynvjitlink \
-    --variants "{cuda_compiler_version: ['${CUDA_VERSION}']}" \
+    --variants "{cuda_compiler_version: ["'"'"${CUDA_VERSION}"'"'"]}" \
 ;
 
 rapids-upload-conda-to-s3 python
