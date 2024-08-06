@@ -5,14 +5,15 @@
     load_file="pynvjitlink/VERSION",
     regex_pattern="(?P<value>.*)"
 )[0] %}
+{% set project_data = data["project"] %}
+{% set project_urls = project_data["urls"] %}
+
 {% if cuda_version is undefined %}
 {% set cuda_version = load_file_regex(
     load_file="pynvjitlink/CUDA_VERSION",
     regex_pattern="(?P<value>.*)"
 )[0] %}
 {% endif %}
-{% set project_data = data["project"] %}
-{% set project_urls = project_data["urls"] %}
 
 package:
   name: pynvjitlink
