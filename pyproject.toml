@@ -7,7 +7,7 @@ dependencies-file = "dependencies.yaml"
 [tool.scikit-build]
 build.verbose = true
 cmake.version = "CMakeLists.txt"
-minimum-version = "0.10"
+minimum-version = "build-system.requires"
 ninja.make-fallback = true
 build-dir = "build/{wheel_tag}"
 wheel.packages = ["pynvjitlink"]
