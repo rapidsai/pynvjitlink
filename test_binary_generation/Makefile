@@ -1,7 +1,7 @@
 # Generates the input files used by the pynvjitlink binding test suite
 
 # Test binaries are built taking into account the CC of the GPU in the test machine
-GPU_CC := $(shell nvidia-smi --query-gpu=compute_cap --format=csv | grep -v compute_cap | sed 's/\.//')
+GPU_CC := $(shell nvidia-smi --query-gpu=compute_cap --format=csv | grep -v compute_cap | head -n 1 | sed 's/\.//')
 GPU_CC ?= 75
 
 # Use CC 7.0 as an alternative in fatbin testing, unless CC is 7.x
