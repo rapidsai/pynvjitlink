@@ -5,6 +5,10 @@
     load_file="pynvjitlink/VERSION",
     regex_pattern="(?P<value>.*)"
 )[0] %}
+{% set cuda_version = load_file_regex(
+    load_file="pynvjitlink/CUDA_VERSION",
+    regex_pattern="(?P<value>.*)"
+)[0] %}
 {% set project_data = data["project"] %}
 {% set project_urls = project_data["urls"] %}
 
@@ -26,14 +30,14 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - {{ compiler('cuda') }}
+    - {{ compiler('cuda') }} {{ cuda_version }}
     - {{ stdlib('c') }}
     - cmake >=3.26.4,!=3.30.0
     - ninja
   host:
     - libnvjitlink-dev
     - libnvjitlink-static
-    - cuda-version {{ cuda_compiler_version }}
+    - cuda-version {{ cuda_version }}
     - python
     - pip
     - rapids-build-backend >=0.3.0,<0.4.0dev0
