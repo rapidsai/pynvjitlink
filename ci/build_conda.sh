@@ -17,9 +17,13 @@ rapids-logger "Begin py build"
 
 export CUDA_VERSION="$(cat pynvjitlink/CUDA_VERSION)"
 
+cat > cuda_compiler_version.json << EOF
+{cuda_compiler_version: ["${CUDA_VERSION}"]}
+EOF
+
 rapids-conda-retry build \
     conda/recipes/pynvjitlink \
-    --variants "{cuda_compiler_version: ["'"'"${CUDA_VERSION}"'"'"]}" \
+    -m cuda_compiler_version.json \
 ;
 
 rapids-upload-conda-to-s3 python
