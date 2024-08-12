@@ -15,6 +15,11 @@ rapids-print-env
 
 rapids-logger "Begin py build"
 
-rapids-conda-retry mambabuild conda/recipes/pynvjitlink
+export CUDA_VERSION="$(cat pynvjitlink/CUDA_VERSION)"
+
+rapids-conda-retry mambabuild \
+    conda/recipes/pynvjitlink \
+    --variants "{cuda_version: ['${CUDA_VERSION}']}" \
+;
 
 rapids-upload-conda-to-s3 python
