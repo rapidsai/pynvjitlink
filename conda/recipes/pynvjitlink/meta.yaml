@@ -31,8 +31,8 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}
-    - cuda-version {{ cuda_version }}
     - {{ stdlib('c') }}
+    - cuda-version {{ cuda_version }}
     - cmake >=3.26.4,!=3.30.0
     - ninja
   host:
