@@ -6,7 +6,8 @@ from pynvjitlink import patch
 patch.patch_numba_linker()
 
 if __name__ == "__main__":
-    from numba.testing._runtests import _main
     import sys
+
+    from numba.testing._runtests import _main
 
     sys.exit(0 if _main(sys.argv) else 1)

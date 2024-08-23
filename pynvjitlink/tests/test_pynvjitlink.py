@@ -1,8 +1,7 @@
 # Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 
-import pytest
-
 import pynvjitlink
+import pytest
 from pynvjitlink import _nvjitlinklib
 from pynvjitlink.api import InputType
 

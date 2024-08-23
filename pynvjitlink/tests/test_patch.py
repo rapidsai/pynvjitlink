@@ -1,18 +1,18 @@
 # Copyright (c) 2023-2024, NVIDIA CORPORATION.
 
-import pytest
 import sys
+from unittest.mock import patch as mock_patch
 
+import pytest
 from numba import cuda
-from pynvjitlink import patch, NvJitLinkError
+from pynvjitlink import NvJitLinkError, patch
 from pynvjitlink.patch import (
     PatchedLinker,
-    patch_numba_linker,
-    new_patched_linker,
-    required_numba_ver,
     _numba_version_ok,
+    new_patched_linker,
+    patch_numba_linker,
+    required_numba_ver,
 )
-from unittest.mock import patch as mock_patch
 
 
 def test_numba_patching_numba_not_ok():

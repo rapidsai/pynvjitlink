@@ -1,8 +1,8 @@
 # Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 
-import pytest
 import sys
 
+import pytest
 from pynvjitlink import NvJitLinker, NvJitLinkError
 
 

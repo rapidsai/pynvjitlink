@@ -1,10 +1,10 @@
 # Copyright (c) 2024, NVIDIA CORPORATION.
 
 import os
-import pytest
 
+import pytest
 from numba import cuda
-from pynvjitlink.patch import Archive, Cubin, CUSource, Fatbin, Object, PTXSource, LTOIR
+from pynvjitlink.patch import LTOIR, Archive, Cubin, CUSource, Fatbin, Object, PTXSource
 
 
 @pytest.fixture(scope="session")
