@@ -1,9 +1,9 @@
 # Copyright (c) 2023-2024, NVIDIA CORPORATION.
 
-from enum import Enum
-from pynvjitlink import _nvjitlinklib
-
 import weakref
+from enum import Enum
+
+from pynvjitlink import _nvjitlinklib
 
 
 class InputType(Enum):
