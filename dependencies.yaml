@@ -84,6 +84,10 @@ dependencies:
             packages:
               - python=3.12
           - matrix:
+              py: "3.12"
+            packages:
+              - python=3.12
+          - matrix:
             packages:
               - python>=3.10,<3.13
   run:
