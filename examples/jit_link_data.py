@@ -8,10 +8,9 @@
 # In addition to CUSource files, PTXSource objects can be used to link PTX from
 # memory (not shown in this example).
 
+import numpy as np
 from numba import cuda
 from pynvjitlink import patch
-
-import numpy as np
 
 patch.patch_numba_linker()
 

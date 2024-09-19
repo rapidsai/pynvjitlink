@@ -1,6 +1,7 @@
+# Copyright (c) 2023-2024, NVIDIA CORPORATION.
+
 import os
 import sys
-
 from pathlib import Path
 
 CONDA_PREFIX = os.environ["CONDA_PREFIX"]
@@ -22,7 +23,7 @@ flags = [
 ]
 
 
-def Settings(**kwargs):
+def Settings(**kwargs):  # noqa: N802
     return {"flags": flags}
 
 

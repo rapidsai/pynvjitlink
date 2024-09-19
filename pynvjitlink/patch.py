@@ -1,9 +1,9 @@
 # Copyright (c) 2023-2024, NVIDIA CORPORATION.
-from functools import partial
-from pynvjitlink.api import NvJitLinker, NvJitLinkError
-
 import os
 import pathlib
+from functools import partial
+
+from pynvjitlink.api import NvJitLinker, NvJitLinkError
 
 _numba_version_ok = False
 _numba_error = None
@@ -29,14 +29,14 @@ except ImportError as ie:
     _numba_error = f"failed to import Numba: {ie}."
 
 if _numba_version_ok:
-    from numba.core import config
     from numba import cuda
+    from numba.core import config
     from numba.cuda.cudadrv import nvrtc
     from numba.cuda.cudadrv.driver import (
-        driver,
         FILE_EXTENSION_MAP,
         Linker,
         LinkerError,
+        driver,
     )
 else:
     # Prevent the definition of PatchedLinker failing if we have no Numba
@@ -223,7 +223,7 @@ class PatchedLinker(Linker):
         ptx, log = nvrtc.compile(cu, name, cc)
 
         if config.DUMP_ASSEMBLY:
-            print(("ASSEMBLY %s" % name).center(80, "-"))
+            print((f"ASSEMBLY {name}").center(80, "-"))
             print(ptx)
             print("=" * 80)
 
