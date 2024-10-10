@@ -78,6 +78,7 @@ def test_add_fatbin_with_cubin_error(device_functions_cubin, gpu_arch_flag):
         nvjitlinker.add_fatbin(cubin, name)
 
 
+@pytest.mark.xfail(reason='CUDA 12.6 pynvjitlink does not raise for duplicates')
 def test_duplicate_symbols_cubin_and_fatbin(
     device_functions_cubin, device_functions_fatbin, gpu_arch_flag
 ):
