@@ -16,7 +16,17 @@
 
 #define PY_SSIZE_T_CLEAN
 #include "nvJitLink.h"
+// something funny going on with this macro on Windows...
+// see https://stackoverflow.com/a/62235644/2344149
+#ifdef _DEBUG
+#define __PYNVJIT_DEBUG _DEBUG
+#undef _DEBUG
 #include <Python.h>
+#define _DEBUG __PYNVJIT_DEBUG
+#undef __PYNVJIT_DEBUG
+#else
+#include <Python.h>
+#endif
 #include <new>
 
 static const char *nvJitLinkGetErrorEnum(nvJitLinkResult error) {
