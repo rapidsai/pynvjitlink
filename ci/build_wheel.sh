@@ -16,6 +16,7 @@ python -m pip wheel . --wheel-dir=./dist -vvv --disable-pip-version-check --no-d
 python -m auditwheel repair --exclude libcuda.so.1 -w ./final_dist ./dist/*
 
 python -m pip install abi3audit
+pyenv rehash
 abi3audit ./final_dist/*.whl
 
 rapids-logger "Upload Wheel"
