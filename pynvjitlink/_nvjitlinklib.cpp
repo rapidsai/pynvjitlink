@@ -17,6 +17,7 @@
 #define PY_SSIZE_T_CLEAN
 #include "nvJitLink.h"
 #include <Python.h>
+#include <cstdio>
 #include <new>
 
 static const char *nvJitLinkGetErrorEnum(nvJitLinkResult error) {

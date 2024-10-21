@@ -11,6 +11,7 @@ minimum-version = "build-system.requires"
 ninja.make-fallback = true
 build-dir = "build/{wheel_tag}"
 wheel.packages = ["pynvjitlink"]
+wheel.py-api = "cp311"
 
 [build-system]
 requires = [

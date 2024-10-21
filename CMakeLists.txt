@@ -11,6 +11,11 @@ project(
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
 Python_add_library(_nvjitlinklib MODULE pynvjitlink/_nvjitlinklib.cpp WITH_SOABI)
+target_compile_definitions(
+    _nvjitlinklib
+    # Target Python 3.11, the earliest version to support the buffer protocol.
+    PRIVATE Py_LIMITED_API=0x030B0000
+)
 
 find_package(
   # Require CUDA 12.2 Update 2 to avoid nvjitlink bugs
