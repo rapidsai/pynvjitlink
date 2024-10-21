@@ -15,5 +15,8 @@ python -m pip wheel . --wheel-dir=./dist -vvv --disable-pip-version-check --no-d
 # Exclude libcuda.so.1 because we only install a driver stub
 python -m auditwheel repair --exclude libcuda.so.1 -w ./final_dist ./dist/*
 
+python -m pip install abi3audit
+abi3audit ./final_dist/*.whl
+
 rapids-logger "Upload Wheel"
 RAPIDS_PY_WHEEL_NAME="pynvjitlink_${RAPIDS_PY_CUDA_SUFFIX}" rapids-upload-wheels-to-s3 ./final_dist
