@@ -5,6 +5,8 @@ set -euo pipefail
 
 . /opt/conda/etc/profile.d/conda.sh
 
+conda config --set channel_priority strict
+
 rapids-logger "Install testing dependencies"
 
 ENV_YAML_DIR="$(mktemp -d)"
