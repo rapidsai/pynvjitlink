@@ -5,6 +5,8 @@ set -euo pipefail
 
 . /opt/conda/etc/profile.d/conda.sh
 
+conda config --set channel_priority strict
+
 VERSION="$(head -1 pynvjitlink/VERSION)"
 
 rapids-logger "Install testing dependencies"

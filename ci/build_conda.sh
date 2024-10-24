@@ -3,6 +3,8 @@
 
 set -euo pipefail
 
+conda config --set channel_priority strict
+
 rapids-configure-conda-channels
 
 source rapids-configure-sccache
