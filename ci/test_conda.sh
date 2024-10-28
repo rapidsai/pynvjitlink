@@ -7,6 +7,8 @@ set -euo pipefail
 
 conda config --set channel_priority strict
 
+VERSION="$(head -1 pynvjitlink/VERSION)"
+
 rapids-logger "Install testing dependencies"
 
 ENV_YAML_DIR="$(mktemp -d)"
@@ -31,7 +33,7 @@ rapids-print-env
 
 rapids-mamba-retry install \
   --channel "${PYTHON_CHANNEL}" \
-  pynvjitlink
+  "pynvjitlink=${VERSION}"
 
 rapids-logger "Build Tests"
 pushd test_binary_generation
