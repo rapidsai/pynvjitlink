@@ -24,9 +24,13 @@ cuda_compiler_version:
   - "${CUDA_VERSION}"
 EOF
 
+sccache --zero-stats
+
 rapids-conda-retry build \
     conda/recipes/pynvjitlink \
     -m cuda_compiler_version.yaml \
 ;
+
+sccache --show-adv-stats
 
 rapids-upload-conda-to-s3 python
