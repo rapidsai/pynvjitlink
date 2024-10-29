@@ -3,6 +3,8 @@
 
 set -euo pipefail
 
+source rapids-configure-sccache
+
 rapids-logger "Install CUDA Toolkit"
 source "$(dirname "$0")/install_latest_cuda_toolkit.sh"
 
