@@ -21,5 +21,7 @@ sccache --show-adv-stats
 # Exclude libcuda.so.1 because we only install a driver stub
 python -m auditwheel repair --exclude libcuda.so.1 -w ./final_dist ./dist/*
 
+./ci/validate_wheel.sh final_dist
+
 rapids-logger "Upload Wheel"
 RAPIDS_PY_WHEEL_NAME="pynvjitlink_${RAPIDS_PY_CUDA_SUFFIX}" rapids-upload-wheels-to-s3 python ./final_dist
