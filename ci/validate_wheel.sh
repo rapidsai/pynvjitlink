@@ -9,6 +9,8 @@ python -m pip install \
     'pydistcheck==0.8.*' \
     twine
 
+pyenv rehash
+
 rapids-logger "validate packages with 'pydistcheck'"
 
 pydistcheck \
