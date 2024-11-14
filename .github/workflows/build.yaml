@@ -23,7 +23,7 @@ jobs:
   build-wheels:
     needs:
       - compute-matrix
-    uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.12
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-24.10
     with:
       build_type: branch
       script: "ci/build_wheel.sh"
@@ -31,7 +31,7 @@ jobs:
   build-conda:
     needs:
       - compute-matrix
-    uses: rapidsai/shared-workflows/.github/workflows/conda-python-build.yaml@branch-24.12
+    uses: rapidsai/shared-workflows/.github/workflows/conda-python-build.yaml@branch-24.10
     with:
       build_type: branch
       script: "ci/build_conda.sh"
@@ -40,7 +40,7 @@ jobs:
     needs:
       - build-wheels
     secrets: inherit
-    uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-24.12
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-24.10
     with:
       build_type: ${{ inputs.build_type || 'branch' }}
       branch: ${{ inputs.branch }}
@@ -52,7 +52,7 @@ jobs:
     needs:
      - build-conda
     secrets: inherit
-    uses: rapidsai/shared-workflows/.github/workflows/conda-upload-packages.yaml@branch-24.12
+    uses: rapidsai/shared-workflows/.github/workflows/conda-upload-packages.yaml@branch-24.10
     with:
       build_type: ${{ inputs.build_type || 'branch' }}
       branch: ${{ inputs.branch }}
