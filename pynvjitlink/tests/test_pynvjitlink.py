@@ -7,24 +7,23 @@ from pynvjitlink.api import InputType
 
 
 def test_create_no_arch_error():
-    # nvjitlink expects at least the architecture to be specified.
-    with pytest.raises(RuntimeError, match="NVJITLINK_ERROR_MISSING_ARCH error"):
+    with pytest.raises(_nvjitlinklib.nvJitLinkError, match="ERROR_INVALID_INPUT"):
         _nvjitlinklib.create()
 
 
 def test_invalid_arch_error():
     # sm_XX is not a valid architecture
-    with pytest.raises(RuntimeError, match="NVJITLINK_ERROR_UNRECOGNIZED_OPTION error"):
+    with pytest.raises(_nvjitlinklib.nvJitLinkError, match="ERROR_UNRECOGNIZED_OPTION"):
         _nvjitlinklib.create("-arch=sm_XX")
 
 
 def test_unrecognized_option_error():
-    with pytest.raises(RuntimeError, match="NVJITLINK_ERROR_UNRECOGNIZED_OPTION error"):
+    with pytest.raises(_nvjitlinklib.nvJitLinkError, match="ERROR_UNRECOGNIZED_OPTION"):
         _nvjitlinklib.create("-fictitious_option")
 
 
 def test_invalid_option_type_error():
-    with pytest.raises(TypeError, match="Expecting only strings"):
+    with pytest.raises(TypeError, match="an integer is required"):
         _nvjitlinklib.create("-arch", 53)
 
 
@@ -74,14 +73,15 @@ def test_get_error_log(undefined_extern_cubin, gpu_arch_flag):
     filename, data = undefined_extern_cubin
     input_type = InputType.CUBIN.value
     _nvjitlinklib.add_data(handle, input_type, data, filename)
-    with pytest.raises(RuntimeError):
+    with pytest.raises(_nvjitlinklib.nvJitLinkError):
+        # FIXME: For some reason this API would leak the error log to stderr
         _nvjitlinklib.complete(handle)
     error_log = _nvjitlinklib.get_error_log(handle)
     _nvjitlinklib.destroy(handle)
     assert (
         "Undefined reference to '_Z5undefff' "
         "in 'undefined_extern.cubin'" in error_log
-    )
+    ), f"{error_log=}"
 
 
 def test_get_info_log(device_functions_cubin, gpu_arch_flag):
@@ -116,7 +116,7 @@ def test_get_linked_cubin_link_not_complete_error(
     filename, data = device_functions_cubin
     input_type = InputType.CUBIN.value
     _nvjitlinklib.add_data(handle, input_type, data, filename)
-    with pytest.raises(RuntimeError, match="NVJITLINK_ERROR_INTERNAL error"):
+    with pytest.raises(_nvjitlinklib.nvJitLinkError, match="ERROR_INTERNAL"):
         _nvjitlinklib.get_linked_cubin(handle)
     _nvjitlinklib.destroy(handle)
 
@@ -159,7 +159,7 @@ def test_get_linked_ptx_link_not_complete_error(
     filename, data = device_functions_ltoir_object
     input_type = InputType.OBJECT.value
     _nvjitlinklib.add_data(handle, input_type, data, filename)
-    with pytest.raises(RuntimeError, match="NVJITLINK_ERROR_INTERNAL error"):
+    with pytest.raises(_nvjitlinklib.nvJitLinkError, match="ERROR_INTERNAL"):
         _nvjitlinklib.get_linked_ptx(handle)
     _nvjitlinklib.destroy(handle)
 
