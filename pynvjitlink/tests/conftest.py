@@ -28,7 +28,7 @@ def alt_gpu_compute_capability(gpu_compute_capability):
 @pytest.fixture(scope="session")
 def absent_gpu_compute_capability(gpu_compute_capability, alt_gpu_compute_capability):
     """A compute capability not used in any cubin or fatbin test binary"""
-    cc_majors = {6, 7, 8}
+    cc_majors = {6, 7, 8, 9, 10, 12}
     cc_majors.remove(gpu_compute_capability[0])
     cc_majors.remove(alt_gpu_compute_capability[0])
     return (cc_majors.pop(), 0)
