@@ -83,7 +83,10 @@ def test_get_error_log(undefined_extern_cubin, gpu_arch_flag):
         "in 'undefined_extern.cubin'" in error_log
     )
 
-
+@pytest.skipif(
+    gpu_compute_capability < (7, 5),
+    reason="CUDA 12.8 shows deprecations for devices older than sm75",
+)
 def test_get_info_log(device_functions_cubin, gpu_arch_flag):
     handle = _nvjitlinklib.create(gpu_arch_flag)
     filename, data = device_functions_cubin
