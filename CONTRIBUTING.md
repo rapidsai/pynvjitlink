@@ -49,5 +49,28 @@ contributing to. Start with _Step 3_ from above, commenting on the issue to let
 others know you are working on it. If you have any questions related to the
 implementation of the issue, ask them in the issue instead of the PR.
 
+## Releases
+
+The release process for pynvjitlink involves the following steps:
+
+- Open a PR to update `pynvjitlink/VERSION` to the desired version.
+- Generate a short changelog with `git log v<PREVIOUS_VERSION>..HEAD --oneline --pretty=format:"- %s"`
+- Put the changelog in the version update PR description.
+- Once `main` is updated, tag the release:
+```
+git checkout main && git pull
+git tag -a v<VERSION>
+```
+- For the tag annotation, paste the same changelog as above, like this:
+```
+v<VERSION>
+
+- ... (bullet points on release items)
+```
+- Push the tag:
+```
+git push rapidsai v<VERSION>
+```
+
 ## Attribution
 Portions adopted from https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md
