@@ -69,7 +69,7 @@ v<VERSION>
 ```
 - Push the tag:
 ```
-git push rapidsai v<VERSION>
+git push git@github.com:rapidsai/pynvjitlink.git v<VERSION>
 ```
 
 ## Attribution
