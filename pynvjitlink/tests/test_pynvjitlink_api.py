@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2025, NVIDIA CORPORATION. All rights reserved.
 
 import sys
 
@@ -120,7 +120,11 @@ def test_get_error_log(undefined_extern_cubin, gpu_arch_flag):
     assert "Undefined reference to '_Z5undefff'" in error_log
 
 
-def test_get_info_log(device_functions_cubin, gpu_arch_flag):
+def test_get_info_log(device_functions_cubin, gpu_arch_flag, gpu_compute_capability):
+    if gpu_compute_capability < (7, 5):
+        pytest.skip(
+            "CUDA 12.8 shows deprecations for devices older than compute capability 7.5"
+        )
     nvjitlinker = NvJitLinker(gpu_arch_flag)
     name, cubin = device_functions_cubin
     nvjitlinker.add_cubin(cubin, name)
