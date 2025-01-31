@@ -8,7 +8,7 @@ dependencies-file = "dependencies.yaml"
 build.verbose = true
 cmake.version = "CMakeLists.txt"
 minimum-version = "build-system.requires"
-ninja.make-fallback = true
+ninja.make-fallback = false
 build-dir = "build/{wheel_tag}"
 wheel.packages = ["pynvjitlink"]
 
