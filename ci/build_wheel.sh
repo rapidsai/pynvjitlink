@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2023-2024, NVIDIA CORPORATION
+# Copyright (c) 2023-2025, NVIDIA CORPORATION
 
 set -euo pipefail
 
@@ -14,7 +14,7 @@ sccache --zero-stats
 
 rapids-logger "Build wheel"
 mkdir -p ./dist
-python -m pip wheel . --wheel-dir=./dist -v --disable-pip-version-check --no-deps
+rapids-pip-retry wheel . --wheel-dir=./dist -v --disable-pip-version-check --no-deps
 
 sccache --show-adv-stats
 
