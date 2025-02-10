@@ -23,3 +23,9 @@ repos:
     hooks:
       - id: verify-copyright
         args: [--fix, --main-branch=main]
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: ["--severity=warning"]
+        files: ^ci/
