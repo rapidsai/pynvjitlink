@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2024, NVIDIA CORPORATION.
+# Copyright (c) 2018-2025, NVIDIA CORPORATION.
 
 {% set data = load_file_data("pyproject.toml") %}
 {% set version = load_file_regex(
@@ -63,7 +63,7 @@ about:
   home: {{ project_urls["Homepage"] }}
   dev_url: {{ project_urls["Repository"] }}
   doc_url: {{ project_urls["Documentation"] }}
-  license: {{ project_data["license"]["text"] }}
+  license: {{ project_data["license"] }}
   license_family: Apache
   license_file: LICENSE
   license_url: {{ project_urls["License"] }}
