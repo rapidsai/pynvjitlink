@@ -60,6 +60,8 @@ if spec is not None:
         suggestion = "Instead, use NUMBA_CUDA_ENABLE_PYNVJITLINK environment variable to enable pynvjitlink features."
     else:
         suggestion = "Instead, use config.CUDA_ENABLE_PYNVJITLINK option to enable pynvjitlink features."
+
+    _numba_cuda_error += suggestion
 else:
     _numba_cuda_in_use = False
 
