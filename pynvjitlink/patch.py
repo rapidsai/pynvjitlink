@@ -9,12 +9,10 @@ from pynvjitlink.api import NvJitLinker, NvJitLinkError
 _numba_version_ok = False
 _numba_error = None
 
-_numba_cuda_version_ok = False
 _numba_cuda_in_use = False
 _numba_cuda_error = None
 
 required_numba_ver = (0, 58)
-max_numba_cuda_ver = (0, 0, 18)
 
 mvc_docs_url = (
     "https://numba.readthedocs.io/en/stable/cuda/" "minor_version_compatibility.html"
@@ -53,7 +51,15 @@ else:
 spec = importlib.util.find_spec("numba_cuda")
 if spec is not None:
     _numba_cuda_in_use = True
-    _numba_cuda_error = "`numba_cuda` includes patches from pynvjitlink, so no further patches are needed."
+    _numba_cuda_error = "`numba_cuda` includes patches from pynvjitlink, so no further patches are needed. "
+
+    import numba_cuda
+
+    numba_cuda_ver = (int(x) for x in numba_cuda.__version__.split("."))
+    if numba_cuda_ver < (0, 2, 0):
+        suggestion = "Instead, use NUMBA_CUDA_ENABLE_PYNVJITLINK environment variable to enable pynvjitlink features."
+    else:
+        suggestion = "Instead, use config.CUDA_ENABLE_PYNVJITLINK option to enable pynvjitlink features."
 else:
     _numba_cuda_in_use = False
 
