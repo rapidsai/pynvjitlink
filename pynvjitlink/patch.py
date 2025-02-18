@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024, NVIDIA CORPORATION.
+# Copyright (c) 2023-2025, NVIDIA CORPORATION.
 import os
 import pathlib
 from functools import partial
@@ -8,7 +8,12 @@ from pynvjitlink.api import NvJitLinker, NvJitLinkError
 _numba_version_ok = False
 _numba_error = None
 
+_numba_cuda_version_ok = False
+_numba_cuda_in_use = False
+_numba_cuda_error = None
+
 required_numba_ver = (0, 58)
+max_numba_cuda_ver = (0, 0, 18)
 
 mvc_docs_url = (
     "https://numba.readthedocs.io/en/stable/cuda/" "minor_version_compatibility.html"
@@ -42,6 +47,33 @@ else:
     # Prevent the definition of PatchedLinker failing if we have no Numba
     # Linker - it won't be used anyway.
     Linker = object
+
+
+try:
+    import numba_cuda
+
+    _numba_cuda_in_use = True
+    numba_cuda_ver = tuple(int(x) for x in numba_cuda.__version__.split("."))
+    if numba_cuda_ver < max_numba_cuda_ver:
+        _numba_cuda_version_ok = True
+    else:
+        _numba_cuda_version_ok = False
+        _numba_cuda_error = (
+            f"Only `numba_cuda` version below {max_numba_cuda_ver} is supported. "
+            f"Current version is {numba_cuda.__version__}. "
+        )
+
+        if numba_cuda_ver < (0, 2, 0):
+            suggestion = "Please enable pynvjitlink via NUMBA_CUDA_ENABLE_PYNVJITLINK environment variable."
+        else:
+            suggestion = (
+                "Please enable pynvjitlink via config.CUDA_ENABLE_PYNVJITLINK option."
+            )
+
+        _numba_cuda_error += suggestion
+except ImportError:
+    _numba_cuda_in_use = False
+    _numba_cuda_error = "`numba_cuda` package is not installed. Pynvjitlink should only be used with `numba_cuda` package."
 
 
 class LinkableCode:
@@ -255,6 +287,10 @@ def new_patched_linker(
 def patch_numba_linker(*, lto=False):
     if not _numba_version_ok:
         msg = f"Cannot patch Numba: {_numba_error}"
+        raise RuntimeError(msg)
+
+    if not _numba_cuda_in_use or not _numba_cuda_version_ok:
+        msg = f"Cannot patch Numba: {_numba_cuda_error}"
         raise RuntimeError(msg)
 
     # Replace the built-in linker that uses the Driver API with our linker that
