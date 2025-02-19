@@ -55,7 +55,7 @@ if spec is not None:
 
     import numba_cuda
 
-    numba_cuda_ver = (int(x) for x in numba_cuda.__version__.split("."))
+    numba_cuda_ver = tuple(int(x) for x in numba_cuda.__version__.split("."))
     if numba_cuda_ver < (0, 2, 0):
         suggestion = "Instead, use NUMBA_CUDA_ENABLE_PYNVJITLINK environment variable to enable pynvjitlink features."
     else:
