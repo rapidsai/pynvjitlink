@@ -8,7 +8,7 @@ source rapids-configure-sccache
 rapids-logger "Install CUDA Toolkit"
 source "$(dirname "$0")/install_latest_cuda_toolkit.sh"
 
-RAPIDS_PY_CUDA_SUFFIX="$(rapids-wheel-ctk-name-gen ${RAPIDS_CUDA_VERSION})"
+RAPIDS_PY_CUDA_SUFFIX="$(rapids-wheel-ctk-name-gen "${RAPIDS_CUDA_VERSION}")"
 
 sccache --zero-stats
 
