@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2024, NVIDIA CORPORATION
+# Copyright (c) 2024-2025, NVIDIA CORPORATION
 
 # Installs the latest CUDA Toolkit.
 # Supports Rocky Linux 8.
@@ -13,12 +13,14 @@ if [ "${OS_ID}" != "rocky" ]; then
     exit 1
 fi
 
-export CUDA_VERSION="$(cat pynvjitlink/CUDA_VERSION)"
-export YUM_CUDA_VERSION="${CUDA_VERSION//./-}"
+CUDA_VERSION="$(cat pynvjitlink/CUDA_VERSION)"
+export CUDA_VERSION
+YUM_CUDA_VERSION="${CUDA_VERSION//./-}"
+export YUM_CUDA_VERSION
 
 yum install -y \
-    cuda-nvcc-$YUM_CUDA_VERSION \
-    cuda-cudart-devel-$YUM_CUDA_VERSION \
-    cuda-driver-devel-$YUM_CUDA_VERSION \
-    libnvjitlink-devel-$YUM_CUDA_VERSION \
+    cuda-nvcc-"$YUM_CUDA_VERSION" \
+    cuda-cudart-devel-"$YUM_CUDA_VERSION" \
+    cuda-driver-devel-"$YUM_CUDA_VERSION" \
+    libnvjitlink-devel-"$YUM_CUDA_VERSION" \
 ;

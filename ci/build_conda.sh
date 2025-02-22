@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2024, NVIDIA CORPORATION
+# Copyright (c) 2024-2025, NVIDIA CORPORATION
 
 set -euo pipefail
 
@@ -17,7 +17,8 @@ rapids-print-env
 
 rapids-logger "Begin py build"
 
-export CUDA_VERSION="$(cat pynvjitlink/CUDA_VERSION)"
+CUDA_VERSION="$(cat pynvjitlink/CUDA_VERSION)"
+export CUDA_VERSION
 
 cat > cuda_compiler_version.yaml << EOF
 cuda_compiler_version:
