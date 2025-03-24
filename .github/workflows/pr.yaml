@@ -73,6 +73,8 @@ jobs:
       build_type: pull-request
       script: "ci/build_wheel.sh"
       matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
+      wheel-name: pynvjitlink
+      package-type: python
   test-wheels:
     needs:
       - build-wheels
