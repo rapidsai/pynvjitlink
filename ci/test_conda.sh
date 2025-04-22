@@ -25,7 +25,7 @@ set +u
 conda activate test
 set -u
 
-PYTHON_CHANNEL=$(rapids-download-conda-from-s3 python)
+PYTHON_CHANNEL=$(rapids-download-conda-from-github python)
 RAPIDS_TESTS_DIR=${RAPIDS_TESTS_DIR:-"${PWD}/test-results"}/
 mkdir -p "${RAPIDS_TESTS_DIR}"
 

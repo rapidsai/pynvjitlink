@@ -23,7 +23,7 @@ set +u
 conda activate test
 set -u
 
-PYTHON_CHANNEL=$(rapids-download-conda-from-s3 python)
+PYTHON_CHANNEL=$(rapids-download-conda-from-github python)
 
 rapids-print-env
 

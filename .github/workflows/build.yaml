@@ -30,7 +30,7 @@ jobs:
       build_type: branch
       script: "ci/build_wheel.sh"
       matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
-      wheel-name: pynvjitlink
+      package-name: pynvjitlink
       package-type: python
   build-conda:
     needs:
