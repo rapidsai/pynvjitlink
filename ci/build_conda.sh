@@ -3,10 +3,6 @@
 
 set -euo pipefail
 
-conda config --set channel_priority strict
-
-rapids-configure-conda-channels
-
 source rapids-configure-sccache
 
 source rapids-date-string
@@ -15,23 +11,24 @@ export CMAKE_GENERATOR=Ninja
 
 rapids-print-env
 
-rapids-logger "Begin py build"
+# populates `RATTLER_CHANNELS` array and `RATTLER_ARGS` array
+source rapids-rattler-channel-string
 
-CUDA_VERSION="$(cat pynvjitlink/CUDA_VERSION)"
-export CUDA_VERSION
-
-cat > cuda_compiler_version.yaml << EOF
-cuda_compiler_version:
-  - "${CUDA_VERSION}"
-EOF
+rapids-logger "Building pynvjitlink"
 
 sccache --zero-stats
 
-rapids-conda-retry build \
-    conda/recipes/pynvjitlink \
-    -m cuda_compiler_version.yaml \
-;
+# --no-build-id allows for caching with `sccache`
+# more info is available at
+# https://rattler.build/latest/tips_and_tricks/#using-sccache-or-ccache-with-rattler-build
+rattler-build build --recipe conda/recipes/pynvjitlink \
+                    "${RATTLER_ARGS[@]}" \
+                    "${RATTLER_CHANNELS[@]}"
 
 sccache --show-adv-stats
+
+# remove build_cache directory to avoid uploading the entire source tree
+# tracked in https://github.com/prefix-dev/rattler-build/issues/1424
+rm -rf "$RAPIDS_CONDA_BLD_OUTPUT_DIR"/build_cache
 
 rapids-upload-conda-to-s3 python
