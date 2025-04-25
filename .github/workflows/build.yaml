@@ -25,17 +25,17 @@ jobs:
   build-wheels:
     needs:
       - compute-matrix
-    uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-25.04
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-build.yaml@branch-25.06
     with:
       build_type: branch
       script: "ci/build_wheel.sh"
       matrix_filter: ${{ needs.compute-matrix.outputs.BUILD_MATRIX }}
-      wheel-name: pynvjitlink
+      package-name: pynvjitlink
       package-type: python
   build-conda:
     needs:
       - compute-matrix
-    uses: rapidsai/shared-workflows/.github/workflows/conda-python-build.yaml@branch-25.04
+    uses: rapidsai/shared-workflows/.github/workflows/conda-python-build.yaml@branch-25.06
     with:
       build_type: branch
       script: "ci/build_conda.sh"
@@ -44,7 +44,7 @@ jobs:
     needs:
       - build-wheels
     secrets: inherit
-    uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-25.04
+    uses: rapidsai/shared-workflows/.github/workflows/wheels-publish.yaml@branch-25.06
     with:
       build_type: ${{ inputs.build_type || 'branch' }}
       branch: ${{ inputs.branch }}
@@ -56,7 +56,7 @@ jobs:
     needs:
      - build-conda
     secrets: inherit
-    uses: rapidsai/shared-workflows/.github/workflows/conda-upload-packages.yaml@branch-25.04
+    uses: rapidsai/shared-workflows/.github/workflows/conda-upload-packages.yaml@branch-25.06
     with:
       build_type: ${{ inputs.build_type || 'branch' }}
       branch: ${{ inputs.branch }}
