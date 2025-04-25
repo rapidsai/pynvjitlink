@@ -2,7 +2,7 @@
 schema_version: 1
 
 context:
-  cuda_version: ${{ load_from_file("pynvjitlink/CUDA_VERSION") }}
+  cuda_version: ${{ load_from_file("pynvjitlink/CUDA_VERSION") | trim }}
   date_string: '${{ env.get("RAPIDS_DATE_STRING") }}'
   head_rev: ${{ git.head_rev(".")[:8] }}
   py_version: ${{ env.get("RAPIDS_PY_VERSION") }}
