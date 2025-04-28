@@ -1,0 +1,69 @@
+# Copyright (c) 2025, NVIDIA CORPORATION.
+schema_version: 1
+
+context:
+  cuda_version: ${{ load_from_file("pynvjitlink/CUDA_VERSION") | trim }}
+  date_string: '${{ env.get("RAPIDS_DATE_STRING") }}'
+  head_rev: ${{ git.head_rev(".")[:8] }}
+  py_version: ${{ env.get("RAPIDS_PY_VERSION") }}
+  py_buildstring: ${{ py_version | version_to_buildstring }}
+  version: ${{ load_from_file("pynvjitlink/VERSION") | trim }}
+
+package:
+  name: pynvjitlink
+  version: ${{ version }}
+source:
+  path: ../../..
+
+build:
+  dynamic_linking:
+    overlinking_behavior: error
+  string: ${{ cuda_version }}_py${{ py_buildstring }}_${{ date_string }}_${{ head_rev }}_h${{ PKG_HASH }}
+  script:
+    content: |
+      python -m pip install . -vv
+    secrets:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+    env:
+      CMAKE_C_COMPILER_LAUNCHER: ${{ env.get("CMAKE_C_COMPILER_LAUNCHER") }}
+      CMAKE_CUDA_COMPILER_LAUNCHER: ${{ env.get("CMAKE_CUDA_COMPILER_LAUNCHER") }}
+      CMAKE_CXX_COMPILER_LAUNCHER: ${{ env.get("CMAKE_CXX_COMPILER_LAUNCHER") }}
+      CMAKE_GENERATOR: ${{ env.get("CMAKE_GENERATOR") }}
+      SCCACHE_BUCKET: ${{ env.get("SCCACHE_BUCKET") }}
+      SCCACHE_IDLE_TIMEOUT: ${{ env.get("SCCACHE_IDLE_TIMEOUT") }}
+      SCCACHE_REGION: ${{ env.get("SCCACHE_REGION") }}
+      SCCACHE_S3_USE_SSL: ${{ env.get("SCCACHE_S3_USE_SSL") }}
+      SCCACHE_S3_NO_CREDENTIALS: ${{ env.get("SCCACHE_S3_NO_CREDENTIALS") }}
+      SCCACHE_S3_KEY_PREFIX: pynvjitlink/${{ env.get("RAPIDS_CONDA_ARCH") }}/cuda${{ cuda_major }}
+
+requirements:
+  build:
+    - ${{ compiler("c") }}
+    - ${{ compiler("cxx") }}
+    - ${{ compiler("cuda") }}
+    - ${{ stdlib("c") }}
+    - cmake >=3.24.4,!=3.30.0
+    - ninja
+  host:
+    - cuda-version =${{ cuda_version }}
+    - libnvjitlink-dev
+    - libnvjitlink-static
+    - python =${{ py_version }}
+    - pip
+    - rapids-build-backend >=0.3.0,<0.4.0dev0
+    - scikit-build-core >=0.10.0
+  run:
+    - ${{ pin_compatible("cuda-version", lower_bound="x", upper_bound="x.x") }}
+    - python
+    - numba >=0.58
+  ignore_run_exports:
+    by_name:
+      - cuda-version
+      - libnvjitlink
+
+about:
+  homepage: ${{ load_from_file("pyproject.toml").project.urls.Homepage }}
+  license: ${{ load_from_file("pyproject.toml").project.license.text }}
+  summary: ${{ load_from_file("pyproject.toml").project.description }}
