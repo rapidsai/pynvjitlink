@@ -1,12 +1,16 @@
-# Copyright (c) 2023-2024, NVIDIA CORPORATION.
+# Copyright (c) 2023-2025, NVIDIA CORPORATION.
 import os
 import pathlib
 from functools import partial
+import importlib.util
 
 from pynvjitlink.api import NvJitLinker, NvJitLinkError
 
 _numba_version_ok = False
 _numba_error = None
+
+_numba_cuda_in_use = False
+_numba_cuda_error = None
 
 required_numba_ver = (0, 58)
 
@@ -42,6 +46,24 @@ else:
     # Prevent the definition of PatchedLinker failing if we have no Numba
     # Linker - it won't be used anyway.
     Linker = object
+
+
+spec = importlib.util.find_spec("numba_cuda")
+if spec is not None:
+    _numba_cuda_in_use = True
+    _numba_cuda_error = "`numba_cuda` includes patches from pynvjitlink, so no further patches are needed. "
+
+    import numba_cuda
+
+    numba_cuda_ver = tuple(int(x) for x in numba_cuda.__version__.split("."))
+    if numba_cuda_ver < (0, 2, 0):
+        suggestion = "Instead, use NUMBA_CUDA_ENABLE_PYNVJITLINK environment variable to enable pynvjitlink features."
+    else:
+        suggestion = "Instead, use config.CUDA_ENABLE_PYNVJITLINK option to enable pynvjitlink features."
+
+    _numba_cuda_error += suggestion
+else:
+    _numba_cuda_in_use = False
 
 
 class LinkableCode:
@@ -255,6 +277,10 @@ def new_patched_linker(
 def patch_numba_linker(*, lto=False):
     if not _numba_version_ok:
         msg = f"Cannot patch Numba: {_numba_error}"
+        raise RuntimeError(msg)
+
+    if _numba_cuda_in_use:
+        msg = f"Cannot patch Numba: {_numba_cuda_error}"
         raise RuntimeError(msg)
 
     # Replace the built-in linker that uses the Driver API with our linker that
