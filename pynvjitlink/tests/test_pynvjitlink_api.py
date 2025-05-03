@@ -78,8 +78,9 @@ def test_add_fatbin_with_cubin_error(device_functions_cubin, gpu_arch_flag):
         nvjitlinker.add_fatbin(cubin, name)
 
 
-@pytest.mark.skip(reason="CUDA 12.9 nvjitlink performs invalid reads under "
-                  "this error scenario")
+@pytest.mark.skip(
+    reason="CUDA 12.9 nvjitlink performs invalid reads under this error scenario"
+)
 def test_duplicate_symbols_cubin_and_fatbin(
     device_functions_cubin, device_functions_fatbin, gpu_arch_flag
 ):
