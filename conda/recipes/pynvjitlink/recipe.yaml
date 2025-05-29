@@ -59,6 +59,11 @@ requirements:
     - python
     - numba >=0.58
   ignore_run_exports:
+    from_package:
+      - ${{ compiler("c") }}
+      - ${{ compiler("cxx") }}
+      - ${{ compiler("cuda") }}
+      - ${{ stdlib("c") }}
     by_name:
       - cuda-version
       - libnvjitlink
