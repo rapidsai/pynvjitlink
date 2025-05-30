@@ -5,7 +5,8 @@ from unittest.mock import patch as mock_patch
 
 import pytest
 from numba import cuda
-from pynvjitlink import NvJitLinkError, patch
+from pynvjitlink import patch
+from pynvjitlink._nvjitlinklib import nvJitLinkError
 from pynvjitlink.patch import (
     PatchedLinker,
     _numba_version_ok,
@@ -48,7 +49,7 @@ def test_create_no_cc_error():
 def test_invalid_arch_error():
     # CC 0.0 is not a valid compute capability
     with pytest.raises(
-        NvJitLinkError, match="NVJITLINK_ERROR_UNRECOGNIZED_OPTION error"
+        nvJitLinkError, match="ERROR_UNRECOGNIZED_OPTION"
     ):
         PatchedLinker(cc=(0, 0))
 
