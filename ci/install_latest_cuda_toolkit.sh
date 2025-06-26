@@ -7,7 +7,7 @@
 yum update -y
 yum install -y epel-release
 
-OS_ID=$(. /etc/os-release; echo $ID)
+OS_ID=$(. /etc/os-release; echo "$ID")
 if [ "${OS_ID}" != "rocky" ]; then
     echo "Error: OS not detected as Rocky Linux. Exiting."
     exit 1
