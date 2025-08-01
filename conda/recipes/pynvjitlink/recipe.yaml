@@ -18,7 +18,7 @@ source:
 build:
   dynamic_linking:
     overlinking_behavior: error
-  string: ${{ cuda_version }}_py${{ py_buildstring }}_${{ date_string }}_${{ head_rev }}_h${{ hash }}
+  string: ${{ cuda_version | replace(".", "_") }}_py${{ py_buildstring }}_${{ date_string }}_${{ head_rev }}_h${{ hash }}
   script:
     content: |
       python -m pip install . -vv
