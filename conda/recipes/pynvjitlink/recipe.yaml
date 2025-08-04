@@ -52,7 +52,7 @@ requirements:
     - libnvjitlink-static
     - python =${{ py_version }}
     - pip
-    - rapids-build-backend >=0.3.0,<0.4.0dev0
+    - rapids-build-backend >=0.4.0,<0.5.0.dev0
     - scikit-build-core >=0.10.0
   run:
     - ${{ pin_compatible("cuda-version", lower_bound="x", upper_bound="x.x") }}
