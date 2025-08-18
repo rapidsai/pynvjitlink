@@ -1,7 +1,7 @@
 > [!IMPORTANT]
 > The final release of this project was `v0.7.0`.
 > Similar functionality is available in `cuda.core`, and for `numba-cuda>=0.16`,
-> `numba-cuda` automatically detecst and enable nvjitlink when needed with no explicit configuration.
+> `numba-cuda` automatically detects and enables nvjitlink when needed and available with no explicit configuration.
 > See https://docs.rapids.ai/notices/rsn0052/ for details.
 
 # <div align="left"><img src="https://rapids.ai/assets/images/rapids_logo.png" width="90px"/>&nbsp;pynvjitlink</div>
